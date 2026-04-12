@@ -23,7 +23,7 @@ export default function NavbarWrapper() {
       pillColor="#f1f4f5"
       hoveredPillTextColor="#f1f4f5"
       pillTextColor="#0c1e2b"
-      theme="light"
+      theme="dark"
       initialLoadAnimation={false}
     />
   );

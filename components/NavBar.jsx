@@ -228,9 +228,9 @@ const PillNav = ({
   };
 
   return (
-    <div className="absolute top-[1em] z-[1000] w-full left-0 md:w-auto md:left-auto">
+    <div className="absolute top-[1em] z-[1000] w-full left-0 md:left-1/2 md:-translate-x-1/2 md:w-auto">
       <nav
-        className={`w-full md:w-max flex items-center justify-between md:justify-start box-border px-4 md:px-0 ${className}`}
+        className={`w-full md:w-max flex items-center justify-between box-border px-4 md:px-0 ${className}`}
         aria-label="Primary"
         style={cssVars}
       >
