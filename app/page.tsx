@@ -1,6 +1,50 @@
+'use client';
+
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
-import { heroData } from '@/data/hero';
+import { AboutSection } from '@/components/AboutSection';
+import { ProjectsSection } from '@/components/ProjectsSection';
+import { ContactSection } from '@/components/ContactSection';
+import { Footer } from '@/components/Footer';
+import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function Home() {
-  return <MinimalistHero {...heroData} />;
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      <ScrollStack
+        useWindowScroll={true}
+        itemDistance={0}
+        itemStackDistance={0}
+        stackPosition="0%"
+        scaleEndPosition="0%"
+        baseScale={1.0}
+        itemScale={0}
+        className="w-full relative"
+        onStackComplete={() => {}}
+      >
+        <ScrollStackItem>
+          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
+            <MinimalistHero />
+          </div>
+        </ScrollStackItem>
+        <ScrollStackItem>
+          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20">
+            <AboutSection />
+          </div>
+        </ScrollStackItem>
+        <ScrollStackItem>
+          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30">
+            <ProjectsSection />
+          </div>
+        </ScrollStackItem>
+        <ScrollStackItem>
+          <div className="h-[100dvh] flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40">
+            <div className="flex-grow flex flex-col">
+              <ContactSection />
+            </div>
+            <Footer />
+          </div>
+        </ScrollStackItem>
+      </ScrollStack>
+    </div>
+  );
 }

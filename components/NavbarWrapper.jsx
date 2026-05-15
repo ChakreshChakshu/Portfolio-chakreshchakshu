@@ -11,18 +11,19 @@ export default function NavbarWrapper() {
       logo="/next.svg"
       logoAlt="Company Logo"
       items={[
-        { label: 'Home', href: '/' },
-        { label: 'About', href: '/about' },
-        { label: 'Projects', href: '/projects' },
-        { label: 'Contact', href: '/contact' }
+        { label: 'Home', href: '#home' },
+        { label: 'About', href: '#about' },
+        { label: 'Projects', href: '#projects' },
+        { label: 'Contact', href: '#contact' }
       ]}
       activeHref={pathname}
       className="custom-nav"
       ease="power2.easeOut"
       baseColor="#0c1e2b"
-      pillColor="#f1f4f5"
-      hoveredPillTextColor="#f1f4f5"
-      pillTextColor="#0c1e2b"
+      hoverBgColor="#f1f4f5"
+      pillColor="#132e43"
+      hoveredPillTextColor="#0c1e2b"
+      pillTextColor="#f1f4f5"
       theme="dark"
       initialLoadAnimation={false}
     />

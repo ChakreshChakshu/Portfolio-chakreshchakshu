@@ -1,0 +1,36 @@
+'use client';
+
+import React from 'react';
+
+export function ProjectsSection() {
+  return (
+    <section id="projects" className="w-full relative bg-background py-24 min-h-[100dvh] flex items-center">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="mb-16">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground">
+            Selected Work
+          </h2>
+          <div className="h-1 w-20 bg-primary mt-4"></div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className="group relative overflow-hidden bg-card border border-border/50 rounded-2xl aspect-[4/3] shadow-lg">
+              <div className="absolute inset-0 bg-muted/50 transition-colors group-hover:bg-transparent"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-t from-background/90 to-transparent">
+                <h3 className="text-2xl font-bold font-heading mb-2 text-foreground">Project {item}</h3>
+                <p className="text-foreground/80 font-sans mb-4 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                  A comprehensive web application demonstrating modern frontend architecture and clean UI design.
+                </p>
+                <div className="flex gap-2 opacity-0 transform translate-y-4 transition-all duration-300 delay-75 group-hover:opacity-100 group-hover:translate-y-0">
+                  <span className="px-3 py-1 text-xs font-mono bg-primary/20 text-primary rounded-full">React</span>
+                  <span className="px-3 py-1 text-xs font-mono bg-primary/20 text-primary rounded-full">Next.js</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

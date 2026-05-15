@@ -12,12 +12,14 @@ const PillNav = ({
   className = '',
   ease = 'power3.easeOut',
   baseColor = '#fff',
+  hoverBgColor,
   pillColor = '#060010',
   hoveredPillTextColor = '#060010',
   pillTextColor,
   onMobileMenuClick,
   initialLoadAnimation = true
 }) => {
+  const resolvedHoverBgColor = hoverBgColor ?? baseColor;
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const circleRefs = useRef([]);
@@ -206,6 +208,20 @@ const PillNav = ({
     onMobileMenuClick?.();
   };
 
+  const handleNavClick = (e, href) => {
+    if (href?.startsWith('#')) {
+      e.preventDefault();
+      setIsMobileMenuOpen(false);
+      if (window.lenis) {
+        window.lenis.scrollTo(href);
+      } else {
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   const isExternalLink = href =>
     href.startsWith('http://') ||
     href.startsWith('https://') ||
@@ -218,6 +234,7 @@ const PillNav = ({
 
   const cssVars = {
     ['--base']: baseColor,
+    ['--hover-bg']: resolvedHoverBgColor,
     ['--pill-bg']: pillColor,
     ['--hover-text']: hoveredPillTextColor,
     ['--pill-text']: resolvedPillTextColor,
@@ -249,6 +266,7 @@ const PillNav = ({
               height: 'var(--nav-h)',
               background: 'var(--base, #000)'
             }}
+            onClick={(e) => handleNavClick(e, items[0].href)}
           >
             <img src={logo} alt={logoAlt} ref={logoImgRef} className="w-full h-full object-cover block" />
           </Link>
@@ -266,6 +284,7 @@ const PillNav = ({
               height: 'var(--nav-h)',
               background: 'var(--base, #000)'
             }}
+            onClick={(e) => handleNavClick(e, items?.[0]?.href || '#')}
           >
             <img src={logo} alt={logoAlt} ref={logoImgRef} className="w-full h-full object-cover block" />
           </a>
@@ -299,7 +318,7 @@ const PillNav = ({
                   <span
                     className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none"
                     style={{
-                      background: 'var(--base, #000)',
+                      background: 'var(--hover-bg, var(--base, #000))',
                       willChange: 'transform'
                     }}
                     aria-hidden="true"
@@ -349,6 +368,7 @@ const PillNav = ({
                       aria-label={item.ariaLabel || item.label}
                       onMouseEnter={() => handleEnter(i)}
                       onMouseLeave={() => handleLeave(i)}
+                      onClick={(e) => handleNavClick(e, item.href)}
                     >
                       {PillContent}
                     </Link>
@@ -361,6 +381,7 @@ const PillNav = ({
                       aria-label={item.ariaLabel || item.label}
                       onMouseEnter={() => handleEnter(i)}
                       onMouseLeave={() => handleLeave(i)}
+                      onClick={(e) => handleNavClick(e, item.href)}
                     >
                       {PillContent}
                     </a>
@@ -429,7 +450,7 @@ const PillNav = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                   >
                     {item.label}
                   </Link>
@@ -440,7 +461,7 @@ const PillNav = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                   >
                     {item.label}
                   </a>
