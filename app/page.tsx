@@ -9,7 +9,7 @@ import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background overflow-x-hidden">
       <ScrollStack
         useWindowScroll={true}
         itemDistance={0}
@@ -19,29 +19,29 @@ export default function Home() {
         baseScale={1.0}
         itemScale={0}
         className="w-full relative"
-        onStackComplete={() => {}}
+        onStackComplete={() => { }}
       >
         <ScrollStackItem>
-          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
+          <div className="h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
             <MinimalistHero />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20">
+          <div className="h-screen w-full bg-[#14213d] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20">
             <AboutSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="h-[100dvh] w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30">
+          <div className="h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30">
             <ProjectsSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="h-[100dvh] flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40">
-            <div className="flex-grow flex flex-col">
-              <ContactSection />
+          <div className="h-screen flex flex-col w-full bg-[#14213d] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden">
+            <ContactSection />
+            <div className="absolute bottom-0 left-0 w-full z-50">
+              <Footer />
             </div>
-            <Footer />
           </div>
         </ScrollStackItem>
       </ScrollStack>

@@ -139,7 +139,7 @@ export function AboutSection() {
 
   return (
     <section id="about" className="w-full relative flex items-center p-4 md:p-12 min-h-[100dvh]">
-      <div className="absolute inset-0 bg-background/50 backdrop-blur-3xl z-0 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[#14213d]/50 backdrop-blur-3xl z-0 pointer-events-none"></div>
 
       <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center w-full relative z-10 gap-12">
         {/* Left Side: Heading */}
@@ -167,7 +167,7 @@ export function AboutSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
-            className="flex items-center gap-4 bg-white/[0.02] border border-white/10 p-3 rounded-2xl w-fit backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_8px_20px_rgba(0,0,0,0.4)]"
+            className="flex items-center gap-4 bg-[#14213d]/30 border border-[#14213d]/50 p-3 rounded-2xl w-fit backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_8px_20px_rgba(0,0,0,0.4)]"
           >
             <span className="text-foreground/80 font-medium text-sm md:text-base tracking-wide">Wait, are you a developer?</span>
             
@@ -195,17 +195,17 @@ export function AboutSection() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="w-full lg:w-1/2 rounded-2xl border border-border/50 bg-[#0a0a0a]/90 shadow-[0_0_80px_rgba(0,0,0,0.5)] backdrop-blur-xl overflow-hidden flex flex-col"
+          className="w-full lg:w-1/2 rounded-2xl border border-[#14213d]/50 bg-[#000000]/90 shadow-[0_0_80px_rgba(0,0,0,0.5)] backdrop-blur-xl overflow-hidden flex flex-col"
           style={{ height: '75vh', minHeight: '550px' }}
           onClick={handleTerminalClick}
         >
           {isDeveloper ? (
             <div className="flex flex-col h-full font-mono">
               {/* Terminal Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.03]">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[#14213d]/30 bg-[#14213d]/10">
                 <div className="flex gap-2 w-20">
                   <div className="w-3.5 h-3.5 rounded-full bg-red-500/80 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
-                  <div className="w-3.5 h-3.5 rounded-full bg-yellow-500/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]"></div>
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#fca311]/80 shadow-[0_0_10px_rgba(252,163,17,0.5)]"></div>
                   <div className="w-3.5 h-3.5 rounded-full bg-green-500/80 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
                 </div>
                 
@@ -231,7 +231,7 @@ export function AboutSection() {
 
                 {/* Active Input Line */}
                 <div className="flex items-center mt-2">
-                  <span className="text-green-400 mr-3 shrink-0">visitor@portfolio:~$</span>
+                  <span className="text-[#fca311] mr-3 shrink-0">visitor@portfolio:~$</span>
                   <input
                     ref={inputRef}
                     type="text"
@@ -251,7 +251,7 @@ export function AboutSection() {
             </div>
           ) : (
             <div className="flex flex-col h-full overflow-y-auto p-8 md:p-12 custom-scrollbar">
-              <h3 className="text-3xl font-heading font-bold text-foreground mb-8 border-b border-white/10 pb-4">
+              <h3 className="text-3xl font-heading font-bold text-[#ffffff] mb-8 border-b border-[#14213d]/30 pb-4">
                 About Me
               </h3>
               
@@ -300,7 +300,7 @@ function AnimatedLine({ line }: { line: TerminalLine }) {
   if (line.type === 'command') {
     return (
       <div ref={lineRef} className="flex mb-3 text-foreground font-mono">
-        <span className="text-green-400 mr-3">visitor@portfolio:~$</span>
+        <span className="text-[#fca311] mr-3">visitor@portfolio:~$</span>
         <span>{line.content}</span>
       </div>
     );

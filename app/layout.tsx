@@ -20,7 +20,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <NavbarWrapper />
-        <main className="grow pt-24">{children}</main>
+        <main className="grow">{children}</main>
       </body>
     </html>
   );

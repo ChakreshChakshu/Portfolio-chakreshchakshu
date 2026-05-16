@@ -19,11 +19,11 @@ export default function NavbarWrapper() {
       activeHref={pathname}
       className="custom-nav"
       ease="power2.easeOut"
-      baseColor="#0c1e2b"
-      hoverBgColor="#f1f4f5"
-      pillColor="#132e43"
-      hoveredPillTextColor="#0c1e2b"
-      pillTextColor="#f1f4f5"
+      baseColor="#000000"
+      hoverBgColor="#e5e5e5"
+      pillColor="#14213d"
+      hoveredPillTextColor="#000000"
+      pillTextColor="#ffffff"
       theme="dark"
       initialLoadAnimation={false}
     />
