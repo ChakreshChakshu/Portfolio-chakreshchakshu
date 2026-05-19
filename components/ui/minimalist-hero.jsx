@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Icon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 import { heroData } from '@/data/hero';
 
-const SocialIcon = ({ href, icon: IconComponent }: { href: string; icon: Icon }) => (
+const SocialIcon = ({ href, icon: IconComponent }) => (
   <a href={href} target="_blank" rel="noopener noreferrer" className="text-foreground/60 transition-colors hover:text-foreground">
     <IconComponent className="h-5 w-5" weight="fill" />
   </a>
@@ -14,7 +13,7 @@ const SocialIcon = ({ href, icon: IconComponent }: { href: string; icon: Icon })
 
 export const MinimalistHero = ({
   className,
-}: { className?: string }) => {
+}) => {
   const {
     mainText,
     readMoreLink,
@@ -36,11 +35,9 @@ export const MinimalistHero = ({
       <BackgroundBeams className="absolute inset-0 z-0" />
 
       <div className="relative grid w-full flex-grow grid-cols-1 items-center md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Removed right-side content per user request */}
 
         <div className="relative order-1 md:order-2 flex justify-center items-center h-full min-h-[400px] py-12 md:py-0">
           <div className="relative w-full max-w-[350px] md:max-w-[450px] lg:max-w-[550px] aspect-square overflow-visible shrink-0 mt-2 md:mt-0">
-            {/* Back half: Circle container with overflow hidden */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -56,7 +53,7 @@ export const MinimalistHero = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
                   onError={(e) => {
-                    const target = e.target as HTMLImageElement;
+                    const target = e.target;
                     target.onerror = null;
                     target.src = `https://placehold.co/400x600/eab308/ffffff?text=Image+Not+Found`;
                   }}
@@ -64,7 +61,6 @@ export const MinimalistHero = ({
               )}
             </motion.div>
 
-            {/* Front half: Popping out top with clip-path */}
             {imageSrc && (
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -83,10 +79,8 @@ export const MinimalistHero = ({
                 />
               </motion.div>
             )}
-            {/* Social Icons around the circle */}
             {socialLinks.map((link, index) => {
               const total = socialLinks.length;
-              // Angle from 45 to 135 degrees (bottom arc)
               const startAngle = 45;
               const endAngle = 135;
               const angle = startAngle + (index * (endAngle - startAngle)) / (total - 1);
@@ -151,7 +145,6 @@ export const MinimalistHero = ({
           transition={{ duration: 0.5, delay: 1.2 }}
           className="flex items-center space-x-4"
         >
-          {/* Social icons moved to circle */}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

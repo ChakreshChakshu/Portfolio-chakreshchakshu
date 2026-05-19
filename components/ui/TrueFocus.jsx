@@ -2,17 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import './TrueFocus.css';
 
-interface TrueFocusProps {
-  sentence?: string;
-  separator?: string;
-  manualMode?: boolean;
-  blurAmount?: number;
-  borderColor?: string;
-  glowColor?: string;
-  animationDuration?: number;
-  pauseBetweenAnimations?: number;
-}
-
 const TrueFocus = ({
   sentence = 'True Focus',
   separator = ' ',
@@ -22,12 +11,12 @@ const TrueFocus = ({
   glowColor = 'rgba(0, 255, 0, 0.6)',
   animationDuration = 0.5,
   pauseBetweenAnimations = 1
-}: TrueFocusProps) => {
+}) => {
   const words = sentence.split(separator);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [lastActiveIndex, setLastActiveIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [lastActiveIndex, setLastActiveIndex] = useState(null);
+  const containerRef = useRef(null);
+  const wordRefs = useRef([]);
   const [focusRect, setFocusRect] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   useEffect(() => {
@@ -61,7 +50,7 @@ const TrueFocus = ({
     }
   }, [currentIndex, words.length]);
 
-  const handleMouseEnter = (index: number) => {
+  const handleMouseEnter = (index) => {
     if (manualMode) {
       setLastActiveIndex(index);
       setCurrentIndex(index);
@@ -98,7 +87,7 @@ const TrueFocus = ({
               '--border-color': borderColor,
               '--glow-color': glowColor,
               transition: `filter ${animationDuration}s ease`
-            } as React.CSSProperties}
+            }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
@@ -122,7 +111,7 @@ const TrueFocus = ({
         style={{
           '--border-color': borderColor,
           '--glow-color': glowColor
-        } as React.CSSProperties}
+        }}
       >
         <span className="corner top-left"></span>
         <span className="corner top-right"></span>

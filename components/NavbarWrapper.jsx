@@ -11,10 +11,11 @@ export default function NavbarWrapper() {
       logo="/next.svg"
       logoAlt="Company Logo"
       items={[
-        { label: 'Home', href: '#home' },
-        { label: 'About', href: '#about' },
-        { label: 'Projects', href: '#projects' },
-        { label: 'Contact', href: '#contact' }
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+        { label: 'Skills', href: '/skills' },
+        { label: 'Projects', href: '/projects' },
+        { label: 'Contact', href: '/contact' }
       ]}
       activeHref={pathname}
       className="custom-nav"
@@ -24,7 +25,6 @@ export default function NavbarWrapper() {
       pillColor="#14213d"
       hoveredPillTextColor="#000000"
       pillTextColor="#ffffff"
-      theme="dark"
       initialLoadAnimation={false}
     />
   );
