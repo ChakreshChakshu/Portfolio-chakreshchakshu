@@ -1,18 +1,13 @@
-import type { Metadata } from "next";
 import { inter, generalSans, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 import NavbarWrapper from "../components/NavbarWrapper";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Chakresh Chakshu | Frontend Engineer",
   description: "Crafting modern web experiences with clean code and smooth interactions.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
