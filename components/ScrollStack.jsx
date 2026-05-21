@@ -121,18 +121,14 @@ const ScrollStack = ({
 
       let blur = 0;
       if (blurAmount) {
-        let topCardIndex = 0;
-        for (let j = 0; j < cardsRef.current.length; j++) {
-          const jVirtualTop = cardsTop[j] + delayPx * j;
-          const jTriggerStart = jVirtualTop - stackPositionPx - itemStackDistance * j;
-          if (scrollTop >= jTriggerStart) {
-            topCardIndex = j;
-          }
-        }
-
-        if (i < topCardIndex) {
-          const depthInStack = topCardIndex - i;
-          blur = Math.max(0, depthInStack * blurAmount);
+        const entryProgress = calculateProgress(
+          scrollTop,
+          pinStart - containerHeight,
+          pinStart
+        );
+        if (entryProgress < 1) {
+          // Use a smooth quadratic curve for a premium focus transition
+          blur = Math.pow(1 - entryProgress, 2) * blurAmount;
         }
       }
 

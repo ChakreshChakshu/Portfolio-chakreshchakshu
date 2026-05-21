@@ -19,6 +19,7 @@ export default function Home() {
         scaleEndPosition="0%"
         baseScale={1.0}
         itemScale={0}
+        blurAmount={12}
         className="w-full relative"
         onStackComplete={() => { }}
       >
