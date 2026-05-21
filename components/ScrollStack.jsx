@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useCallback } from 'react';
+import { useLayoutEffect, useRef, useCallback, useState } from 'react';
 import Lenis from 'lenis';
 import './ScrollStack.css';
 
@@ -19,7 +19,9 @@ const ScrollStack = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
-  onStackComplete
+  showDots = false,
+  onStackComplete,
+  onActiveIndexChange
 }) => {
   const scrollerRef = useRef(null);
   const stackCompletedRef = useRef(false);
@@ -28,6 +30,9 @@ const ScrollStack = ({
   const cardsRef = useRef([]);
   const lastTransformsRef = useRef(new Map());
   const isUpdatingRef = useRef(false);
+  const activeIndexRef = useRef(0);
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const calculateProgress = useCallback((scrollTop, start, end) => {
     if (scrollTop < start) return 0;
@@ -100,6 +105,8 @@ const ScrollStack = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
+    let computedActiveIndex = 0;
+
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
@@ -113,6 +120,10 @@ const ScrollStack = ({
       const triggerEnd = virtualTop - scaleEndPositionPx;
       const pinStart = virtualTop - stackPositionPx - itemStackDistance * i;
       const pinEnd = endTop - containerHeight / 2;
+
+      if (scrollTop >= pinStart) {
+        computedActiveIndex = i;
+      }
 
       const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
       const targetScale = baseScale + i * itemScale;
@@ -177,8 +188,15 @@ const ScrollStack = ({
       }
     });
 
+    if (computedActiveIndex !== activeIndexRef.current) {
+      activeIndexRef.current = computedActiveIndex;
+      setActiveIndex(computedActiveIndex);
+      onActiveIndexChange?.(computedActiveIndex);
+    }
+
     isUpdatingRef.current = false;
   }, [
+    itemDistance,
     itemScale,
     itemStackDistance,
     stackPosition,
@@ -188,6 +206,7 @@ const ScrollStack = ({
     blurAmount,
     useWindowScroll,
     onStackComplete,
+    onActiveIndexChange,
     calculateProgress,
     parsePercentage
   ]);
@@ -346,6 +365,24 @@ const ScrollStack = ({
     updateCardTransforms,
     calculateDimensions
   ]);
+  const handleDotClick = useCallback((idx) => {
+    if (!cardsRef.current[idx]) return;
+    const { cardsTop, containerHeight } = dimensionsRef.current;
+    const cardTop = cardsTop[idx];
+    const delayPx = itemDistance || 0;
+    const delayOffset = delayPx * idx;
+    const stackPositionPx = parsePercentage(stackPosition, containerHeight);
+    
+    const targetScroll = cardTop + delayOffset - stackPositionPx - itemStackDistance * idx;
+    
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(targetScroll);
+    } else if (useWindowScroll) {
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    } else if (scrollerRef.current) {
+      scrollerRef.current.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
+  }, [itemDistance, stackPosition, itemStackDistance, useWindowScroll, parsePercentage]);
 
   return (
     <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>
@@ -354,6 +391,19 @@ const ScrollStack = ({
         {/* Spacer so the last pin can release cleanly */}
         <div className="scroll-stack-end" />
       </div>
+      
+      {showDots && cardsRef.current.length > 0 && (
+        <div className="scroll-stack-dots">
+          {cardsRef.current.map((_, idx) => (
+            <button
+              key={idx}
+              className={`scroll-stack-dot ${idx === activeIndex ? 'active' : ''}`}
+              onClick={() => handleDotClick(idx)}
+              aria-label={`Go to section ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

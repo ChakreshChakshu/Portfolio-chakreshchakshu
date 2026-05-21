@@ -20,6 +20,7 @@ export default function Home() {
         baseScale={1.0}
         itemScale={0}
         blurAmount={12}
+        showDots={true}
         className="w-full relative"
         onStackComplete={() => { }}
       >

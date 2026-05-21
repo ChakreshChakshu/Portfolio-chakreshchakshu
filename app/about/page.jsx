@@ -1,7 +1,9 @@
+import { AboutSection } from '@/components/AboutSection';
+
 export default function About() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">About Me</h1>
+    <div className="w-full min-h-screen bg-background">
+      <AboutSection />
     </div>
   );
 }

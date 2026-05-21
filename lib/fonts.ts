@@ -1,7 +1,6 @@
-import { Inter, JetBrains_Mono } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Plus_Jakarta_Sans, Outfit, JetBrains_Mono } from 'next/font/google';
 
-export const inter = Inter({
+export const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
@@ -13,8 +12,8 @@ export const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
 });
 
-export const generalSans = localFont({
-  src: '../public/fonts/GeneralSans-Variable.woff2',
+export const outfit = Outfit({
+  subsets: ['latin'],
   display: 'swap',
   variable: '--font-heading',
 });

@@ -6,6 +6,8 @@ import PillNav from './NavBar';
 export default function NavbarWrapper() {
   const pathname = usePathname();
 
+  if (pathname === '/') return null;
+
   return (
     <PillNav
       logo="/next.svg"

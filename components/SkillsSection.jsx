@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { skillsData } from '@/data/skills';
 
 const categories = [
@@ -41,12 +40,9 @@ export function SkillsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {skills.map((skill, i) => (
-            <motion.div
+          {skills.map((skill) => (
+            <div
               key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08, duration: 0.4 }}
               className="group bg-[#14213d]/20 border border-[#14213d]/40 rounded-xl p-5 hover:border-[#fca311]/30 transition-all duration-300"
             >
               <div className="flex items-center justify-between mb-3">
@@ -57,14 +53,12 @@ export function SkillsSection() {
                 <span className="text-sm font-mono text-[#fca311]">{skill.level}%</span>
               </div>
               <div className="w-full h-2 bg-[#14213d]/50 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${skill.level}%` }}
-                  transition={{ delay: i * 0.1 + 0.2, duration: 0.8, ease: 'easeOut' }}
-                  className="h-full bg-gradient-to-r from-[#fca311] to-[#fca311]/70 rounded-full"
+                <div
+                  className="h-full bg-gradient-to-r from-[#fca311] to-[#fca311]/70 rounded-full transition-all duration-1000 ease-out"
+                  style={{ width: `${skill.level}%` }}
                 />
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { inter, generalSans, jetbrainsMono } from "@/lib/fonts";
+import { plusJakartaSans, outfit, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 import NavbarWrapper from "../components/NavbarWrapper";
 
@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${generalSans.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
+      className={`${plusJakartaSans.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <NavbarWrapper />
