@@ -302,7 +302,13 @@ const ScrollStack = ({
         spacer.style.height = `${(cards.length - 1) * delayPx}px`;
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
-        scrollerInner.appendChild(spacer);
+        
+        const endElement = scrollerInner.querySelector('.scroll-stack-end');
+        if (endElement) {
+          scrollerInner.insertBefore(spacer, endElement);
+        } else {
+          scrollerInner.appendChild(spacer);
+        }
       }
     }
 
