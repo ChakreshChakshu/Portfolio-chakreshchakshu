@@ -18,5 +18,8 @@ export const skillsData = {
     { name: "Docker", level: 70, icon: "🐳" },
     { name: "Figma", level: 75, icon: "🎯" },
     { name: "Vercel", level: 85, icon: "▲" },
+    { name: "Claude Code", level: 92, icon: "🤖" },
+    { name: "Codex", level: 88, icon: "🧠" },
+    { name: "Agentic AI", level: 85, icon: "⚡" },
   ],
 };

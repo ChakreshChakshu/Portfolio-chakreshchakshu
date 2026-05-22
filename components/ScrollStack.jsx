@@ -33,6 +33,7 @@ const ScrollStack = ({
   const activeIndexRef = useRef(0);
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [cardsCount, setCardsCount] = useState(0);
 
   const calculateProgress = useCallback((scrollTop, start, end) => {
     if (scrollTop < start) return 0;
@@ -286,6 +287,7 @@ const ScrollStack = ({
     );
 
     cardsRef.current = cards;
+    setCardsCount(cards.length);
     const transformsCache = lastTransformsRef.current;
     
     const delayPx = itemDistance || 0;
@@ -392,9 +394,9 @@ const ScrollStack = ({
         <div className="scroll-stack-end" />
       </div>
       
-      {showDots && cardsRef.current.length > 0 && (
+      {showDots && cardsCount > 0 && (
         <div className="scroll-stack-dots">
-          {cardsRef.current.map((_, idx) => (
+          {Array.from({ length: cardsCount }).map((_, idx) => (
             <button
               key={idx}
               className={`scroll-stack-dot ${idx === activeIndex ? 'active' : ''}`}
