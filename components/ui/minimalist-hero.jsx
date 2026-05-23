@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { heroData } from '@/data/hero';
+import { ElegantShape } from '@/components/ui/shape-landing-hero';
 import { 
   GithubLogo, 
   LinkedinLogo, 
@@ -83,18 +84,68 @@ export function MinimalistHero({ className }) {
           isExpanded ? "opacity-100" : "opacity-40"
         )}
       >
+        {/* Soft elegant geometric shapes - mounts on scroll */}
+        {isExpanded && (
+          <div className="absolute inset-0 overflow-hidden z-0">
+            <ElegantShape
+              delay={0.3}
+              width={600}
+              height={140}
+              rotate={12}
+              gradient="from-indigo-500/[0.12]"
+              className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+            />
+
+            <ElegantShape
+              delay={0.5}
+              width={500}
+              height={120}
+              rotate={-15}
+              gradient="from-rose-500/[0.12]"
+              className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+            />
+
+            <ElegantShape
+              delay={0.4}
+              width={300}
+              height={80}
+              rotate={-8}
+              gradient="from-violet-500/[0.12]"
+              className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+            />
+
+            <ElegantShape
+              delay={0.6}
+              width={200}
+              height={60}
+              rotate={20}
+              gradient="from-amber-500/[0.12]"
+              className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+            />
+
+            <ElegantShape
+              delay={0.7}
+              width={150}
+              height={40}
+              rotate={-25}
+              gradient="from-cyan-500/[0.12]"
+              className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+            />
+          </div>
+        )}
+
         <div 
-          className="absolute inset-0 opacity-[0.14]"
+          className="absolute inset-0 opacity-[0.08] z-1"
           style={{
-            backgroundImage: `linear-gradient(rgba(252, 163, 17, 0.12) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(252, 163, 17, 0.12) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(252, 163, 17, 0.08) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(252, 163, 17, 0.08) 1px, transparent 1px)`,
             backgroundSize: '45px 45px',
           }}
         />
         {/* Soft atmospheric gradient */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.95)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.95)_100%)] z-1" />
         {/* Centered gold ambient blob */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-[#fca311]/5 blur-[160px] animate-pulse duration-[10000ms]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-[#fca311]/5 blur-[160px] animate-pulse duration-[10000ms] z-1" />
       </div>
 
 
