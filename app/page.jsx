@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { AboutSection } from '@/components/AboutSection';
 import { SkillsSection } from '@/components/SkillsSection';
@@ -9,6 +10,8 @@ import { Footer } from '@/components/Footer';
 import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function Home() {
+  const [activeSectionIdx, setActiveSectionIdx] = useState(0);
+
   return (
     <div className="flex flex-col min-h-screen bg-background overflow-x-hidden">
       <ScrollStack
@@ -23,6 +26,7 @@ export default function Home() {
         showDots={true}
         className="w-full relative"
         onStackComplete={() => { }}
+        onActiveIndexChange={(idx) => setActiveSectionIdx(idx)}
       >
         <ScrollStackItem>
           <div className="h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
@@ -31,7 +35,7 @@ export default function Home() {
         </ScrollStackItem>
         <ScrollStackItem>
           <div className="h-screen w-full bg-[#14213d] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20">
-            <AboutSection />
+            <AboutSection isActive={activeSectionIdx === 1} />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>

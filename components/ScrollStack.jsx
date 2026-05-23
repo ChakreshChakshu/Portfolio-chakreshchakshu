@@ -84,9 +84,10 @@ const ScrollStack = ({
     
     const containerHeight = useWindowScroll ? window.innerHeight : scrollerRef.current.clientHeight;
     
-    const endElement = useWindowScroll
-      ? document.querySelector('.scroll-stack-end')
-      : scrollerRef.current?.querySelector('.scroll-stack-end');
+    const scrollerInner = scrollerRef.current?.querySelector('.scroll-stack-inner');
+    const endElement = scrollerInner
+      ? Array.from(scrollerInner.children).find(el => el.classList.contains('scroll-stack-end'))
+      : null;
       
     const endTop = endElement ? getElementOffset(endElement) : 0;
     
@@ -280,11 +281,10 @@ const ScrollStack = ({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
-    const cards = Array.from(
-      useWindowScroll
-        ? document.querySelectorAll('.scroll-stack-card')
-        : scroller.querySelectorAll('.scroll-stack-card')
-    );
+    const scrollerInner = scrollerRef.current?.querySelector('.scroll-stack-inner');
+    const cards = scrollerInner
+      ? Array.from(scrollerInner.children).filter(el => el.classList.contains('scroll-stack-card'))
+      : [];
 
     cardsRef.current = cards;
     setCardsCount(cards.length);
@@ -304,13 +304,8 @@ const ScrollStack = ({
       card.style.webkitPerspective = '1000px';
     });
 
-    // Add dummy height to the scroller inner to account for the delay
-    const scrollerInner = useWindowScroll 
-      ? document.querySelector('.scroll-stack-inner') 
-      : scrollerRef.current?.querySelector('.scroll-stack-inner');
-      
     if (scrollerInner) {
-      const existingSpacer = scrollerInner.querySelector('.scroll-delay-spacer');
+      const existingSpacer = Array.from(scrollerInner.children).find(el => el.classList.contains('scroll-delay-spacer'));
       if (existingSpacer) existingSpacer.remove();
       
       if (delayPx > 0 && cards.length > 1) {
@@ -320,8 +315,8 @@ const ScrollStack = ({
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
         
-        const endElement = scrollerInner.querySelector('.scroll-stack-end');
-        if (endElement) {
+        const endElement = Array.from(scrollerInner.children).find(el => el.classList.contains('scroll-stack-end'));
+        if (endElement && endElement.parentNode === scrollerInner) {
           scrollerInner.insertBefore(spacer, endElement);
         } else {
           scrollerInner.appendChild(spacer);
