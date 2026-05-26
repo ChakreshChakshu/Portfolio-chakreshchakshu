@@ -84,11 +84,55 @@ export function ProjectsSection() {
   return (
     <section 
       id="projects" 
-      className="w-full relative bg-transparent pt-12 md:pt-16 pb-8 min-h-[100dvh] flex flex-col justify-start select-none overflow-hidden"
+      className="w-full relative bg-gradient-to-b from-[#0f172a] via-[#14213d] to-[#070a13] pt-12 md:pt-16 pb-8 min-h-[100dvh] flex flex-col justify-start select-none overflow-hidden"
     >
+      {/* Premium Keyframes styles */}
+      <style>{`
+        @keyframes float-slow {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(60px, -80px) scale(1.15); }
+        }
+        @keyframes float-reverse {
+          0%, 100% { transform: translate(0, 0) scale(1.15); }
+          50% { transform: translate(-80px, 60px) scale(0.9); }
+        }
+      `}</style>
+
+      {/* Premium Animated Background (Non-Checkered Fluid Aurora) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Soft Ambient base overlay */}
+        <div className="absolute inset-0 bg-[#0f172a]/20" />
+        
+        {/* Radiant Center Light Source (Fluid Core) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-tr from-[#fca311]/25 via-[#1d4ed8]/30 to-[#a855f7]/20 blur-[110px] opacity-90 animate-pulse duration-[8000ms]" />
+
+        {/* Orb 1: Radiant Amber Gold */}
+        <div 
+          className="absolute -top-20 -left-20 w-[550px] h-[550px] rounded-full bg-[#fca311]/25 blur-[90px] mix-blend-screen"
+          style={{
+            animation: 'float-slow 18s ease-in-out infinite'
+          }}
+        />
+
+        {/* Orb 2: Royal Indigo Blue */}
+        <div 
+          className="absolute -bottom-40 -right-20 w-[600px] h-[600px] rounded-full bg-[#3b82f6]/30 blur-[100px] mix-blend-screen"
+          style={{
+            animation: 'float-reverse 22s ease-in-out infinite'
+          }}
+        />
+
+        {/* Orb 3: Radiant Fuchsia Purple */}
+        <div 
+          className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-[#d946ef]/20 blur-[90px] mix-blend-screen"
+          style={{
+            animation: 'float-slow 28s ease-in-out infinite alternate'
+          }}
+        />
+      </div>
       
       {/* Bounded Content Container */}
-      <div className="container mx-auto px-6 md:px-12 max-w-6xl w-full flex flex-col flex-grow" ref={containerRef}>
+      <div className="container mx-auto px-6 md:px-12 max-w-6xl w-full flex flex-col flex-grow relative z-10" ref={containerRef}>
         
         {/* Header Block */}
         <div className="mb-6 shrink-0">

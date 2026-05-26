@@ -10,20 +10,12 @@ export function AboutSection() {
     const ITEM_DISTANCE = 1600;
 
     const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
+      const cardTop = 1 * window.innerHeight;
 
-      const cardElement = container.parentElement;
-      if (!cardElement) return;
-
-      const cardTop = cardElement.offsetTop;
-      const nextCardElement = cardElement.nextElementSibling;
-      const nextCardTop = nextCardElement ? nextCardElement.offsetTop : cardTop + window.innerHeight * 2;
-
-      // Card 1 (AboutSection) starts pinning at cardTop + ITEM_DISTANCE
-      // Card 2 (SkillsSection) starts pinning at nextCardTop + 2 * ITEM_DISTANCE
-      const rangeStart = cardTop + ITEM_DISTANCE;
-      const rangeEnd = nextCardTop + 2 * ITEM_DISTANCE;
+      // Card 1 (AboutSection) starts pinning at cardTop + 1600
+      // Transitions text over exactly 1600px of scrolling space
+      const rangeStart = cardTop + 1600;
+      const rangeEnd = rangeStart + 1600;
 
       const currentScroll = window.scrollY;
 
