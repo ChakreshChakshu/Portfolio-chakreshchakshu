@@ -117,6 +117,9 @@ const ScrollStack = ({
       if (i >= 2) {
         delayOffset += 1000;
       }
+      if (i >= 4) {
+        delayOffset += 1500; // 1500px buffer before Contact arises
+      }
       
       const cardTop = cardsTop[i];
       const virtualTop = cardTop + delayOffset;
@@ -314,7 +317,11 @@ const ScrollStack = ({
       if (delayPx > 0 && cards.length > 1) {
         const spacer = document.createElement('div');
         spacer.className = 'scroll-delay-spacer';
-        spacer.style.height = `${(cards.length - 1) * delayPx + 1000}px`;
+        let totalExtraDelay = 1000;
+        if (cards.length > 4) {
+          totalExtraDelay += 1500; // Match the 1500px extra buffer for Contact
+        }
+        spacer.style.height = `${(cards.length - 1) * delayPx + totalExtraDelay}px`;
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
         
