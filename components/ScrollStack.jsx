@@ -113,7 +113,10 @@ const ScrollStack = ({
       if (!card) return;
 
       const delayPx = itemDistance || 0;
-      const delayOffset = delayPx * i;
+      let delayOffset = delayPx * i;
+      if (i >= 2) {
+        delayOffset += 1000;
+      }
       
       const cardTop = cardsTop[i];
       const virtualTop = cardTop + delayOffset;
@@ -220,13 +223,13 @@ const ScrollStack = ({
   const setupLenis = useCallback(() => {
     if (useWindowScroll) {
       const lenis = new Lenis({
-        duration: 1.2,
+        duration: 1.6,
         easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         touchMultiplier: 2,
         infinite: false,
         wheelMultiplier: 1,
-        lerp: 0.1,
+        lerp: 0.07,
         syncTouch: true,
         syncTouchLerp: 0.075
       });
@@ -311,7 +314,7 @@ const ScrollStack = ({
       if (delayPx > 0 && cards.length > 1) {
         const spacer = document.createElement('div');
         spacer.className = 'scroll-delay-spacer';
-        spacer.style.height = `${(cards.length - 1) * delayPx}px`;
+        spacer.style.height = `${(cards.length - 1) * delayPx + 1000}px`;
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
         
@@ -367,7 +370,10 @@ const ScrollStack = ({
     const { cardsTop, containerHeight } = dimensionsRef.current;
     const cardTop = cardsTop[idx];
     const delayPx = itemDistance || 0;
-    const delayOffset = delayPx * idx;
+    let delayOffset = delayPx * idx;
+    if (idx >= 2) {
+      delayOffset += 1000;
+    }
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     
     const targetScroll = cardTop + delayOffset - stackPositionPx - itemStackDistance * idx;
