@@ -92,8 +92,9 @@ export function SkillsSection() {
       const dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < 1) return;
 
-      const ex = cx + (dx / dist) * CONNECT_RADIUS;
-      const ey = cy + (dy / dist) * CONNECT_RADIUS;
+      const connectRadius = kRect.width * 0.42;
+      const ex = cx + (dx / dist) * connectRadius;
+      const ey = cy + (dy / dist) * connectRadius;
       const offset = Math.min(dist * 0.12, 35);
       const cpX = (px + ex) / 2 - (dy / dist) * offset;
       const cpY = (py + ey) / 2 + (dx / dist) * offset;
@@ -197,8 +198,8 @@ export function SkillsSection() {
           {/* Center cloud */}
           <div ref={cloudRef} className="flex items-center justify-center">
             <div className="relative flex items-center justify-center">
-              <div className="absolute w-[640px] h-[640px] rounded-full border border-[#fca311]/8 pointer-events-none" />
-              <div className="absolute w-[580px] h-[580px] rounded-full border border-dashed border-white/5 pointer-events-none" />
+              <div className="absolute w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] lg:w-[500px] lg:h-[500px] rounded-full border border-[#fca311]/8 pointer-events-none max-w-full" />
+              <div className="absolute w-[250px] h-[250px] sm:w-[360px] sm:h-[360px] lg:w-[450px] lg:h-[450px] rounded-full border border-dashed border-white/5 pointer-events-none max-w-full" />
               <IconCloud images={cloudImages} />
             </div>
           </div>

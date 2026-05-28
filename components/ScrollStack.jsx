@@ -67,14 +67,9 @@ const ScrollStack = ({
 
   const getElementOffset = useCallback(
     element => {
-      if (useWindowScroll) {
-        const rect = element.getBoundingClientRect();
-        return rect.top + window.scrollY;
-      } else {
-        return element.offsetTop;
-      }
+      return element.offsetTop;
     },
-    [useWindowScroll]
+    []
   );
 
   const dimensionsRef = useRef({ cardsTop: [], endTop: 0, containerHeight: 0 });
@@ -100,6 +95,17 @@ const ScrollStack = ({
     if (!cardsRef.current.length || isUpdatingRef.current) return;
 
     isUpdatingRef.current = true;
+
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) {
+      cardsRef.current.forEach((card, i) => {
+        if (!card) return;
+        card.style.transform = 'none';
+        card.style.filter = 'none';
+      });
+      isUpdatingRef.current = false;
+      return;
+    }
 
     const scrollTop = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
     const { containerHeight, endTop, cardsTop } = dimensionsRef.current;
@@ -224,6 +230,9 @@ const ScrollStack = ({
   }, [updateCardTransforms]);
 
   const setupLenis = useCallback(() => {
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return null;
+
     if (useWindowScroll) {
       const lenis = new Lenis({
         duration: 1.6,
@@ -297,10 +306,11 @@ const ScrollStack = ({
     const transformsCache = lastTransformsRef.current;
     
     const delayPx = itemDistance || 0;
+    const isMobile = window.innerWidth < 1024;
 
     cards.forEach((card, i) => {
-      // Remove physical margin to prevent DOM space issues
-      card.style.marginBottom = '0px';
+      // Remove physical margin to prevent DOM space issues on desktop, add small spacing on mobile
+      card.style.marginBottom = isMobile ? '40px' : '0px';
       card.style.willChange = 'transform, filter';
       card.style.transformOrigin = 'top center';
       card.style.backfaceVisibility = 'hidden';
@@ -314,7 +324,7 @@ const ScrollStack = ({
       const existingSpacer = Array.from(scrollerInner.children).find(el => el.classList.contains('scroll-delay-spacer'));
       if (existingSpacer) existingSpacer.remove();
       
-      if (delayPx > 0 && cards.length > 1) {
+      if (!isMobile && delayPx > 0 && cards.length > 1) {
         const spacer = document.createElement('div');
         spacer.className = 'scroll-delay-spacer';
         let totalExtraDelay = 1000;

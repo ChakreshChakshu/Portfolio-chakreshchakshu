@@ -66,3 +66,9 @@
   background: #fca311;
   box-shadow: 0 0 15px rgba(252, 163, 17, 0.6);
 }
+
+@media (max-width: 1023px) {
+  .scroll-stack-dots {
+    display: none !important;
+  }
+}
