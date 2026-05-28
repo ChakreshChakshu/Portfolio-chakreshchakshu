@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 export function ContactSection() {
   return (
     <section id="contact" className="w-full relative bg-transparent py-8 flex flex-col justify-center items-center">
