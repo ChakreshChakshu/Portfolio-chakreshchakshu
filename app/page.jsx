@@ -34,7 +34,7 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-[#14213d] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-hidden py-12 lg:py-0">
             <AboutSection isActive={activeSectionIdx === 1} />
           </div>
         </ScrollStackItem>
@@ -49,7 +49,7 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-[#14213d] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden py-12 lg:py-0">
             <div className="flex-1 flex flex-col items-center justify-center px-4">
               <ContactSection />
             </div>

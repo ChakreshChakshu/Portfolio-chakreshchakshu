@@ -333,7 +333,7 @@ export function ProjectsSection() {
   return (
     <section 
       id="projects" 
-      className="w-full relative bg-gradient-to-b from-[#cbd5e1] via-[#94a3b8] to-[#64748b] pt-12 md:pt-16 pb-8 min-h-[100dvh] flex flex-col justify-start select-none overflow-hidden"
+      className="w-full relative bg-[#000000] pt-12 md:pt-16 pb-8 min-h-[100dvh] flex flex-col justify-start select-none overflow-hidden"
     >
       {/* Premium Keyframes styles */}
       <style>{`
@@ -350,26 +350,26 @@ export function ProjectsSection() {
       {/* Premium Animated Background (Liquid Glass Aurora - Light Theme) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {/* Soft Ambient base overlays */}
-        <div className="absolute inset-0 bg-slate-950/10" />
+        <div className="absolute inset-0 bg-[#000000]/40" />
 
         {/* Left Side Concentric Rings */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[450px] h-[450px] hidden md:block select-none opacity-25 z-0 pointer-events-none">
-          <div className="absolute inset-0 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-10 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-20 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-30 rounded-full border border-slate-950/15 border-dashed" />
-          <div className="absolute inset-40 rounded-full border border-slate-950/5" />
-          <div className="absolute inset-[200px] rounded-full border border-slate-950/10" />
+          <div className="absolute inset-0 rounded-full border border-white/5" />
+          <div className="absolute inset-10 rounded-full border border-white/5" />
+          <div className="absolute inset-20 rounded-full border border-white/5" />
+          <div className="absolute inset-30 rounded-full border border-white/10 border-dashed" />
+          <div className="absolute inset-40 rounded-full border border-white/5" />
+          <div className="absolute inset-[200px] rounded-full border border-white/5" />
         </div>
 
         {/* Right Side Concentric Rings */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-[450px] h-[450px] hidden md:block select-none opacity-25 z-0 pointer-events-none">
-          <div className="absolute inset-0 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-10 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-20 rounded-full border border-slate-950/10" />
-          <div className="absolute inset-30 rounded-full border border-slate-950/15 border-dashed" />
-          <div className="absolute inset-40 rounded-full border border-slate-950/5" />
-          <div className="absolute inset-[200px] rounded-full border border-slate-950/10" />
+          <div className="absolute inset-0 rounded-full border border-white/5" />
+          <div className="absolute inset-10 rounded-full border border-white/5" />
+          <div className="absolute inset-20 rounded-full border border-white/5" />
+          <div className="absolute inset-30 rounded-full border border-white/10 border-dashed" />
+          <div className="absolute inset-40 rounded-full border border-white/5" />
+          <div className="absolute inset-[200px] rounded-full border border-white/5" />
         </div>
         
         {/* Liquid Glass Orb 1: Radiant Gold/Amber with glossy specular glow */}
@@ -402,10 +402,10 @@ export function ProjectsSection() {
         
         {/* Header Block */}
         <div className="mb-6 shrink-0 relative z-10 flex flex-col items-center text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 font-sans">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans">
             Selected Builds
           </h2>
-          <p className="text-xs md:text-sm text-slate-800 font-sans mt-3 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs md:text-sm text-slate-300 font-sans mt-3 max-w-2xl mx-auto leading-relaxed">
             A curated showcase of production-ready applications, open-source libraries, and developer tools. Each build represents a deep dive into systems design, API architecture, and user experience.
           </p>
           <div className="h-1 w-20 bg-[#fca311] mt-4 rounded-full"></div>
