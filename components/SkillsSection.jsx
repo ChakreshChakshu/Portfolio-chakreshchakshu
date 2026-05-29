@@ -14,7 +14,7 @@ export function SkillsSection() {
   // Check screen width for mobile responsive layout
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -259,7 +259,7 @@ export function SkillsSection() {
           border-color: var(--panel-accent);
           box-shadow: 0 0 35px var(--panel-glow);
         }
-        @media (max-width: 768px) {
+        @media (max-width: 1023px) {
           .grid-backdrop {
             display: none;
           }
