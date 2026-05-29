@@ -85,7 +85,7 @@ export function SkillsSection() {
         sceneProgress = progress < 0.66 ? 0 : Math.min(1, (progress - 0.66) / 0.34);
       }
 
-      const currentRotation = sceneProgress * -180; // in degrees
+      const currentRotation = sceneProgress * -360; // in degrees (full 360-degree rotation ensures all skills rotate to the front)
       const angleStep = 360 / scene.skills.length;
 
       const sceneWrapper = containerRef.current?.querySelectorAll(`.scene-container`)[sIdx];
