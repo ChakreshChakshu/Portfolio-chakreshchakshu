@@ -2,6 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import MagicRings from './MagicRings';
+
+const ringColors = [
+  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 1: Gold / Warm Orange
+  { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 2: Indigo / Purple
+  { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 3: Emerald / Teal
+];
 
 export function AboutSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -117,8 +124,6 @@ export function AboutSection() {
   }, []);
 
   useEffect(() => {
-    const ITEM_DISTANCE = 1600;
-
     const handleScroll = () => {
       const cardTop = 1 * window.innerHeight;
 
@@ -172,6 +177,28 @@ export function AboutSection() {
       {/* Cinematic Ambient Background Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#fca311]/4 blur-[200px] pointer-events-none z-0" />
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] rounded-full bg-blue-500/4 blur-[150px] pointer-events-none z-0" />
+
+      {/* Dynamic Three.js Magic Rings Background */}
+      <div className="absolute inset-0 z-0 opacity-80 mix-blend-screen pointer-events-none">
+        <MagicRings 
+          color={ringColors[activeIndex]?.color || '#fca311'}
+          colorTwo={ringColors[activeIndex]?.colorTwo || '#d97706'}
+          speed={0.6}
+          ringCount={8}
+          attenuation={7.5}
+          lineThickness={2.0}
+          baseRadius={0.22}
+          radiusStep={0.07}
+          scaleRate={0.14}
+          opacity={0.35}
+          noiseAmount={0.02}
+          followMouse={true}
+          mouseInfluence={0.15}
+          hoverScale={1.15}
+          parallax={0.06}
+          clickBurst={true}
+        />
+      </div>
 
       {/* Symmetrical "About me" Header (Fixed at top of screen) */}
       <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center transition-all duration-1000 z-40">
