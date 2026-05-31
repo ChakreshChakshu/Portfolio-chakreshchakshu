@@ -591,7 +591,7 @@ export function ProjectsSection() {
                       className="font-black uppercase leading-[0.82] tracking-[-0.04em] font-sans select-none"
                       style={{
                         fontSize: 'clamp(5rem, 14vw, 13rem)',
-                        WebkitTextStroke: '1px rgba(255,255,255,0.18)',
+                        WebkitTextStroke: '2px rgba(255,255,255,0.55)',
                         color: 'transparent',
                       }}
                     >
