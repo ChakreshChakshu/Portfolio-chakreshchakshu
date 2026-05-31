@@ -14,7 +14,7 @@ export function ProjectsSection() {
   const slideRefs = useRef([]);
   const cardRefs = useRef([]);
   const detailRefs = useRef([]);
-  const timelineRef = useRef(null);
+  const activeIndexRef = useRef(0);
 
   // Check screen width for mobile responsive layout
   useEffect(() => {
@@ -51,150 +51,102 @@ export function ProjectsSection() {
     { color: '#FFA17B', glow: 'rgba(255, 161, 123, 0.2)' }
   ];
 
-  // Scroll listener for desktop (drives the GSAP timeline manually based on absolute page scroll)
+  const playTransition = (fromIdx, toIdx) => {
+    const prevSlide   = slideRefs.current[fromIdx];
+    const prevDetails = detailRefs.current[fromIdx];
+    const nextSlide   = slideRefs.current[toIdx];
+    const nextCard    = cardRefs.current[toIdx];
+    const nextDetails = detailRefs.current[toIdx];
+
+    if (!nextSlide) return;
+
+    gsap.killTweensOf([prevSlide, prevDetails, nextSlide, nextCard, nextDetails].filter(Boolean));
+
+    // Reset upcoming slide to small-card state
+    gsap.set(nextSlide, { visibility: 'visible', scale: 0.45, opacity: 0, y: 60 });
+    if (nextCard)    gsap.set(nextCard,    { borderRadius: '40px' });
+    if (nextDetails) gsap.set(nextDetails, { opacity: 0, y: 12 });
+
+    const tl = gsap.timeline();
+
+    // Step 1 — peek: small card rises, title only visible
+    tl.to(nextSlide, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' })
+
+    // Step 2 — auto-expand: card fills section
+    .to(nextSlide, { scale: 1.0, duration: 0.7, ease: 'power3.inOut' }, '+=0.08')
+    .to(nextCard,  { borderRadius: '0px', duration: 0.7, ease: 'power3.inOut' }, '<')
+
+    // Step 3 — reveal details
+    .to(nextDetails, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.25')
+
+    // Fade out previous slide
+    .to(prevSlide,   { opacity: 0, scale: 0.96, duration: 0.5, ease: 'power2.inOut' }, 0)
+    .to(prevDetails, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 0);
+
+    // Section bg color
+    gsap.to(sectionRef.current, {
+      backgroundColor: bgColors[toIdx % bgColors.length],
+      duration: 0.6,
+      ease: 'power2.inOut',
+    });
+  };
+
+  // Scroll listener — only detects index change, animation is auto-played
   const handleScroll = () => {
     if (isMobile) return;
 
-    const cardTop = 3 * window.innerHeight;
+    const cardTop    = 3 * window.innerHeight;
     const rangeStart = cardTop + 5800;
-    const rangeEnd = rangeStart + 2200;
+    const rangeEnd   = rangeStart + 2200;
+    const scroll     = window.scrollY;
 
-    const currentScroll = window.scrollY;
-    let progress = 0;
-
-    if (currentScroll < rangeStart) {
-      progress = 0;
-      setActiveIndex(0);
-    } else if (currentScroll > rangeEnd) {
-      progress = 1;
-      setActiveIndex(slidesData.length - 1);
-    } else {
-      progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
-      const step = 1 / slidesData.length;
-      const index = Math.min(
-        Math.floor(progress / step),
+    let newIndex = 0;
+    if (scroll >= rangeStart && scroll <= rangeEnd) {
+      const progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
+      newIndex = Math.min(
+        Math.floor(progress * slidesData.length),
         slidesData.length - 1
       );
-      setActiveIndex(index);
+    } else if (scroll > rangeEnd) {
+      newIndex = slidesData.length - 1;
     }
 
-    if (timelineRef.current) {
-      timelineRef.current.progress(progress);
+    const prev = activeIndexRef.current;
+    if (newIndex !== prev) {
+      activeIndexRef.current = newIndex;
+      setActiveIndex(newIndex);
+      playTransition(prev, newIndex);
     }
   };
 
-  // Setup GSAP scroll-scrubbed timeline on desktop
+  // Initial GSAP state setup
   useEffect(() => {
     if (isMobile) return;
 
-    const ctx = gsap.context(() => {
-      if (sectionRef.current) {
-        const tl = gsap.timeline({ paused: true });
-        timelineRef.current = tl;
+    slidesData.forEach((_, idx) => {
+      const slide   = slideRefs.current[idx];
+      const card    = cardRefs.current[idx];
+      const details = detailRefs.current[idx];
+      if (!slide) return;
 
-        const numSlides = slidesData.length;
-        const step = 1 / numSlides;
-
-        // Set initial state for all slides and cards
-        slidesData.forEach((_, idx) => {
-          const slide = slideRefs.current[idx];
-          const card = cardRefs.current[idx];
-          const details = detailRefs.current[idx];
-          if (!slide) return;
-
-          if (idx === 0) {
-            gsap.set(slide, { scale: 1.0, opacity: 1, yPercent: 0, visibility: "visible" });
-            if (card) gsap.set(card, { borderRadius: "0px" });
-            if (details) gsap.set(details, { opacity: 1, y: 0 });
-          } else {
-            gsap.set(slide, { scale: 0.1, opacity: 0, yPercent: 100, visibility: "hidden" });
-            if (card) gsap.set(card, { borderRadius: "48px" });
-            if (details) gsap.set(details, { opacity: 0, y: 20 });
-          }
-        });
-
-        // Build the multi-slide scroll transition timeline
-        for (let i = 0; i < numSlides - 1; i++) {
-          const currentSlide = slideRefs.current[i];
-          const currentCard = cardRefs.current[i];
-          const currentDetails = detailRefs.current[i];
-          const upcomingSlide = slideRefs.current[i + 1];
-          const upcomingCard = cardRefs.current[i + 1];
-          const upcomingDetails = detailRefs.current[i + 1];
-
-          const startProgress = i * step;
-          const midProgress = startProgress + step * 0.4;
-
-          // Step 1: Slide comes out of bottom, is small (scale: 0.4), showing only title
-          tl.to(upcomingSlide, {
-            visibility: "visible",
-            opacity: 1,
-            scale: 0.4,
-            yPercent: 0,
-            duration: step * 0.4,
-            ease: "power2.out"
-          }, startProgress)
-          .to(upcomingCard, {
-            borderRadius: "48px",
-            duration: step * 0.4,
-            ease: "power2.out"
-          }, startProgress)
-          .to(currentDetails, {
-            opacity: 0,
-            y: -10,
-            duration: step * 0.4,
-            ease: "power2.in"
-          }, startProgress)
-
-          // Step 2: Slide gets bigger to cover section (scale: 1.0), flattens corners, and reveals all info
-          .to(upcomingSlide, {
-            scale: 1.0,
-            duration: step * 0.6,
-            ease: "power3.inOut"
-          }, midProgress)
-          .to(upcomingCard, {
-            borderRadius: "0px",
-            duration: step * 0.6,
-            ease: "power3.inOut"
-          }, midProgress)
-          .to(upcomingDetails, {
-            opacity: 1,
-            y: 0,
-            duration: step * 0.5,
-            ease: "power2.out"
-          }, midProgress + step * 0.1)
-          .to(currentSlide, {
-            scale: 0.98,
-            opacity: 0,
-            duration: step * 0.6,
-            ease: "power3.inOut"
-          }, midProgress)
-          .to(currentCard, {
-            borderRadius: "48px",
-            duration: step * 0.6,
-            ease: "power3.inOut"
-          }, midProgress);
-
-          // Change section background color smoothly
-          tl.to(sectionRef.current, {
-            backgroundColor: bgColors[i + 1],
-            duration: step,
-            ease: "power2.inOut"
-          }, startProgress);
-        }
+      if (idx === 0) {
+        gsap.set(slide,   { scale: 1.0, opacity: 1, y: 0, visibility: 'visible' });
+        if (card)    gsap.set(card,    { borderRadius: '0px' });
+        if (details) gsap.set(details, { opacity: 1, y: 0 });
+      } else {
+        gsap.set(slide,   { scale: 0.45, opacity: 0, y: 60, visibility: 'hidden' });
+        if (card)    gsap.set(card,    { borderRadius: '40px' });
+        if (details) gsap.set(details, { opacity: 0, y: 12 });
       }
-    }, sectionRef);
+    });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
-
-    // Initial trigger
     const timer = setTimeout(handleScroll, 100);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
-      ctx.revert();
       clearTimeout(timer);
     };
   }, [isMobile, slidesData.length]);
@@ -230,45 +182,6 @@ export function ProjectsSection() {
     return () => window.removeEventListener('scroll', handleMobileScroll);
   }, [isMobile]);
 
-  // Go to a specific slide by smoothly scrolling the viewport to the slide's range index
-  const goTo = (index) => {
-    if (isMobile) return;
-
-    const cardTop = 3 * window.innerHeight;
-    const rangeStart = cardTop + 5800;
-    
-    // Calculate the target scroll position inside the 2200px scrollable space
-    const targetScroll = rangeStart + (index * 2200 / slidesData.length) + 15;
-
-    window.scrollTo({
-      top: targetScroll,
-      behavior: 'smooth'
-    });
-  };
-
-  const navigate = (direction) => {
-    const nextIndex = direction === 1
-      ? (activeIndex < slidesData.length - 1 ? activeIndex + 1 : 0)
-      : (activeIndex > 0 ? activeIndex - 1 : slidesData.length - 1);
-
-    goTo(nextIndex);
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    if (isMobile) return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowRight") {
-        navigate(1);
-      } else if (e.key === "ArrowLeft") {
-        navigate(-1);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, isMobile]);
 
   // Generate dynamic wave lines indicator heights using mathematical spacing
   const totalLines = 60;
@@ -615,8 +528,7 @@ export function ProjectsSection() {
                       {activeProjects.map((proj, pIdx) => (
                         <div
                           key={proj.title}
-                          onClick={() => goTo(pIdx + 1)}
-                          className="group flex-1 flex flex-col gap-1 px-5 py-4 border-r border-white/[0.05] last:border-r-0 cursor-pointer hover:bg-white/[0.03] transition-all duration-300"
+                          className="group flex-1 flex flex-col gap-1 px-5 py-4 border-r border-white/[0.05] last:border-r-0"
                         >
                           <span
                             className="text-[9px] font-mono tabular-nums font-bold"
@@ -756,7 +668,6 @@ export function ProjectsSection() {
             {slidesData.map((project, idx) => (
               <div
                 key={project.title}
-                onClick={() => goTo(idx)}
                 onMouseEnter={() => setHoverIndex(idx)}
                 onMouseLeave={() => setHoverIndex(null)}
                 className={`slide-thumb ${activeIndex === idx ? 'active' : ''}`}
