@@ -41,6 +41,7 @@ export function ProjectsSection() {
   ];
 
   const accentColors = ["#FFFFFF", "#7DD6FF", "#D5FF37", "#FFA0B0", "#FFA17B"];
+  const cardBgColors = ["#020a18", "#001d35", "#071a00", "#1c0020", "#1f0a00"];
   const bgColors = ["#02050f", "#000a1f", "#001509", "#0f021f", "#1b0a00"];
   const thumbAccents = [
     { color: '#FFFFFF', glow: 'rgba(255, 255, 255, 0.2)' },
@@ -410,9 +411,6 @@ export function ProjectsSection() {
           position: absolute;
           inset: 0;
           z-index: 10;
-          background: rgba(10, 15, 30, 0.45);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 0px;
           width: 100%;
@@ -423,7 +421,6 @@ export function ProjectsSection() {
           justify-content: center;
           text-align: center;
           padding: 48px;
-          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
           will-change: transform, opacity;
         }
 
@@ -583,85 +580,79 @@ export function ProjectsSection() {
                 ref={el => slideRefs.current[idx] = el}
                 className="slide"
               >
-                <div 
+                <div
                   ref={el => cardRefs.current[idx] = el}
-                  className="project-card-overlay flex flex-col lg:flex-row gap-10 items-center justify-between text-left"
+                  className="project-card-overlay"
                   style={{
-                    maxWidth: '920px',
-                    width: '90%',
-                    height: 'auto',
-                    minHeight: '420px',
-                    borderColor: activeIndex === idx ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
-                    boxShadow: activeIndex === idx ? '0 40px 100px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 255, 255, 0.05)' : '0 40px 100px rgba(0, 0, 0, 0.8)',
-                    borderRadius: activeIndex === idx ? '0px' : '48px',
-                    padding: '48px 64px'
+                    backgroundColor: cardBgColors[0],
+                    borderColor: activeIndex === idx ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.06)',
                   }}
                 >
                   {/* Corner tech highlights */}
-                  <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/20 pointer-events-none" />
-                  <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/20 pointer-events-none" />
-                  <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-white/20 pointer-events-none" />
-                  <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/20 pointer-events-none" />
+                  <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-white/20 pointer-events-none" />
+                  <div className="absolute top-4 right-4 w-5 h-5 border-t border-r border-white/20 pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 w-5 h-5 border-b border-l border-white/20 pointer-events-none" />
+                  <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-white/20 pointer-events-none" />
 
-                  {/* Left Column: Vision & Philosophy */}
-                  <div className="flex-1 flex flex-col items-start pr-0 lg:pr-8">
-                    <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/40 mb-3 block font-bold select-none">
-                      ★ ARCHIVE DEPLOYMENT
-                    </span>
-                    <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-none text-white font-sans uppercase">
-                      BUILD INDEX
-                    </h2>
-                    <p className="text-sm sm:text-base text-slate-400 font-medium tracking-wide leading-relaxed mt-5 font-sans">
-                      A curated assembly of production platforms, administrative consoles, and interactive micro-architectures engineered for speed, scalability, and pixel-perfect design.
-                    </p>
-                    <div className="flex flex-wrap gap-2 mt-6">
-                      {project.tags.map(tech => (
-                        <span 
-                          key={tech} 
-                          className="px-2.5 py-1 text-[9px] font-mono rounded border border-white/5 bg-white/[0.01] text-slate-400 uppercase tracking-widest font-semibold"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Constrained content wrapper */}
+                  <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-12 items-center text-left">
 
-                  {/* Right Column: Clickable Node Telemetry Menu! */}
-                  <div 
-                    ref={el => detailRefs.current[idx] = el}
-                    className="flex-1 w-full bg-black/40 border border-white/5 rounded-2xl p-6 flex flex-col text-left font-mono pointer-events-auto"
-                  >
-                    <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4 text-[10px] text-white/40 select-none">
-                      <span>SYS_LOG: ARCHIVE_NODES</span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                        <span className="text-emerald-500 font-bold">ONLINE</span>
+                    {/* Left Column */}
+                    <div className="flex-1 flex flex-col items-start">
+                      <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/35 mb-4 block font-bold select-none">
+                        ★ ARCHIVE DEPLOYMENT
                       </span>
+                      <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white font-sans uppercase">
+                        BUILD<br />INDEX
+                      </h2>
+                      <p className="text-sm text-slate-400 font-medium leading-relaxed mt-6 max-w-sm font-sans">
+                        A curated assembly of production platforms, administrative consoles, and interactive micro-architectures engineered for speed, scalability, and pixel-perfect design.
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-6">
+                        {project.tags.map(tech => (
+                          <span
+                            key={tech}
+                            className="px-2.5 py-1 text-[9px] font-mono rounded border border-white/5 bg-white/[0.02] text-slate-400 uppercase tracking-widest font-semibold"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                      {activeProjects.map((proj, pIdx) => (
-                        <div
-                          key={proj.title}
-                          onClick={() => goTo(pIdx + 1)}
-                          className="group flex items-center justify-between px-4 py-3 rounded-lg border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-white/10 transition-all duration-300 cursor-pointer pointer-events-auto"
-                        >
-                          <div className="flex items-center gap-3 select-none">
-                            <span className="text-[10px]" style={{ color: accentColors[pIdx + 1] }}>
-                              0{pIdx + 1}
-                            </span>
-                            <span className="text-xs text-slate-300 group-hover:text-white group-hover:pl-1 transition-all duration-300">
-                              {proj.title}
+                    {/* Right Column: Project node list */}
+                    <div
+                      ref={el => detailRefs.current[idx] = el}
+                      className="w-full lg:w-[420px] bg-[#030d1e] border border-white/[0.06] rounded-2xl p-6 flex flex-col text-left font-mono pointer-events-auto shrink-0"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-5 text-[10px] text-white/35 select-none">
+                        <span>SYS_LOG: ARCHIVE_NODES</span>
+                        <span className="text-emerald-400 font-bold">ONLINE</span>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {activeProjects.map((proj, pIdx) => (
+                          <div
+                            key={proj.title}
+                            onClick={() => goTo(pIdx + 1)}
+                            className="group flex items-center justify-between px-4 py-3 rounded-xl border border-white/[0.06] bg-[#060f20] hover:bg-[#0a1830] hover:border-white/[0.12] transition-all duration-300 cursor-pointer pointer-events-auto"
+                          >
+                            <div className="flex items-center gap-3 select-none">
+                              <span className="text-[10px] tabular-nums" style={{ color: accentColors[pIdx + 1] }}>
+                                0{pIdx + 1}
+                              </span>
+                              <span className="text-xs text-slate-300 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300">
+                                {proj.title}
+                              </span>
+                            </div>
+                            <span className="text-[9px] opacity-0 group-hover:opacity-60 transition-all duration-300 text-slate-400 select-none tracking-widest">
+                              VIEW ➔
                             </span>
                           </div>
-                          <span className="text-[9px] opacity-0 group-hover:opacity-100 transition-all duration-300 text-slate-400 select-none">
-                            DEPLOY ➔
-                          </span>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
+                  </div>
                 </div>
               </div>
             );
@@ -674,12 +665,12 @@ export function ProjectsSection() {
               ref={el => slideRefs.current[idx] = el}
               className="slide"
             >
-              <div 
+              <div
                 ref={el => cardRefs.current[idx] = el}
                 className="project-card-overlay"
                 style={{
-                  borderColor: activeIndex === idx ? `${accentColors[idx % accentColors.length]}33` : 'rgba(255, 255, 255, 0.08)',
-                  boxShadow: activeIndex === idx ? `0 40px 100px rgba(0, 0, 0, 0.8), 0 0 30px ${thumbAccents[idx % thumbAccents.length].glow}` : '0 40px 100px rgba(0, 0, 0, 0.8)'
+                  backgroundColor: cardBgColors[idx % cardBgColors.length],
+                  borderColor: activeIndex === idx ? `${accentColors[idx % accentColors.length]}44` : 'rgba(255, 255, 255, 0.06)',
                 }}
               >
                 {/* Corner tech highlights */}
