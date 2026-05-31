@@ -402,6 +402,12 @@ export function ProjectsSection() {
           will-change: transform, opacity;
         }
 
+        #projects .slides > div:first-child {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+        }
+
         #projects .slide--current {
           pointer-events: auto;
           opacity: 1;
@@ -424,17 +430,6 @@ export function ProjectsSection() {
           will-change: transform, opacity;
         }
 
-        #projects .scroll-hint {
-          position: fixed;
-          top: 2rem;
-          right: 2rem;
-          color: #fff;
-          z-index: 100;
-          font-size: 1rem;
-          font-family: monospace;
-          letter-spacing: 1px;
-          opacity: 0.5;
-        }
 
         /* Bottom UI container */
         #projects .bottom-ui-container {
@@ -566,8 +561,6 @@ export function ProjectsSection() {
         }
       `}</style>
 
-      {/* Scroll hints */}
-      <div className="scroll-hint select-none">scroll or drag</div>
 
       {/* Main Slides Stacked Viewport */}
       <div className="slides">
@@ -575,83 +568,71 @@ export function ProjectsSection() {
           if (project.isIntro) {
             // Render highly interactive philosophical dashboard for the landing slide!
             return (
-              <div 
-                key="intro" 
+              <div
+                key="intro"
                 ref={el => slideRefs.current[idx] = el}
                 className="slide"
               >
                 <div
                   ref={el => cardRefs.current[idx] = el}
                   className="project-card-overlay"
-                  style={{
-                    backgroundColor: cardBgColors[0],
-                    borderColor: activeIndex === idx ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.06)',
-                  }}
+                  style={{ backgroundColor: cardBgColors[0] }}
                 >
-                  {/* Corner tech highlights */}
-                  <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-white/20 pointer-events-none" />
-                  <div className="absolute top-4 right-4 w-5 h-5 border-t border-r border-white/20 pointer-events-none" />
-                  <div className="absolute bottom-4 left-4 w-5 h-5 border-b border-l border-white/20 pointer-events-none" />
-                  <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-white/20 pointer-events-none" />
 
-                  {/* Constrained content wrapper */}
-                  <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-12 items-center text-left">
-
-                    {/* Left Column */}
-                    <div className="flex-1 flex flex-col items-start">
-                      <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/35 mb-4 block font-bold select-none">
-                        ★ ARCHIVE DEPLOYMENT
-                      </span>
-                      <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white font-sans uppercase">
-                        BUILD<br />INDEX
-                      </h2>
-                      <p className="text-sm text-slate-400 font-medium leading-relaxed mt-6 max-w-sm font-sans">
-                        A curated assembly of production platforms, administrative consoles, and interactive micro-architectures engineered for speed, scalability, and pixel-perfect design.
-                      </p>
-                      <div className="flex flex-wrap gap-2 mt-6">
-                        {project.tags.map(tech => (
-                          <span
-                            key={tech}
-                            className="px-2.5 py-1 text-[9px] font-mono rounded border border-white/5 bg-white/[0.02] text-slate-400 uppercase tracking-widest font-semibold"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Right Column: Project node list */}
+                  {/* Full-bleed typography */}
+                  <div className="absolute inset-0 flex flex-col justify-start pt-16 px-8 lg:px-16 pointer-events-none overflow-hidden">
                     <div
-                      ref={el => detailRefs.current[idx] = el}
-                      className="w-full lg:w-[420px] bg-[#030d1e] border border-white/[0.06] rounded-2xl p-6 flex flex-col text-left font-mono pointer-events-auto shrink-0"
+                      className="font-black uppercase leading-[0.82] tracking-[-0.04em] text-white font-sans select-none"
+                      style={{ fontSize: 'clamp(5rem, 14vw, 13rem)' }}
                     >
-                      <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-5 text-[10px] text-white/35 select-none">
-                        <span>SYS_LOG: ARCHIVE_NODES</span>
-                        <span className="text-emerald-400 font-bold">ONLINE</span>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {activeProjects.map((proj, pIdx) => (
-                          <div
-                            key={proj.title}
-                            onClick={() => goTo(pIdx + 1)}
-                            className="group flex items-center justify-between px-4 py-3 rounded-xl border border-white/[0.06] bg-[#060f20] hover:bg-[#0a1830] hover:border-white/[0.12] transition-all duration-300 cursor-pointer pointer-events-auto"
-                          >
-                            <div className="flex items-center gap-3 select-none">
-                              <span className="text-[10px] tabular-nums" style={{ color: accentColors[pIdx + 1] }}>
-                                0{pIdx + 1}
-                              </span>
-                              <span className="text-xs text-slate-300 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300">
-                                {proj.title}
-                              </span>
-                            </div>
-                            <span className="text-[9px] opacity-0 group-hover:opacity-60 transition-all duration-300 text-slate-400 select-none tracking-widest">
-                              VIEW ➔
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                      CRAFTED
                     </div>
+                    <div
+                      className="font-black uppercase leading-[0.82] tracking-[-0.04em] font-sans select-none"
+                      style={{
+                        fontSize: 'clamp(5rem, 14vw, 13rem)',
+                        WebkitTextStroke: '1px rgba(255,255,255,0.18)',
+                        color: 'transparent',
+                      }}
+                    >
+                      WITH CODE
+                    </div>
+                    <div
+                      className="font-black uppercase leading-[0.82] tracking-[-0.04em] text-white font-sans select-none"
+                      style={{ fontSize: 'clamp(5rem, 14vw, 13rem)' }}
+                    >
+                      &amp; PURPOSE
+                    </div>
+                  </div>
 
+                  {/* Bottom project index strip */}
+                  <div
+                    ref={el => detailRefs.current[idx] = el}
+                    className="absolute bottom-0 left-0 right-0 border-t border-white/[0.06] pointer-events-auto"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(12px)' }}
+                  >
+                    <div className="flex">
+                      {activeProjects.map((proj, pIdx) => (
+                        <div
+                          key={proj.title}
+                          onClick={() => goTo(pIdx + 1)}
+                          className="group flex-1 flex flex-col gap-1 px-5 py-4 border-r border-white/[0.05] last:border-r-0 cursor-pointer hover:bg-white/[0.03] transition-all duration-300"
+                        >
+                          <span
+                            className="text-[9px] font-mono tabular-nums font-bold"
+                            style={{ color: accentColors[pIdx + 1] }}
+                          >
+                            0{pIdx + 1}
+                          </span>
+                          <span className="text-[11px] font-sans font-semibold text-white/70 group-hover:text-white transition-colors duration-300 uppercase tracking-wide truncate select-none">
+                            {proj.title}
+                          </span>
+                          <span className="text-[9px] font-mono text-white/20 group-hover:text-white/40 transition-colors duration-300 uppercase tracking-widest select-none">
+                            View ➔
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
