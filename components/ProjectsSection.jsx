@@ -62,31 +62,80 @@ export function ProjectsSection() {
 
     gsap.killTweensOf([prevSlide, prevDetails, nextSlide, nextCard, nextDetails].filter(Boolean));
 
-    // Reset upcoming slide to small-card state
-    gsap.set(nextSlide, { visibility: 'visible', scale: 0.45, opacity: 0, y: 60 });
-    if (nextCard)    gsap.set(nextCard,    { borderRadius: '40px' });
-    if (nextDetails) gsap.set(nextDetails, { opacity: 0, y: 12 });
+    const getSlideDirection = (idx) => {
+      const directions = [
+        { xPercent: -100, yPercent: 0 },  // Left
+        { xPercent: 100, yPercent: 0 },   // Right
+        { xPercent: 0, yPercent: -100 },  // Top
+        { xPercent: 0, yPercent: 100 }    // Bottom
+      ];
+      return directions[idx % directions.length];
+    };
+
+    const dir = getSlideDirection(toIdx);
+
+    // Dynamic zIndex layering: active slide on top, previous slide right below, others underneath
+    slidesData.forEach((_, idx) => {
+      if (slideRefs.current[idx]) {
+        slideRefs.current[idx].style.zIndex = idx === toIdx ? '20' : idx === fromIdx ? '15' : '10';
+      }
+    });
+
+    // Reset next slide to enter from its respective direction, full viewport coverage
+    gsap.set(nextSlide, { 
+      visibility: 'visible', 
+      xPercent: dir.xPercent, 
+      yPercent: dir.yPercent, 
+      scale: 1.0, 
+      opacity: 1 
+    });
+    if (nextCard) {
+      gsap.set(nextCard, { borderRadius: '0px' });
+    }
+    if (nextDetails) {
+      gsap.set(nextDetails, { opacity: 0, y: 20 });
+    }
 
     const tl = gsap.timeline();
 
-    // Step 1 — peek: small card rises, title only visible
-    tl.to(nextSlide, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' })
+    // Slide incoming project card into center (covering full viewport)
+    tl.to(nextSlide, {
+      xPercent: 0,
+      yPercent: 0,
+      duration: 0.9,
+      ease: 'power3.inOut'
+    })
 
-    // Step 2 — auto-expand: card fills section
-    .to(nextSlide, { scale: 1.0, duration: 0.7, ease: 'power3.inOut' }, '+=0.08')
-    .to(nextCard,  { borderRadius: '0px', duration: 0.7, ease: 'power3.inOut' }, '<')
+    // Fade/rise project details into view
+    .to(nextDetails, {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.25')
 
-    // Step 3 — reveal details
-    .to(nextDetails, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.25')
+    // Shift previous slide slightly in the opposite direction and fade it
+    if (prevSlide) {
+      tl.to(prevSlide, {
+        xPercent: -dir.xPercent * 0.25,
+        yPercent: -dir.yPercent * 0.25,
+        opacity: 0,
+        duration: 0.9,
+        ease: 'power3.inOut'
+      }, 0);
+    }
+    if (prevDetails) {
+      tl.to(prevDetails, {
+        opacity: 0,
+        duration: 0.35,
+        ease: 'power2.in'
+      }, 0);
+    }
 
-    // Fade out previous slide
-    .to(prevSlide,   { opacity: 0, scale: 0.96, duration: 0.5, ease: 'power2.inOut' }, 0)
-    .to(prevDetails, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 0);
-
-    // Section bg color
+    // Smooth background color blend
     gsap.to(sectionRef.current, {
       backgroundColor: bgColors[toIdx % bgColors.length],
-      duration: 0.6,
+      duration: 0.8,
       ease: 'power2.inOut',
     });
   };
@@ -95,10 +144,20 @@ export function ProjectsSection() {
   const handleScroll = () => {
     if (isMobile) return;
 
-    const cardTop    = 3 * window.innerHeight;
-    const rangeStart = cardTop + 5800;
-    const rangeEnd   = rangeStart + 2200;
-    const scroll     = window.scrollY;
+    const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+    const getElementOffset = (el) => {
+      return el ? el.offsetTop : 0;
+    };
+
+    const card3Top = cards[3] ? getElementOffset(cards[3]) : (3 * window.innerHeight);
+    const card4Top = cards[4] ? getElementOffset(cards[4]) : (4 * window.innerHeight);
+
+    const rangeStart = card3Top + 5800;
+    const contactPinStart = card4Top + 8900;
+    
+    // Conclude transition 800px before the Contact section pins
+    const rangeEnd = contactPinStart - 800;
+    const scroll = window.scrollY;
 
     let newIndex = 0;
     if (scroll >= rangeStart && scroll <= rangeEnd) {
@@ -123,6 +182,16 @@ export function ProjectsSection() {
   useEffect(() => {
     if (isMobile) return;
 
+    const getSlideDirection = (idx) => {
+      const directions = [
+        { xPercent: -100, yPercent: 0 },  // Left
+        { xPercent: 100, yPercent: 0 },   // Right
+        { xPercent: 0, yPercent: -100 },  // Top
+        { xPercent: 0, yPercent: 100 }    // Bottom
+      ];
+      return directions[idx % directions.length];
+    };
+
     slidesData.forEach((_, idx) => {
       const slide   = slideRefs.current[idx];
       const card    = cardRefs.current[idx];
@@ -130,13 +199,14 @@ export function ProjectsSection() {
       if (!slide) return;
 
       if (idx === 0) {
-        gsap.set(slide,   { scale: 1.0, opacity: 1, y: 0, visibility: 'visible' });
+        gsap.set(slide,   { scale: 1.0, opacity: 1, xPercent: 0, yPercent: 0, visibility: 'visible', zIndex: 20 });
         if (card)    gsap.set(card,    { borderRadius: '0px' });
         if (details) gsap.set(details, { opacity: 1, y: 0 });
       } else {
-        gsap.set(slide,   { scale: 0.45, opacity: 0, y: 60, visibility: 'hidden' });
-        if (card)    gsap.set(card,    { borderRadius: '40px' });
-        if (details) gsap.set(details, { opacity: 0, y: 12 });
+        const dir = getSlideDirection(idx);
+        gsap.set(slide,   { scale: 1.0, opacity: 0, xPercent: dir.xPercent, yPercent: dir.yPercent, visibility: 'hidden', zIndex: 10 });
+        if (card)    gsap.set(card,    { borderRadius: '0px' });
+        if (details) gsap.set(details, { opacity: 0, y: 20 });
       }
     });
 
