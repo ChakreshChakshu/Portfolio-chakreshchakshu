@@ -588,34 +588,6 @@ export function ProjectsSection() {
                     </div>
                   </div>
 
-                  {/* Bottom project index strip */}
-                  <div
-                    ref={el => detailRefs.current[idx] = el}
-                    className="absolute bottom-0 left-0 right-0 border-t border-white/[0.06] pointer-events-auto"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(12px)' }}
-                  >
-                    <div className="flex">
-                      {activeProjects.map((proj, pIdx) => (
-                        <div
-                          key={proj.title}
-                          className="group flex-1 flex flex-col gap-1 px-5 py-4 border-r border-white/[0.05] last:border-r-0"
-                        >
-                          <span
-                            className="text-[9px] font-mono tabular-nums font-bold"
-                            style={{ color: accentColors[pIdx + 1] }}
-                          >
-                            0{pIdx + 1}
-                          </span>
-                          <span className="text-[11px] font-sans font-semibold text-white/70 group-hover:text-white transition-colors duration-300 uppercase tracking-wide truncate select-none">
-                            {proj.title}
-                          </span>
-                          <span className="text-[9px] font-mono text-white/20 group-hover:text-white/40 transition-colors duration-300 uppercase tracking-widest select-none">
-                            View ➔
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
             );
