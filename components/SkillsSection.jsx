@@ -59,30 +59,33 @@ export function SkillsSection() {
 
     progressRef.current = progress;
 
-    // Trigger holographic character reveal when user scrolls into the section
+    // Trigger holographic header reveal when user scrolls into the section
     if (progress > 0.05 && !headerRevealedRef.current) {
       headerRevealedRef.current = true;
-      gsap.fromTo('.tech-orbit-char',
-        { opacity: 0, y: -16, filter: 'blur(8px)', scale: 0.8 },
+      gsap.fromTo('.skills-header-reveal',
+        { opacity: 0, y: -20, filter: 'blur(10px)' },
         { 
           opacity: 1, 
           y: 0, 
           filter: 'blur(0px)', 
-          scale: 1, 
           duration: 1.0, 
-          stagger: 0.04, 
           ease: "power3.out",
           overwrite: "auto"
         }
       );
     }
 
-    // Determine active scene based on progress
-    let activeIdx = 0;
+    const relativeScroll = progress * 1600;
 
-    if (progress < 0.53) {
+    // Determine active scene based on progress segments
+    let activeIdx = 0;
+    if (relativeScroll < 350) {
       activeIdx = 0;
-    } else if (progress < 0.76) {
+    } else if (relativeScroll < 600) {
+      activeIdx = 0;
+    } else if (relativeScroll < 950) {
+      activeIdx = 1;
+    } else if (relativeScroll < 1200) {
       activeIdx = 1;
     } else {
       activeIdx = 2;
@@ -90,9 +93,27 @@ export function SkillsSection() {
 
     setActiveScene(activeIdx);
 
+    // Map relativeScroll to timeline progress
+    let timelineProgress = 0;
+    if (relativeScroll < 150) {
+      timelineProgress = (relativeScroll / 150) * 0.22;
+    } else if (relativeScroll < 350) {
+      timelineProgress = 0.22;
+    } else if (relativeScroll < 600) {
+      timelineProgress = 0.22 + ((relativeScroll - 350) / 250) * 0.33;
+    } else if (relativeScroll < 950) {
+      timelineProgress = 0.55;
+    } else if (relativeScroll < 1200) {
+      timelineProgress = 0.55 + ((relativeScroll - 950) / 250) * 0.35;
+    } else if (relativeScroll < 1550) {
+      timelineProgress = 0.9;
+    } else {
+      timelineProgress = 0.9 + ((relativeScroll - 1550) / 50) * 0.1;
+    }
+
     // Scrub the vertical scene transition timeline
     if (timelineRef.current) {
-      timelineRef.current.progress(progress);
+      timelineRef.current.progress(timelineProgress);
     }
 
     // Rotate and translate grid backdrop floor slightly on scroll (Spatial Flight Parallax)
@@ -111,19 +132,34 @@ export function SkillsSection() {
 
   // Update trigonometric 3D billboarding positions for all scenes (called in requestAnimationFrame loop)
   const updateCylinderPositions = () => {
-    const progress = progressRef.current;
+    const relativeScroll = progressRef.current * 1600;
 
     scenes.forEach((scene, sIdx) => {
       let sceneProgress = 0;
       if (sIdx === 0) {
-        sceneProgress = progress < 0.1 ? 0 : Math.min(1, (progress - 0.1) / 0.55);
+        if (relativeScroll < 350) {
+          sceneProgress = relativeScroll / 350;
+        } else {
+          sceneProgress = 1;
+        }
       } else if (sIdx === 1) {
-        sceneProgress = progress < 0.3 ? 0 : Math.min(1, (progress - 0.3) / 0.75);
+        if (relativeScroll < 600) {
+          sceneProgress = 0;
+        } else if (relativeScroll < 950) {
+          sceneProgress = (relativeScroll - 600) / 350;
+        } else {
+          sceneProgress = 1;
+        }
       } else {
-        sceneProgress = progress < 0.65 ? 0 : Math.min(1, (progress - 0.65) / 0.35);
+        if (relativeScroll < 1200) {
+          sceneProgress = 0;
+        } else {
+          sceneProgress = Math.min(1, (relativeScroll - 1200) / 350);
+        }
       }
 
-      const scrollRotation = sceneProgress * -120; // in degrees (reduced from -360)
+      // One full round on scroll = 360 degrees!
+      const scrollRotation = sceneProgress * 360; 
       const autoRotation = autoRotationRef.current; // gentle background drift
 
       const currentRotation = scrollRotation + autoRotation;
@@ -161,9 +197,8 @@ export function SkillsSection() {
     if (isMobile) return;
 
     const animate = () => {
-      // Gentle background spin: ~0.15 degrees per frame (perfect slow kinetic drift)
-      // Every single icon will slowly rotate into perfect focus at the front
-      autoRotationRef.current = (autoRotationRef.current + 0.15) % 360;
+      // Extremely slow gentle drift: 0.04 degrees per frame (perfect readability)
+      autoRotationRef.current = (autoRotationRef.current + 0.04) % 360;
 
       updateCylinderPositions();
 
@@ -179,18 +214,16 @@ export function SkillsSection() {
     };
   }, [isMobile]);
 
-  // Trigger holographic character reveal immediately on mobile/mount if already scrolled
+  // Trigger holographic header reveal immediately on mobile/mount if already scrolled
   useEffect(() => {
     if (isMobile) {
-      gsap.fromTo('.tech-orbit-char',
-        { opacity: 0, y: -16, filter: 'blur(8px)', scale: 0.8 },
+      gsap.fromTo('.skills-header-reveal',
+        { opacity: 0, y: -20, filter: 'blur(10px)' },
         { 
           opacity: 1, 
           y: 0, 
           filter: 'blur(0px)', 
-          scale: 1, 
           duration: 1.0, 
-          stagger: 0.04, 
           ease: "power3.out",
           overwrite: "auto"
         }
@@ -230,60 +263,58 @@ export function SkillsSection() {
     gsap.set(sceneWrappers, { yPercent: 120, opacity: 0, scale: 0.75, pointerEvents: 'none' });
     gsap.set(sceneWrappers[0], { yPercent: 0, opacity: 1, scale: 1, pointerEvents: 'auto' });
 
-    // Phase 1: Aperture Zoom Reveal (0 -> 0.3 progress)
+    // Phase 1: Aperture Zoom Reveal (0 -> 0.22 progress)
     tl.to('.aperture-img', {
       scale: 12,
       opacity: 0,
-      duration: 0.3,
+      duration: 0.22,
       ease: "power2.inOut"
     }, 0);
 
     tl.to('.skills-cylinders-wrapper', {
       scale: 1,
       opacity: 1,
-      duration: 0.3,
+      duration: 0.22,
       ease: "power2.inOut"
     }, 0);
 
-    const transitionDuration = 0.35; // Two transitions fit in 0.7 remaining progress (0.35 each)
-
-    // Phase 2: Scene 0 -> Scene 1 (from progress 0.3 to 0.65)
+    // Phase 2: Scene 0 -> Scene 1 (from progress 0.22 to 0.55)
     tl.to(sceneWrappers[0], {
       yPercent: -120,
       opacity: 0,
       scale: 0.75,
       pointerEvents: 'none',
-      duration: transitionDuration,
+      duration: 0.33,
       ease: "power2.inOut"
-    }, 0.3);
+    }, 0.22);
     
     tl.to(sceneWrappers[1], {
       yPercent: 0,
       opacity: 1,
       scale: 1,
       pointerEvents: 'auto',
-      duration: transitionDuration,
+      duration: 0.33,
       ease: "power2.inOut"
-    }, 0.3);
+    }, 0.22);
 
-    // Phase 3: Scene 1 -> Scene 2 (from progress 0.65 to 1.0)
+    // Phase 3: Scene 1 -> Scene 2 (from progress 0.55 to 0.9)
     tl.to(sceneWrappers[1], {
       yPercent: -120,
       opacity: 0,
       scale: 0.75,
       pointerEvents: 'none',
-      duration: transitionDuration,
+      duration: 0.35,
       ease: "power2.inOut"
-    }, 0.3 + transitionDuration);
+    }, 0.55);
 
     tl.to(sceneWrappers[2], {
       yPercent: 0,
       opacity: 1,
       scale: 1,
       pointerEvents: 'auto',
-      duration: transitionDuration,
+      duration: 0.35,
       ease: "power2.inOut"
-    }, 0.3 + transitionDuration);
+    }, 0.55);
 
     handleScroll();
 
@@ -443,20 +474,14 @@ export function SkillsSection() {
         }}
       />
 
-      {/* Symmetrical Holographic Core Header */}
-      <div className="skills-header text-center absolute top-12 z-40 select-none pointer-events-none transition-all duration-500">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.3em] text-white font-mono uppercase flex items-center justify-center gap-[0.02em] select-none pl-[0.3em]">
-          {"TECH ORBIT".split("").map((char, index) => (
-            <span key={index} className="tech-orbit-char inline-block opacity-0 filter blur-[8px] transform -translate-y-4">
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
+      {/* Symmetrical Header */}
+      <div className="skills-header skills-header-reveal text-center absolute top-12 left-1/2 -translate-x-1/2 transition-all duration-1000 z-40 w-full max-w-xl px-4 opacity-0 pointer-events-none">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans">
+          Expertise
         </h2>
-        <div className="h-[2px] w-20 bg-gradient-to-r from-transparent via-[#fca311] to-transparent mt-3 mx-auto relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/40 animate-pulse" />
-        </div>
-        <div className="mt-2.5 overflow-hidden h-[18px] flex items-center justify-center">
-          <div className="active-module-text text-[9px] font-mono text-gray-500 tracking-[0.35em] uppercase opacity-0">
+        <div className="h-1 w-12 bg-[#fca311] mt-3 rounded-full mx-auto" />
+        <div className="mt-4 overflow-hidden h-[18px] flex items-center justify-center">
+          <div className="active-module-text text-[10px] font-mono text-gray-500 tracking-[0.3em] uppercase opacity-0">
             [ MODULE_0{activeScene + 1} // {scenes[activeScene].name.toUpperCase()} ]
           </div>
         </div>
