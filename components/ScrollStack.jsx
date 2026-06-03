@@ -31,6 +31,7 @@ const ScrollStack = ({
   const lastTransformsRef = useRef(new Map());
   const isUpdatingRef = useRef(false);
   const activeIndexRef = useRef(0);
+  const scrollIndicatorRef = useRef(null);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [cardsCount, setCardsCount] = useState(0);
@@ -206,6 +207,30 @@ const ScrollStack = ({
       activeIndexRef.current = computedActiveIndex;
       setActiveIndex(computedActiveIndex);
       onActiveIndexChange?.(computedActiveIndex);
+    }
+
+    if (scrollIndicatorRef.current) {
+      const activeCardTop = cardsTop[computedActiveIndex] || 0;
+      const delayPx = itemDistance || 0;
+      let delayOffset = delayPx * computedActiveIndex;
+      if (computedActiveIndex >= 2) {
+        delayOffset += 1000;
+      }
+      if (computedActiveIndex >= 4) {
+        delayOffset += 1500;
+      }
+      const activePinStart = activeCardTop + delayOffset - stackPositionPx - itemStackDistance * computedActiveIndex;
+      const currentSectionOffset = scrollTop - activePinStart;
+      
+      let opacity = 1;
+      if (computedActiveIndex === cardsRef.current.length - 1) {
+        opacity = 0;
+      } else {
+        opacity = Math.max(0, 1 - currentSectionOffset / 400);
+      }
+      
+      scrollIndicatorRef.current.style.opacity = opacity;
+      scrollIndicatorRef.current.style.pointerEvents = opacity > 0.01 ? 'auto' : 'none';
     }
 
     isUpdatingRef.current = false;
@@ -391,6 +416,9 @@ const ScrollStack = ({
     if (idx >= 2) {
       delayOffset += 1000;
     }
+    if (idx >= 4) {
+      delayOffset += 1500;
+    }
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     
     const targetScroll = cardTop + delayOffset - stackPositionPx - itemStackDistance * idx;
@@ -422,6 +450,36 @@ const ScrollStack = ({
               aria-label={`Go to section ${idx + 1}`}
             />
           ))}
+        </div>
+      )}
+
+      {cardsCount > 0 && (
+        <div
+          ref={scrollIndicatorRef}
+          className="scroll-stack-indicator"
+          onClick={() => {
+            const nextIdx = activeIndexRef.current + 1;
+            if (nextIdx < cardsCount) {
+              handleDotClick(nextIdx);
+            }
+          }}
+          aria-label="Scroll to next section"
+        >
+          <span className="scroll-stack-indicator-text">Scroll Down</span>
+          <div className="scroll-stack-indicator-mouse">
+            <span className="scroll-stack-indicator-wheel" />
+          </div>
+          <svg
+            className="scroll-stack-indicator-chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </div>
       )}
     </div>

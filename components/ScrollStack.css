@@ -67,8 +67,115 @@
   box-shadow: 0 0 15px rgba(252, 163, 17, 0.6);
 }
 
+.scroll-stack-indicator {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1000;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  pointer-events: auto;
+}
+
+.scroll-stack-indicator:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+.scroll-stack-indicator-text {
+  font-size: 9px;
+  font-family: monospace;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.3s ease;
+}
+
+.scroll-stack-indicator:hover .scroll-stack-indicator-text {
+  color: #fca311;
+  text-shadow: 0 0 8px rgba(252, 163, 17, 0.3);
+}
+
+.scroll-stack-indicator-mouse {
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-stack-indicator:hover .scroll-stack-indicator-mouse {
+  border-color: #fca311;
+  box-shadow: 0 0 10px rgba(252, 163, 17, 0.4);
+}
+
+.scroll-stack-indicator-wheel {
+  width: 4px;
+  height: 8px;
+  background: #fca311;
+  border-radius: 9999px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scroll-wheel 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.scroll-stack-indicator-chevron {
+  width: 14px;
+  height: 14px;
+  stroke: rgba(255, 255, 255, 0.4);
+  animation: scroll-chevron 1.6s ease-in-out infinite;
+  transition: stroke 0.3s ease;
+}
+
+.scroll-stack-indicator:hover .scroll-stack-indicator-chevron {
+  stroke: #fca311;
+}
+
+@keyframes scroll-wheel {
+  0% {
+    top: 6px;
+    opacity: 0;
+    height: 4px;
+  }
+  30% {
+    opacity: 1;
+    height: 8px;
+  }
+  90% {
+    top: 20px;
+    opacity: 0;
+    height: 4px;
+  }
+  100% {
+    top: 20px;
+    opacity: 0;
+    height: 4px;
+  }
+}
+
+@keyframes scroll-chevron {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1023px) {
   .scroll-stack-dots {
+    display: none !important;
+  }
+  .scroll-stack-indicator {
     display: none !important;
   }
 }
