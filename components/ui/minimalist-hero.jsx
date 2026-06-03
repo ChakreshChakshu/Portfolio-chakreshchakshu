@@ -405,19 +405,6 @@ export function MinimalistHero({ className }) {
         </div>
       </div>
 
-      {/* Bottom Description: Symmetrical Absolute Center Anchor */}
-      <div 
-        className={cn(
-          "absolute bottom-8 left-1/2 -translate-x-1/2 z-30 w-full max-w-2xl text-center px-4 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-          isExpanded 
-            ? "opacity-100 translate-y-0" 
-            : "opacity-0 translate-y-6"
-        )}
-      >
-        <p className="text-sm md:text-base text-[#e5e5e5]/75 leading-relaxed font-sans font-medium tracking-wide">
-          Full stack developer focused on frontend systems, interaction engineering, and production-grade user experience architectures.
-        </p>
-      </div>
 
       {/* Bottom Right Location Anchor */}
       <footer 

@@ -5,9 +5,10 @@ import { gsap } from 'gsap';
 import MagicRings from './MagicRings';
 
 const ringColors = [
-  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 1: Gold / Warm Orange
-  { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 2: Indigo / Purple
-  { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 3: Emerald / Teal
+  { color: '#38bdf8', colorTwo: '#0284c7' }, // Slide 1: Sky / Blue (Description slide)
+  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 2: Gold / Warm Orange
+  { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 3: Indigo / Purple
+  { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 4: Emerald / Teal
 ];
 
 export function AboutSection() {
@@ -23,9 +24,9 @@ export function AboutSection() {
     { target: 99, suffix: ".9%", label: "UI Precision" }
   ];
 
-  // GSAP Count-up animation for Slide 3 stats
+  // GSAP Count-up animation for Slide 4 stats
   useEffect(() => {
-    if (activeIndex === 2 && heroRef.current) {
+    if (activeIndex === 3 && heroRef.current) {
       const numbers = heroRef.current.querySelectorAll('.stat-number');
       numbers.forEach(num => {
         const target = parseFloat(num.getAttribute('data-target'));
@@ -62,8 +63,8 @@ export function AboutSection() {
       gsap.killTweensOf(lines);
       gsap.killTweensOf(heroRef.current);
 
-      // Centered layout configuration
-      gsap.set(heroRef.current, { yPercent: 33.33, opacity: 1 });
+      // Centered layout configuration for 4 lines (offset starts at 37.5%)
+      gsap.set(heroRef.current, { yPercent: 37.5, opacity: 1 });
       gsap.set(lines, { opacity: 0 });
 
       // Create a paused timeline that we will scrub manually on scroll
@@ -91,10 +92,10 @@ export function AboutSection() {
           startTime
         );
 
-        // Step 3: Shift the entire hero wrapper up
+        // Step 3: Shift the entire hero wrapper up (25% increments for 4 slides)
         if (index > 0) {
           tl.to(heroRef.current, {
-            yPercent: 33.33 - (index * 33.33),
+            yPercent: 37.5 - (index * 25),
             duration: duration,
             ease: "power2.out"
           }, startTime);
@@ -140,15 +141,17 @@ export function AboutSection() {
         setActiveIndex(0);
       } else if (currentScroll > rangeEnd) {
         progress = 1;
-        setActiveIndex(2);
+        setActiveIndex(3);
       } else {
         progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
-        if (progress < 0.33) {
+        if (progress < 0.25) {
           setActiveIndex(0);
-        } else if (progress < 0.66) {
+        } else if (progress < 0.5) {
           setActiveIndex(1);
-        } else {
+        } else if (progress < 0.75) {
           setActiveIndex(2);
+        } else {
+          setActiveIndex(3);
         }
       }
 
@@ -217,7 +220,14 @@ export function AboutSection() {
           className="flex flex-col items-center justify-center flex-grow-0 w-full"
           style={{ height: 'fit-content' }}
         >
-          {/* Line 1: Interfaces & Experiences */}
+          {/* Line 1: Hero Description Slide */}
+          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.25] text-white font-sans max-w-5xl">
+              I am a <span className="bg-gradient-to-r from-sky-400 via-[#fca311] to-[#ffe169] bg-clip-text text-transparent">full-stack developer</span> focused on frontend systems, interaction engineering, and production-grade UX architectures.
+            </h2>
+          </div>
+
+          {/* Line 2: Interfaces & Experiences */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.15] text-white font-sans max-w-6xl">
               I don't just build <br />
@@ -229,7 +239,7 @@ export function AboutSection() {
             </h3>
           </div>
 
-          {/* Line 2: Systems, Interaction & Execution */}
+          {/* Line 3: Systems, Interaction & Execution */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.15] text-white/50 font-sans max-w-6xl">
               I approach development through
@@ -247,10 +257,10 @@ export function AboutSection() {
             </span>
           </div>
 
-          {/* Line 3: Full Stack Integrity */}
+          {/* Line 4: Full Stack Integrity */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[65vh] shrink-0">
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] text-white font-sans max-w-6xl">
-              I build <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">full stack products</span>
+              I build <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">full-stack products</span>
             </h2>
             
             <p className="text-xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-400 font-semibold tracking-wide leading-[1.5] max-w-5xl mt-10 font-sans">
