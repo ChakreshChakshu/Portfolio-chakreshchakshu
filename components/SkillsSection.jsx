@@ -474,18 +474,7 @@ export function SkillsSection() {
         }}
       />
 
-      {/* Symmetrical Header */}
-      <div className="skills-header skills-header-reveal text-center absolute top-12 left-1/2 -translate-x-1/2 transition-all duration-1000 z-40 w-full max-w-xl px-4 opacity-0 pointer-events-none">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans">
-          Expertise
-        </h2>
-        <div className="h-1 w-12 bg-[#fca311] mt-3 rounded-full mx-auto" />
-        <div className="mt-4 overflow-hidden h-[18px] flex items-center justify-center">
-          <div className="active-module-text text-[10px] font-mono text-gray-500 tracking-[0.3em] uppercase opacity-0">
-            [ MODULE_0{activeScene + 1} // {scenes[activeScene].name.toUpperCase()} ]
-          </div>
-        </div>
-      </div>
+
 
       {/* Cylindrical 3D Scenes Wrapper */}
       <div className="skills-cylinders-wrapper relative w-full h-[65vh] flex items-center justify-center">

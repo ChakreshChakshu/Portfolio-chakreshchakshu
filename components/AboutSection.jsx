@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import MagicRings from './MagicRings';
+import { Cpu, HandPointing, Rocket } from '@phosphor-icons/react';
 
 const ringColors = [
-  { color: '#38bdf8', colorTwo: '#0284c7' }, // Slide 1: Sky / Blue (Description slide)
-  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 2: Gold / Warm Orange
-  { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 3: Indigo / Purple
-  { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 4: Emerald / Teal
+  { color: '#ffffff', colorTwo: '#cccccc' }, // Slide 1: Who I Am
+  { color: '#38bdf8', colorTwo: '#0284c7' }, // Slide 2: Sky / Blue (Description slide)
+  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 3: Gold / Warm Orange
+  { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 4: Indigo / Purple
+  { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 5: Emerald / Teal
 ];
 
 export function AboutSection() {
@@ -24,9 +26,9 @@ export function AboutSection() {
     { target: 99, suffix: ".9%", label: "UI Precision" }
   ];
 
-  // GSAP Count-up animation for Slide 4 stats
+  // GSAP Count-up animation for Slide 5 stats
   useEffect(() => {
-    if (activeIndex === 3 && heroRef.current) {
+    if (activeIndex === 4 && heroRef.current) {
       const numbers = heroRef.current.querySelectorAll('.stat-number');
       numbers.forEach(num => {
         const target = parseFloat(num.getAttribute('data-target'));
@@ -63,8 +65,8 @@ export function AboutSection() {
       gsap.killTweensOf(lines);
       gsap.killTweensOf(heroRef.current);
 
-      // Centered layout configuration for 4 lines (offset starts at 37.5%)
-      gsap.set(heroRef.current, { yPercent: 37.5, opacity: 1 });
+      // Centered layout configuration for 5 lines (offset starts at 40%)
+      gsap.set(heroRef.current, { yPercent: 40, opacity: 1 });
       lines.forEach((line, idx) => {
         gsap.set(line, { opacity: idx === 0 ? 1 : 0 });
       });
@@ -96,10 +98,10 @@ export function AboutSection() {
           startTime
         );
 
-        // Step 3: Shift the entire hero wrapper up (25% increments for 4 slides)
+        // Step 3: Shift the entire hero wrapper up (20% increments for 5 slides)
         if (index > 0) {
           tl.to(heroRef.current, {
-            yPercent: 37.5 - (index * 25),
+            yPercent: 40 - (index * 20),
             duration: duration,
             ease: "power2.out"
           }, startTime);
@@ -145,17 +147,19 @@ export function AboutSection() {
         setActiveIndex(0);
       } else if (currentScroll > rangeEnd) {
         progress = 1;
-        setActiveIndex(3);
+        setActiveIndex(4);
       } else {
         progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
-        if (progress < 0.25) {
+        if (progress < 0.20) {
           setActiveIndex(0);
-        } else if (progress < 0.5) {
+        } else if (progress < 0.40) {
           setActiveIndex(1);
-        } else if (progress < 0.75) {
+        } else if (progress < 0.60) {
           setActiveIndex(2);
-        } else {
+        } else if (progress < 0.80) {
           setActiveIndex(3);
+        } else {
+          setActiveIndex(4);
         }
       }
 
@@ -182,8 +186,8 @@ export function AboutSection() {
     <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-transparent text-white relative overflow-hidden select-none">
       
       {/* Cinematic Ambient Background Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#fca311]/4 blur-[200px] pointer-events-none z-0" />
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] rounded-full bg-blue-500/4 blur-[150px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full bg-[#fca311]/4 blur-[300px] pointer-events-none z-0" />
+      <div className="absolute bottom-10 left-10 w-[600px] h-[600px] rounded-full bg-blue-500/4 blur-[200px] pointer-events-none z-0" />
 
       {/* Dynamic Three.js Magic Rings Background */}
       <div className="absolute inset-0 z-0 opacity-80 mix-blend-screen pointer-events-none">
@@ -193,11 +197,11 @@ export function AboutSection() {
           speed={0.6}
           ringCount={8}
           attenuation={7.5}
-          lineThickness={2.0}
-          baseRadius={0.22}
-          radiusStep={0.07}
+          lineThickness={2.2}
+          baseRadius={0.35}
+          radiusStep={0.10}
           scaleRate={0.14}
-          opacity={0.35}
+          opacity={0.45}
           noiseAmount={0.02}
           followMouse={true}
           mouseInfluence={0.15}
@@ -205,14 +209,6 @@ export function AboutSection() {
           parallax={0.06}
           clickBurst={true}
         />
-      </div>
-
-      {/* Symmetrical "About me" Header (Fixed at top of screen) */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center transition-all duration-1000 z-40">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white font-sans">
-          About me
-        </h2>
-        <div className="h-1 w-12 bg-[#fca311] mt-3 rounded-full mx-auto" />
       </div>
 
       {/* Borderless Screen Slide Container */}
@@ -224,59 +220,95 @@ export function AboutSection() {
           className="flex flex-col items-center justify-center flex-grow-0 w-full"
           style={{ height: 'fit-content' }}
         >
-          {/* Line 1: Hero Description Slide */}
+          {/* Line 1: Who I Am Title Slide */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.25] text-white font-sans max-w-5xl">
+            <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white font-sans">
+              Who I Am
+            </h1>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-sky-400 via-[#fca311] to-[#ffe169] mt-6 rounded-full shadow-[0_0_12px_rgba(252,163,17,0.5)]" />
+          </div>
+
+          {/* Line 2: Hero Description Slide */}
+          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.3] text-white font-sans max-w-5xl">
               I am a <span className="bg-gradient-to-r from-sky-400 via-[#fca311] to-[#ffe169] bg-clip-text text-transparent">full-stack developer</span> focused on frontend systems, interaction engineering, and production-grade UX architectures.
             </h2>
           </div>
 
-          {/* Line 2: Interfaces & Experiences */}
+          {/* Line 3: Interfaces & Experiences */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
-            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.15] text-white font-sans max-w-6xl">
-              I don't just build <br />
-              <span className="text-white/40 font-bold italic select-none">interfaces.</span>
-            </h2>
-            
-            <h3 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight font-sans mt-10">
-              I <span className="bg-gradient-to-r from-[#ffe169] via-[#fca311] to-[#d97706] bg-clip-text text-transparent underline decoration-[#fca311]/25 decoration-[3px] underline-offset-[16px] md:underline-offset-[24px]">engineer experiences.</span>
-            </h3>
-          </div>
-
-          {/* Line 3: Systems, Interaction & Execution */}
-          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
-            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.15] text-white/50 font-sans max-w-6xl">
-              I approach development through
-            </h2>
-            
-            <div className="mt-14 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white font-sans">
-              <span className="text-[#fca311] hover:scale-105 transition-transform duration-300">systems,</span>
-              <span className="hidden md:inline w-3 h-3 rounded-full bg-white/20" />
-              <span className="text-white hover:scale-105 transition-transform duration-300">interaction,</span>
-              <span className="hidden md:inline w-3 h-3 rounded-full bg-[#fca311]/50 shadow-[0_0_12px_#fca311]" />
-              <span className="bg-gradient-to-r from-indigo-300 via-violet-400 to-purple-500 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">execution.</span>
-            </div>
-            <span className="text-[10px] font-mono text-gray-500 tracking-[0.4em] uppercase mt-12 block opacity-70">
-              and intentional pathing
-            </span>
-          </div>
-
-          {/* Line 4: Full Stack Integrity */}
-          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[65vh] shrink-0">
-            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] text-white font-sans max-w-6xl">
-              I build <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">full-stack products</span>
-            </h2>
-            
-            <p className="text-xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-400 font-semibold tracking-wide leading-[1.5] max-w-5xl mt-10 font-sans">
-              focused on <span className="text-white font-bold underline decoration-emerald-400/35 decoration-2 underline-offset-8">clean architecture</span>, <br className="hidden md:inline" />
-              <span className="text-white font-bold underline decoration-indigo-400/35 decoration-2 underline-offset-8">strong user experiences</span>, and software <br className="hidden md:inline" />
-              that feels <span className="bg-gradient-to-r from-[#ffe169] to-[#fca311] bg-clip-text text-transparent font-black">engineered</span>, not assembled.
+            <p className="text-xl sm:text-2xl md:text-3xl text-white/50 font-medium tracking-wide mb-3 font-sans">
+              I don&apos;t just build interfaces.
             </p>
+            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none text-white font-sans">
+              I <span className="bg-gradient-to-r from-[#ffe169] via-[#fca311] to-[#d97706] bg-clip-text text-transparent">engineer experiences.</span>
+            </h2>
+          </div>
+
+          {/* Line 4: Systems, Interaction & Execution */}
+          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
+            <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-violet-400 font-bold mb-4">
+              METHODOLOGY
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white font-sans mb-10 max-w-3xl">
+              I approach development through three core pillars
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full px-4">
+              {/* Card 1: Systems */}
+              <div className="group relative p-6 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.02] to-white/[0.01] backdrop-blur-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:border-[#fca311]/30 hover:shadow-[0_15px_30px_-10px_rgba(252,163,17,0.15)]">
+                <div className="w-12 h-12 rounded-xl bg-[#fca311]/10 border border-[#fca311]/20 flex items-center justify-center text-[#fca311] mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <Cpu size={24} weight="duotone" />
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-wider mb-2 font-sans">
+                  SYSTEMS
+                </h3>
+                <div className="w-8 h-0.5 bg-[#fca311]/30 mb-4" />
+                <p className="text-sm text-white/60 leading-relaxed font-sans">
+                  Scalable architecture, strict typescript engineering, and robust backend integrations.
+                </p>
+              </div>
+
+              {/* Card 2: Interaction */}
+              <div className="group relative p-6 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.02] to-white/[0.01] backdrop-blur-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:border-white/20 hover:shadow-[0_15px_30px_-10px_rgba(255,255,255,0.08)]">
+                <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <HandPointing size={24} weight="duotone" />
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-wider mb-2 font-sans">
+                  INTERACTION
+                </h3>
+                <div className="w-8 h-0.5 bg-white/20 mb-4" />
+                <p className="text-sm text-white/60 leading-relaxed font-sans">
+                  Cinematic animations, layout transitions, and high-fidelity interface polishing.
+                </p>
+              </div>
+
+              {/* Card 3: Execution */}
+              <div className="group relative p-6 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.02] to-white/[0.01] backdrop-blur-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:border-indigo-400/30 hover:shadow-[0_15px_30px_-10px_rgba(129,140,248,0.15)]">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <Rocket size={24} weight="duotone" />
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-wider mb-2 font-sans">
+                  EXECUTION
+                </h3>
+                <div className="w-8 h-0.5 bg-indigo-400/30 mb-4" />
+                <p className="text-sm text-white/60 leading-relaxed font-sans">
+                  Lighthouse score optimization, responsive layout integrity, and production reliability.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Line 5: Full Stack Integrity */}
+          <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[65vh] shrink-0">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-white font-sans max-w-4xl">
+              I build <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">full-stack products</span> focused on clean architecture and immersive user experience.
+            </h2>
 
             {/* Specs Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-10 w-full max-w-5xl px-4 z-40">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-10 w-full max-w-4xl px-4 z-40">
               {stats.map((stat, i) => (
-                <div key={i} className="flex flex-col items-center p-4 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-md hover:border-[#fca311]/20 hover:bg-white/[0.03] transition-all duration-300 select-none">
+                <div key={i} className="flex flex-col items-center p-5 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-md hover:border-[#fca311]/20 hover:bg-white/[0.03] transition-all duration-300 select-none">
                   <span 
                     className="stat-number text-2xl sm:text-3xl md:text-4xl font-black text-white font-sans bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent"
                     data-target={stat.target} 

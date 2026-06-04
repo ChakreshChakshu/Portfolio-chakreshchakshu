@@ -18,9 +18,9 @@ export const heroData: {
     part2: "with full stack expertise",
   },
   socialLinks: [
-    { icon: GithubLogo, href: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakresh" },
-    { icon: LinkedinLogo, href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakresh" },
-    { icon: Envelope, href: `mailto:${process.env.NEXT_PUBLIC_EMAIL || "hello@chakresh.com"}` },
+    { icon: GithubLogo, href: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu" },
+    { icon: LinkedinLogo, href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakreshchakshu" },
+    { icon: Envelope, href: `mailto:${process.env.NEXT_PUBLIC_EMAIL || "[EMAIL_ADDRESS]"}` },
   ],
   locationText: "Based in India",
 };
