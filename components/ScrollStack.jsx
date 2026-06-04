@@ -127,12 +127,7 @@ const ScrollStack = ({
 
       const delayPx = itemDistance || 0;
       let delayOffset = delayPx * i;
-      if (i >= 2) {
-        delayOffset += 1000;
-      }
-      if (i >= 4) {
-        delayOffset += 1500; // 1500px buffer before Contact arises
-      }
+      // No extra delay buffers
       
       const cardTop = cardsTop[i];
       const virtualTop = cardTop + delayOffset;
@@ -219,12 +214,7 @@ const ScrollStack = ({
       const activeCardTop = cardsTop[computedActiveIndex] || 0;
       const delayPx = itemDistance || 0;
       let delayOffset = delayPx * computedActiveIndex;
-      if (computedActiveIndex >= 2) {
-        delayOffset += 1000;
-      }
-      if (computedActiveIndex >= 4) {
-        delayOffset += 1500;
-      }
+      // No extra delay buffers
       const activePinStart = activeCardTop + delayOffset - stackPositionPx - itemStackDistance * computedActiveIndex;
       const currentSectionOffset = scrollTop - activePinStart;
       
@@ -264,13 +254,13 @@ const ScrollStack = ({
 
     if (useWindowScroll) {
       const lenis = new Lenis({
-        duration: 1.6,
+        duration: 2.0,
         easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        touchMultiplier: 2,
+        touchMultiplier: 1.5,
         infinite: false,
-        wheelMultiplier: 1,
-        lerp: 0.07,
+        wheelMultiplier: 0.5,
+        lerp: 0.05,
         syncTouch: true,
         syncTouchLerp: 0.075
       });
@@ -293,16 +283,16 @@ const ScrollStack = ({
       const lenis = new Lenis({
         wrapper: scroller,
         content: scroller.querySelector('.scroll-stack-inner'),
-        duration: 1.2,
+        duration: 1.5,
         easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        touchMultiplier: 2,
+        touchMultiplier: 1.5,
         infinite: false,
         gestureOrientationHandler: true,
         normalizeWheel: true,
-        wheelMultiplier: 1,
+        wheelMultiplier: 0.5,
         touchInertiaMultiplier: 35,
-        lerp: 0.1,
+        lerp: 0.08,
         syncTouch: true,
         syncTouchLerp: 0.075,
         touchInertia: 0.6
@@ -356,10 +346,7 @@ const ScrollStack = ({
       if (!isMobile && delayPx > 0 && cards.length > 1) {
         const spacer = document.createElement('div');
         spacer.className = 'scroll-delay-spacer';
-        let totalExtraDelay = 1000;
-        if (cards.length > 4) {
-          totalExtraDelay += 1500; // Match the 1500px extra buffer for Contact
-        }
+        let totalExtraDelay = 0;
         spacer.style.height = `${(cards.length - 1) * delayPx + totalExtraDelay}px`;
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
@@ -416,12 +403,7 @@ const ScrollStack = ({
     const cardTop = cardsTop[idx];
     const delayPx = itemDistance || 0;
     let delayOffset = delayPx * idx;
-    if (idx >= 2) {
-      delayOffset += 1000;
-    }
-    if (idx >= 4) {
-      delayOffset += 1500;
-    }
+    // No extra delay buffers
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     
     const targetScroll = cardTop + delayOffset - stackPositionPx - itemStackDistance * idx;

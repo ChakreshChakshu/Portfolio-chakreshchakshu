@@ -154,11 +154,11 @@ export function ProjectsSection() {
     const card3Top = cards[3] ? getElementOffset(cards[3]) : (3 * window.innerHeight);
     const card4Top = cards[4] ? getElementOffset(cards[4]) : (4 * window.innerHeight);
 
-    const rangeStart = card3Top + 5800;
-    const contactPinStart = card4Top + 8900;
+    const rangeStart = card3Top + 4800;
+    const contactPinStart = card4Top + 6400;
     
-    // Conclude transition 800px before the Contact section pins
-    const rangeEnd = contactPinStart - 800;
+    // Conclude transition 400px before the Contact section pins
+    const rangeEnd = contactPinStart - 400;
     const scroll = window.scrollY;
 
     let newIndex = 0;
