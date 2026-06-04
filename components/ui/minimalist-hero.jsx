@@ -7,7 +7,6 @@ import { ElegantShape } from '@/components/ui/shape-landing-hero';
 import { 
   GithubLogo, 
   LinkedinLogo, 
-  TwitterLogo, 
   Envelope 
 } from '@phosphor-icons/react';
 
@@ -399,9 +398,6 @@ export function MinimalistHero({ className }) {
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-none font-sans drop-shadow-[0_0_15px_rgba(255,255,255,0.05)]">
             {name}
           </h1>
-          <span className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#fca311] uppercase mt-2">
-            Systems Architect
-          </span>
         </div>
       </div>
 

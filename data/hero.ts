@@ -1,4 +1,4 @@
-import { Icon, GithubLogo, LinkedinLogo, TwitterLogo, Envelope } from '@phosphor-icons/react';
+import { Icon, GithubLogo, LinkedinLogo, Envelope } from '@phosphor-icons/react';
 
 export const heroData: {
   mainText: string;
@@ -18,10 +18,9 @@ export const heroData: {
     part2: "with full stack expertise",
   },
   socialLinks: [
-    { icon: GithubLogo, href: "https://github.com/chakresh" },
-    { icon: LinkedinLogo, href: "https://linkedin.com/in/chakresh" },
-    { icon: TwitterLogo, href: "https://twitter.com/chakresh" },
-    { icon: Envelope, href: "mailto:hello@chakresh.com" },
+    { icon: GithubLogo, href: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakresh" },
+    { icon: LinkedinLogo, href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakresh" },
+    { icon: Envelope, href: `mailto:${process.env.NEXT_PUBLIC_EMAIL || "hello@chakresh.com"}` },
   ],
   locationText: "Based in India",
 };

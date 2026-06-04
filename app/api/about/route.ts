@@ -41,9 +41,9 @@ export async function GET() {
         ]
       },
       contact: {
-        email: "chakreshchakshu@gmail.com",
-        github: "https://github.com/chakreshchakshu",
-        linkedin: "https://linkedin.com/in/chakreshchakshu"
+        email: process.env.NEXT_PUBLIC_EMAIL || "chakreshchakshu@gmail.com",
+        github: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu",
+        linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakreshchakshu"
       }
     },
     { status: 200 }

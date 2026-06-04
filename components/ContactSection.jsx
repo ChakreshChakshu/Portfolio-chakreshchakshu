@@ -28,7 +28,7 @@ export function ContactSection() {
   }, []);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('chakreshchakshu@gmail.com');
+    navigator.clipboard.writeText(process.env.NEXT_PUBLIC_EMAIL || 'chakreshchakshu@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -300,7 +300,7 @@ export function ContactSection() {
                     Email
                   </span>
                   <span className="text-sm font-mono text-white/80 group-hover:text-white transition-colors">
-                    chakreshchakshu@gmail.com
+                    {process.env.NEXT_PUBLIC_EMAIL || "chakreshchakshu@gmail.com"}
                   </span>
                 </div>
                 <div className="text-white/30 group-hover:text-white/70 transition-colors">
@@ -339,7 +339,7 @@ export function ContactSection() {
               </span>
               <div className="flex gap-3">
                 <a
-                  href="https://github.com/chakreshchakshu"
+                  href={process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-link flex items-center gap-2.5 px-5 py-3 rounded-full text-xs font-sans text-slate-400 hover:text-white"
@@ -350,7 +350,7 @@ export function ContactSection() {
                   <span>GitHub</span>
                 </a>
                 <a
-                  href="https://linkedin.com/in/chakreshchakshu"
+                  href={process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakreshchakshu"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-link flex items-center gap-2.5 px-5 py-3 rounded-full text-xs font-sans text-slate-400 hover:text-white"
