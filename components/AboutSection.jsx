@@ -65,7 +65,9 @@ export function AboutSection() {
 
       // Centered layout configuration for 4 lines (offset starts at 37.5%)
       gsap.set(heroRef.current, { yPercent: 37.5, opacity: 1 });
-      gsap.set(lines, { opacity: 0 });
+      lines.forEach((line, idx) => {
+        gsap.set(line, { opacity: idx === 0 ? 1 : 0 });
+      });
 
       // Create a paused timeline that we will scrub manually on scroll
       const tl = gsap.timeline({ paused: true });
@@ -77,8 +79,10 @@ export function AboutSection() {
       lines.forEach((line, index) => {
         const startTime = index * (duration + gap);
 
-        // Step 1: Set opacity of current line to 1 at its startTime
-        tl.set(line, { opacity: 1 }, startTime);
+        // Step 1: Set opacity of current line to 1 at its startTime (skip first line since it is already opacity 1)
+        if (index > 0) {
+          tl.set(line, { opacity: 1 }, startTime);
+        }
 
         // Step 2: Animate current line in (rising and scaling)
         tl.fromTo(line, 

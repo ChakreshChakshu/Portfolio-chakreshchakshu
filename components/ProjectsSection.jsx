@@ -104,15 +104,17 @@ export function ProjectsSection() {
       yPercent: 0,
       duration: 0.9,
       ease: 'power3.inOut'
-    })
+    });
 
     // Fade/rise project details into view
-    .to(nextDetails, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, '-=0.25')
+    if (nextDetails) {
+      tl.to(nextDetails, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, '-=0.25');
+    }
 
     // Shift previous slide slightly in the opposite direction and fade it
     if (prevSlide) {

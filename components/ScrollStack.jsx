@@ -33,6 +33,12 @@ const ScrollStack = ({
   const activeIndexRef = useRef(0);
   const scrollIndicatorRef = useRef(null);
 
+  const onStackCompleteRef = useRef(onStackComplete);
+  const onActiveIndexChangeRef = useRef(onActiveIndexChange);
+
+  onStackCompleteRef.current = onStackComplete;
+  onActiveIndexChangeRef.current = onActiveIndexChange;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [cardsCount, setCardsCount] = useState(0);
 
@@ -196,7 +202,7 @@ const ScrollStack = ({
         const isInView = scrollTop >= pinStart && scrollTop <= pinEnd;
         if (isInView && !stackCompletedRef.current) {
           stackCompletedRef.current = true;
-          onStackComplete?.();
+          onStackCompleteRef.current?.();
         } else if (!isInView && stackCompletedRef.current) {
           stackCompletedRef.current = false;
         }
@@ -206,7 +212,7 @@ const ScrollStack = ({
     if (computedActiveIndex !== activeIndexRef.current) {
       activeIndexRef.current = computedActiveIndex;
       setActiveIndex(computedActiveIndex);
-      onActiveIndexChange?.(computedActiveIndex);
+      onActiveIndexChangeRef.current?.(computedActiveIndex);
     }
 
     if (scrollIndicatorRef.current) {
@@ -244,8 +250,6 @@ const ScrollStack = ({
     rotationAmount,
     blurAmount,
     useWindowScroll,
-    onStackComplete,
-    onActiveIndexChange,
     calculateProgress,
     parsePercentage
   ]);
@@ -402,7 +406,6 @@ const ScrollStack = ({
     rotationAmount,
     blurAmount,
     useWindowScroll,
-    onStackComplete,
     setupLenis,
     updateCardTransforms,
     calculateDimensions
