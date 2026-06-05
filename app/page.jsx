@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { AboutSection } from '@/components/AboutSection';
 import { SkillsSection } from '@/components/SkillsSection';
+import { ExperienceSection } from '@/components/ExperienceSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
 import { ContactSection } from '@/components/ContactSection';
 import { Footer } from '@/components/Footer';
@@ -41,6 +42,11 @@ export default function Home() {
         <ScrollStackItem>
           <div className="min-h-screen lg:h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-hidden py-12 lg:py-0">
             <SkillsSection />
+          </div>
+        </ScrollStackItem>
+        <ScrollStackItem>
+          <div className="min-h-screen lg:h-screen w-full bg-[#000000] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-28 overflow-hidden py-12 lg:py-0">
+            <ExperienceSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
