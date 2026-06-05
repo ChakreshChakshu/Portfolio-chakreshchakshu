@@ -9,12 +9,13 @@ import { ProjectsSection } from '@/components/ProjectsSection';
 import { ContactSection } from '@/components/ContactSection';
 import { Footer } from '@/components/Footer';
 import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
+import GradualBlur from '@/components/GradualBlur';
 
 export default function Home() {
   const [activeSectionIdx, setActiveSectionIdx] = useState(0);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-background overflow-x-hidden relative">
       <ScrollStack
         useWindowScroll={true}
         itemDistance={1600}
@@ -63,6 +64,18 @@ export default function Home() {
           </div>
         </ScrollStackItem>
       </ScrollStack>
+
+      <GradualBlur
+        target="page"
+        position="bottom"
+        height="8rem"
+        strength={3}
+        divCount={8}
+        curve="bezier"
+        exponential={true}
+        opacity={1}
+        zIndex={100}
+      />
     </div>
   );
 }

@@ -3,34 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { experienceData } from "@/data/experience";
 import { gsap } from "gsap";
-import { 
-  Layout, 
-  TerminalWindow, 
-  Database, 
-  QrCode, 
-  ShieldCheck, 
-  Briefcase 
-} from "@phosphor-icons/react";
-
-const getIcon = (iconName) => {
-  switch (iconName) {
-    case "layout": return <Layout size={20} weight="duotone" />;
-    case "terminal": return <TerminalWindow size={20} weight="duotone" />;
-    case "database": return <Database size={20} weight="duotone" />;
-    case "qrcode": return <QrCode size={20} weight="duotone" />;
-    case "shield": return <ShieldCheck size={20} weight="duotone" />;
-    default: return <Briefcase size={20} weight="duotone" />;
-  }
-};
-
-const CornerBracket = ({ color = "border-white/10" }) => (
-  <>
-    <span className={`absolute top-0 left-0 w-2.5 h-2.5 border-t border-l ${color} pointer-events-none transition-colors duration-300`} />
-    <span className={`absolute top-0 right-0 w-2.5 h-2.5 border-t border-r ${color} pointer-events-none transition-colors duration-300`} />
-    <span className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l ${color} pointer-events-none transition-colors duration-300`} />
-    <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r ${color} pointer-events-none transition-colors duration-300`} />
-  </>
-);
+import SplitText from "./SplitText";
 
 export function ExperienceSection() {
   const [isMobile, setIsMobile] = useState(false);
@@ -39,12 +12,13 @@ export function ExperienceSection() {
   
   // Section refs for Desktop timeline steps
   const stage1Ref = useRef(null);
-  const stage23Ref = useRef(null);
-  const companyCardRef = useRef(null);
-  const contributionCardsRef = useRef([]);
+  const stage2Ref = useRef(null);
+  const stage3Ref = useRef(null);
   const stage4Ref = useRef(null);
-  const metricValuesRef = useRef([]);
   const stage5Ref = useRef(null);
+  
+  const contributionTextsRef = useRef([]);
+  const metricValuesRef = useRef([]);
 
   // Check screen width for mobile layout
   useEffect(() => {
@@ -59,6 +33,225 @@ export function ExperienceSection() {
   // GSAP scroll listener for driving desktop storytelling steps
   useEffect(() => {
     if (isMobile) return;
+
+    // Create the master timeline (using 100 duration to represent percentage mapping)
+    const tl = gsap.timeline({ paused: true });
+
+    // Initial resets
+    gsap.set(stage1Ref.current, { opacity: 1, yPercent: 0 });
+    gsap.set(stage2Ref.current, { opacity: 0, yPercent: 120 });
+    gsap.set(stage3Ref.current, { opacity: 0 });
+    gsap.set(stage4Ref.current, { opacity: 0, yPercent: 120 });
+    gsap.set(stage5Ref.current, { opacity: 0, yPercent: 120 });
+
+    // ==========================================
+    // STAGE 1: HERO (Effect 17 - 3D Bottom Emerge & Top Out)
+    // ==========================================
+    const s1Chars = stage1Ref.current.querySelectorAll(".stage1-title .char");
+    if (s1Chars.length > 0) {
+      tl.fromTo(s1Chars, 
+        { 
+          opacity: 0, 
+          y: 70,
+          rotateX: -50, 
+          rotateY: -15,
+          z: -100
+        },
+        { 
+          opacity: 1, 
+          y: 0,
+          rotateX: 0, 
+          rotateY: 0,
+          z: 0, 
+          stagger: 0.1,
+          ease: "power2.out",
+          duration: 5
+        },
+        0
+      );
+    }
+
+    // Stage 1 Subtitle & Paragraphs (staggered slide-up from bottom)
+    const s1TextElements = stage1Ref.current.querySelectorAll(".stage1-fade-in");
+    if (s1TextElements.length > 0) {
+      tl.fromTo(s1TextElements,
+        { opacity: 0, y: 40, letterSpacing: "0.1em" },
+        { opacity: 1, y: 0, letterSpacing: "0.25em", stagger: 1.0, ease: "power2.out", duration: 5 },
+        1.5
+      );
+    }
+
+    // Stage 1 Exit (Slide up & out at top)
+    tl.to(stage1Ref.current, { opacity: 0, yPercent: -120, duration: 8, ease: "power2.inOut" }, 12);
+    tl.set(stage1Ref.current, { pointerEvents: "none" }, 20);
+
+    // ==========================================
+    // STAGE 2: COMPANY & ROLE (Effect 28 - Blur, Scale, Emerge Bottom, Exit Top)
+    // ==========================================
+    tl.set(stage2Ref.current, { pointerEvents: "auto" }, 20);
+    tl.fromTo(stage2Ref.current, 
+      { opacity: 0, yPercent: 120 }, 
+      { opacity: 1, yPercent: 0, duration: 8, ease: "power2.out" }, 
+      20
+    );
+
+    const s2Chars = stage2Ref.current.querySelectorAll(".stage2-company .char");
+    if (s2Chars.length > 0) {
+      tl.fromTo(s2Chars,
+        { filter: "blur(12px)", opacity: 0, scale: 1.25, y: 45, rotateX: -30 },
+        { filter: "blur(0px)", opacity: 1, scale: 1, y: 0, rotateX: 0, duration: 6, stagger: 0.08, ease: "power2.out" },
+        20.5
+      );
+    }
+
+    // Stage 2 Fade In elements
+    const s2TextElements = stage2Ref.current.querySelectorAll(".stage2-fade-in");
+    if (s2TextElements.length > 0) {
+      tl.fromTo(s2TextElements,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, stagger: 1.2, ease: "power2.out", duration: 5 },
+        22.5
+      );
+    }
+
+    // Stage 2 Exit (Slide up & out at top)
+    tl.to(stage2Ref.current, { opacity: 0, yPercent: -120, duration: 8, ease: "power2.inOut" }, 32);
+    tl.set(stage2Ref.current, { pointerEvents: "none" }, 40);
+
+    // ==========================================
+    // STAGE 3: CORE CONTRIBUTIONS (Effect 18 - 3D Word Emerge Bottom, Exit Top)
+    // ==========================================
+    tl.set(stage3Ref.current, { pointerEvents: "auto" }, 38);
+    tl.to(stage3Ref.current, { opacity: 1, duration: 2, ease: "power2.out" }, 38);
+
+    // Animate each contribution sequentially
+    experienceData.contributions.forEach((con, idx) => {
+      const el = contributionTextsRef.current[idx];
+      if (!el) return;
+
+      const start = 40 + idx * 8;
+      const exitStart = start + 4;
+
+      const titleEl = el.querySelector(".stage3-title");
+      const words = el.querySelector(".stage3-explanation") ? el.querySelectorAll(".stage3-word") : [];
+
+      // Initial reset of contribution element
+      gsap.set(el, { opacity: 0, yPercent: 120 });
+
+      // Enter (Emerge from bottom)
+      tl.set(el, { pointerEvents: "auto" }, start);
+      tl.fromTo(el, { yPercent: 120, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 3, ease: "power2.out" }, start);
+      
+      if (titleEl) {
+        tl.fromTo(titleEl, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 2, ease: "power2.out" }, start + 0.5);
+      }
+      if (words.length > 0) {
+        tl.fromTo(words,
+          { 
+            opacity: 0, 
+            y: 40, 
+            rotateX: -35 
+          },
+          { 
+            opacity: 1, 
+            y: 0, 
+            rotateX: 0, 
+            stagger: 0.08, 
+            ease: "back.out(1.2)", 
+            duration: 3 
+          },
+          start + 0.8
+        );
+      }
+
+      // Exit (Exit to top)
+      tl.to(el, { opacity: 0, yPercent: -120, duration: 3, ease: "power2.in" }, exitStart);
+      if (titleEl) {
+        tl.to(titleEl, { opacity: 0, y: -20, duration: 2, ease: "power2.in" }, exitStart);
+      }
+      if (words.length > 0) {
+        tl.to(words,
+          { 
+            opacity: 0, 
+            y: -40, 
+            rotateX: 35, 
+            stagger: 0.04, 
+            ease: "power2.in", 
+            duration: 2.5 
+          },
+          exitStart
+        );
+      }
+      tl.set(el, { pointerEvents: "none" }, exitStart + 3);
+    });
+
+    // Stage 3 Exit
+    tl.to(stage3Ref.current, { opacity: 0, duration: 3, ease: "power2.inOut" }, 78);
+    tl.set(stage3Ref.current, { pointerEvents: "none" }, 80);
+
+    // ==========================================
+    // STAGE 4: IMPACT METRICS (Effect 22 - 3D Perspective Card Emerge Bottom, Exit Top)
+    // ==========================================
+    tl.set(stage4Ref.current, { pointerEvents: "auto" }, 80);
+    tl.fromTo(stage4Ref.current, 
+      { opacity: 0, yPercent: 120 }, 
+      { opacity: 1, yPercent: 0, duration: 8, ease: "power2.out" }, 
+      80
+    );
+
+    // Title 3D rotate and slide up
+    const s4Chars = stage4Ref.current.querySelectorAll(".stage4-title .char");
+    if (s4Chars.length > 0) {
+      tl.fromTo(s4Chars,
+        { rotateX: -90, y: 40, opacity: 0 },
+        { rotateX: 0, y: 0, opacity: 1, duration: 5, stagger: 0.08, ease: "power2.out" },
+        80.5
+      );
+    }
+
+    // Metric Columns X-axis tilt and slide up
+    const s4Cols = stage4Ref.current.querySelectorAll(".stage4-metric-col");
+    if (s4Cols.length > 0) {
+      tl.fromTo(s4Cols,
+        { rotateX: -45, y: 60, opacity: 0 },
+        { rotateX: 0, y: 0, opacity: 1, duration: 6, stagger: 0.3, ease: "back.out(1.3)" },
+        81
+      );
+    }
+
+    // Stage 4 Exit (Slide up & out at top)
+    tl.to(stage4Ref.current, { opacity: 0, yPercent: -120, duration: 8, ease: "power2.inOut" }, 90);
+    tl.set(stage4Ref.current, { pointerEvents: "none" }, 98);
+
+    // ==========================================
+    // STAGE 5: CLOSING MOMENT (Effect 29 - Zoom Blur, Emerge Bottom)
+    // ==========================================
+    tl.set(stage5Ref.current, { pointerEvents: "auto" }, 96);
+    tl.fromTo(stage5Ref.current, 
+      { opacity: 0, yPercent: 120 }, 
+      { opacity: 1, yPercent: 0, duration: 6, ease: "power2.out" }, 
+      96
+    );
+
+    // Quote Super-Scale Blur Reveal from below
+    const s5Chars = stage5Ref.current.querySelectorAll(".stage5-title .char");
+    if (s5Chars.length > 0) {
+      tl.fromTo(s5Chars,
+        { filter: "blur(12px)", opacity: 0, scale: 1.3, y: 40, rotateX: -30 },
+        { filter: "blur(0px)", opacity: 1, scale: 1, y: 0, rotateX: 0, duration: 6, stagger: 0.03, ease: "power3.out" },
+        96.5
+      );
+    }
+
+    // Subtext slide up from below
+    const s5Subtext = stage5Ref.current.querySelector(".stage5-subtext");
+    if (s5Subtext) {
+      tl.fromTo(s5Subtext,
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 5, ease: "power2.out" },
+        98.5
+      );
+    }
 
     // Initialize counts to 0 for count-up triggers
     const metricsArr = [0, 0, 0];
@@ -85,139 +278,16 @@ export function ExperienceSection() {
         progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
       }
 
-      // Step mapping:
-      // 0.0 - 0.22: Stage 1 (Hero Statement)
-      // 0.22 - 0.40: Stage 2 (Company & Role Reveal)
-      // 0.40 - 0.72: Stage 3 (Contributions Reveal)
-      // 0.72 - 0.90: Stage 4 (Impact Metrics)
-      // 0.90 - 1.0: Stage 5 (Closing Moment)
-
-      // Stage 1 (Hero Statement)
-      // Active in [0.0, 0.22], fades out in [0.15, 0.22]
-      let s1Opacity = 0;
-      let s1Y = 0;
-      if (progress < 0.22) {
-        s1Opacity = progress < 0.15 ? 1 : 1 - (progress - 0.15) / 0.07;
-        s1Y = (progress / 0.22) * -45;
-      }
-      gsap.to(stage1Ref.current, {
-        opacity: s1Opacity,
-        y: s1Y,
-        pointerEvents: s1Opacity > 0.1 ? "auto" : "none",
-        duration: 0.25,
-        overwrite: "auto"
-      });
-
-      // Stage 2 & 3 (Company Card + Contributions)
-      // Active in [0.18, 0.72]
-      let s23Opacity = 0;
-      if (progress >= 0.18 && progress < 0.72) {
-        if (progress < 0.25) {
-          s23Opacity = (progress - 0.18) / 0.07;
-        } else if (progress > 0.65) {
-          s23Opacity = 1 - (progress - 0.65) / 0.07;
-        } else {
-          s23Opacity = 1;
-        }
-      }
-      
-      // Company Card X-Translation & Scale
-      let companyX = 0;
-      let companyScale = 1;
-      
-      if (progress >= 0.18 && progress < 0.72) {
-        // Stage 2 (Centered): progress 0.18 to 0.35
-        if (progress < 0.35) {
-          companyX = 0;
-          companyScale = 0.96 + ((progress - 0.18) / 0.17) * 0.04;
-        } 
-        // Stage 3 (Slides Left): progress 0.35 to 0.50
-        else if (progress >= 0.35 && progress < 0.50) {
-          const slideProgress = (progress - 0.35) / 0.15;
-          companyX = -240 * slideProgress;
-          companyScale = 1;
-        } 
-        // Pinned Left: progress 0.50 to 0.72
-        else {
-          companyX = -240;
-          companyScale = 1;
-        }
-      }
-
-      gsap.to(stage23Ref.current, {
-        opacity: s23Opacity,
-        pointerEvents: s23Opacity > 0.1 ? "auto" : "none",
-        duration: 0.25,
-        overwrite: "auto"
-      });
-
-      gsap.to(companyCardRef.current, {
-        x: companyX,
-        scale: companyScale,
-        duration: 0.3,
-        overwrite: "auto"
-      });
-
-      // Contributions stagger
-      contributionCardsRef.current.forEach((card, idx) => {
-        if (!card) return;
-        // The contributions reveal staggered during progress 0.43 to 0.66
-        const revealStart = 0.40 + idx * 0.055;
-        const revealEnd = revealStart + 0.06;
-        
-        let cardOpacity = 0;
-        let cardY = 35;
-        let cardScale = 0.95;
-        
-        if (progress >= revealStart) {
-          if (progress >= revealEnd) {
-            cardOpacity = 1;
-            cardY = 0;
-            cardScale = 1;
-          } else {
-            const cardProg = (progress - revealStart) / 0.06;
-            cardOpacity = cardProg;
-            cardY = (1 - cardProg) * 35;
-            cardScale = 0.95 + cardProg * 0.05;
-          }
-        }
-        
-        gsap.to(card, {
-          opacity: cardOpacity,
-          y: cardY,
-          scale: cardScale,
-          duration: 0.25,
-          overwrite: "auto"
-        });
-      });
-
-      // Stage 4 (Impact Metrics)
-      // Active in [0.70, 0.90]
-      let s4Opacity = 0;
-      let s4Y = 35;
-      if (progress >= 0.70 && progress < 0.90) {
-        if (progress < 0.76) {
-          s4Opacity = (progress - 0.70) / 0.06;
-          s4Y = (1 - s4Opacity) * 35;
-        } else if (progress > 0.84) {
-          s4Opacity = 1 - (progress - 0.84) / 0.06;
-          s4Y = ((progress - 0.84) / 0.06) * -35;
-        } else {
-          s4Opacity = 1;
-          s4Y = 0;
-        }
-      }
-      
-      gsap.to(stage4Ref.current, {
-        opacity: s4Opacity,
-        y: s4Y,
-        pointerEvents: s4Opacity > 0.1 ? "auto" : "none",
-        duration: 0.25,
-        overwrite: "auto"
+      // Scrub the master timeline with GSAP (smooth transition)
+      gsap.to(tl, { 
+        progress: progress, 
+        duration: 0.25, 
+        ease: "power2.out", 
+        overwrite: "auto" 
       });
 
       // Metric count-up trigger
-      if (progress >= 0.73 && progress < 0.88) {
+      if (progress >= 0.71 && progress < 0.86) {
         if (!hasCountedUp) {
           hasCountedUp = true;
           experienceData.metrics.forEach((metric, mIdx) => {
@@ -240,27 +310,10 @@ export function ExperienceSection() {
           });
         }
       } else {
-        if (progress < 0.68 || progress > 0.90) {
+        if (progress < 0.66 || progress > 0.88) {
           hasCountedUp = false;
         }
       }
-
-      // Stage 5 (Closing Moment)
-      // Active in [0.88, 1.0]
-      let s5Opacity = 0;
-      let s5Y = 35;
-      if (progress >= 0.88) {
-        s5Opacity = progress < 0.94 ? (progress - 0.88) / 0.06 : 1;
-        s5Y = (1 - s5Opacity) * 35;
-      }
-      
-      gsap.to(stage5Ref.current, {
-        opacity: s5Opacity,
-        y: s5Y,
-        pointerEvents: s5Opacity > 0.1 ? "auto" : "none",
-        duration: 0.25,
-        overwrite: "auto"
-      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -271,6 +324,7 @@ export function ExperienceSection() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
       clearTimeout(timer);
+      tl.kill();
     };
   }, [isMobile]);
 
@@ -286,10 +340,10 @@ export function ExperienceSection() {
           style={{ opacity: 0.5 }}
         />
         
-        <div className="max-w-xl mx-auto flex flex-col gap-12 text-left relative z-10">
+        <div className="max-w-xl mx-auto flex flex-col gap-16 text-left relative z-10">
           {/* Hero Statement */}
           <div className="flex flex-col">
-            <span className="text-[10px] font-mono tracking-[0.4em] text-[#fca311] font-bold uppercase mb-2">
+            <span className="text-[10px] font-mono tracking-[0.45em] text-[#fca311] font-bold uppercase mb-2">
               ★ SYSTEM LOG
             </span>
             <h2 className="text-4xl font-black tracking-tight text-white uppercase font-sans">
@@ -300,77 +354,61 @@ export function ExperienceSection() {
             </p>
           </div>
 
-          {/* Company Card */}
-          <div className="border border-white/5 bg-[#050508]/90 p-7 rounded-xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-[2.5px] h-full bg-[#fca311]" />
-            <CornerBracket color="border-white/5" />
-            
-            <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-[#fca311] uppercase mb-2">
+          {/* Company Details */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-[#fca311] uppercase mb-1">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#fca311] animate-pulse" />
               SYSTEM ACTIVE // {experienceData.duration}
             </div>
-            
-            <h3 className="text-2xl font-black tracking-tight text-white uppercase font-sans">
+            <h3 className="text-3xl font-black tracking-tight text-white uppercase font-sans">
               {experienceData.company}
             </h3>
-            
-            <p className="text-xs font-mono text-slate-400 tracking-wider mt-1">
+            <p className="text-xs font-mono text-[#fca311] tracking-wider">
               {experienceData.role}
             </p>
-            
-            <p className="text-xs text-slate-500 leading-relaxed font-sans mt-4">
+            <p className="text-sm text-slate-400 leading-relaxed font-sans mt-2">
               {experienceData.summary}
             </p>
           </div>
 
           {/* Contributions */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold mb-1">
+          <div className="flex flex-col gap-8">
+            <span className="text-[10px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold">
               ENGINEERING MODULES
             </span>
             
             {experienceData.contributions.map((con, idx) => (
               <div 
                 key={con.id} 
-                className="bg-white/[0.01] border border-white/5 p-5 rounded-xl flex gap-4 items-start relative overflow-hidden"
+                className="flex flex-col gap-2 relative text-left"
               >
-                <CornerBracket color="border-white/5" />
-                <div className="w-10 h-10 rounded-lg bg-[#fca311]/5 border border-[#fca311]/10 flex items-center justify-center text-[#fca311] shrink-0 mt-0.5">
-                  {getIcon(con.iconName)}
+                <div className="flex justify-between items-center border-b border-white/5 pb-1">
+                  <h4 className="text-xs font-mono tracking-wider text-white uppercase">
+                    // MOD-0{idx + 1} : {con.title}
+                  </h4>
                 </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="text-sm font-bold tracking-wider text-white uppercase font-sans">
-                      {con.title}
-                    </h4>
-                    <span className="text-[8.5px] font-mono text-slate-600">
-                      [MOD-0{idx + 1}]
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 leading-relaxed font-sans">
-                    {con.explanation}
-                  </p>
-                </div>
+                <p className="text-sm text-slate-300 leading-relaxed font-sans">
+                  {con.explanation}
+                </p>
               </div>
             ))}
           </div>
 
           {/* Impact Metrics */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold mb-1">
+          <div className="flex flex-col gap-6">
+            <span className="text-[10px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold">
               METRIC HIGHLIGHTS
             </span>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-6">
               {experienceData.metrics.map((metric, idx) => (
                 <div 
                   key={idx} 
-                  className="bg-white/[0.01] border border-white/5 p-4 rounded-xl flex flex-col items-center justify-center text-center relative overflow-hidden"
+                  className="flex flex-col items-center justify-center text-center select-none"
                 >
-                  <CornerBracket color="border-white/5" />
-                  <span className="text-3xl font-black text-white font-sans tracking-tight">
+                  <span className="text-4xl font-black text-white font-sans tracking-tight">
                     {metric.value}{metric.suffix}
                   </span>
-                  <span className="text-[9px] font-mono text-slate-500 tracking-wider mt-1.5 leading-tight uppercase">
+                  <span className="text-[8px] font-mono text-slate-500 tracking-wider mt-2 leading-tight uppercase">
                     {metric.label.replace('Production ', '').replace('Reusable ', '')}
                   </span>
                 </div>
@@ -410,16 +448,13 @@ export function ExperienceSection() {
         ref={stage1Ref}
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-1"
       >
-        <span className="text-[10px] font-mono tracking-[0.45em] text-[#fca311] font-bold uppercase mb-4">
-          ★ SYSTEM ARCHIVE // EXPERIENCE
-        </span>
-        <h2 className="text-7xl md:text-8xl font-black font-sans tracking-tight text-white uppercase leading-none py-2 select-none">
-          EXPERIENCE
+        <h2 className="text-7xl md:text-8xl font-black font-sans tracking-tight text-white uppercase leading-none py-2 select-none stage1-title">
+          <SplitText text="EXPERIENCE" />
         </h2>
         
-        <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-[#fca311] to-transparent mt-4 mb-10 shadow-[0_0_15px_rgba(252,163,17,0.3)]" />
+        <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-[#fca311] to-transparent mt-4 mb-10 shadow-[0_0_15px_rgba(252,163,17,0.3)] stage1-fade-in" />
 
-        <div className="flex flex-col gap-3.5 max-w-xl">
+        <div className="flex flex-col gap-3.5 max-w-xl stage1-fade-in">
           <p className="text-2xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
             Building production systems.
           </p>
@@ -432,88 +467,57 @@ export function ExperienceSection() {
         </div>
       </div>
 
-      {/* -------------------- STAGE 2 & 3: COMPANY & MODULES -------------------- */}
+      {/* -------------------- STAGE 2: COMPANY & ROLE -------------------- */}
       <div 
-        ref={stage23Ref}
-        className="absolute inset-0 z-10 flex justify-center items-center px-16 w-full opacity-0 pointer-events-none"
+        ref={stage2Ref}
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-0 pointer-events-none"
       >
-        <div className="relative w-full max-w-5xl h-[70vh] flex items-center justify-center">
-          
-          {/* Pinned Company Card (Stages 2 and 3) */}
-          <div
-            ref={companyCardRef}
-            className="absolute w-[440px] p-8 rounded-2xl border border-white/[0.06] bg-[#050508]/85 backdrop-blur-[12px] text-left select-none left-50% -translate-x-1/2"
-            style={{
-              boxShadow: "0 20px 45px rgba(0, 0, 0, 0.95), inset 0 0 15px rgba(255, 255, 255, 0.01)"
-            }}
-          >
-            <CornerBracket />
-            
-            {/* Top highlight bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#fca311] via-[#fca311]/60 to-transparent" />
-            
-            {/* Pulsing indicator */}
-            <div className="flex items-center gap-2 mb-5">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#fca311] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#fca311]"></span>
-              </span>
-              <span className="text-[9px] font-mono tracking-[0.25em] text-[#fca311] font-bold">
-                SYSTEM ONLINE // 2025 - PRESENT
-              </span>
-            </div>
+        <h3 className="text-5xl md:text-6xl font-black font-sans tracking-tight text-white uppercase leading-none mb-4 stage2-company">
+          <SplitText text={experienceData.company} />
+        </h3>
+        <span className="text-md font-mono font-bold tracking-[0.25em] text-slate-400 uppercase mb-8 stage2-fade-in">
+          {experienceData.role} // {experienceData.duration}
+        </span>
+        <p className="text-xl md:text-2xl text-slate-300 font-sans leading-relaxed max-w-2xl stage2-fade-in">
+          {experienceData.summary}
+        </p>
+      </div>
 
-            <h3 className="text-3xl font-black font-sans tracking-tight text-white uppercase leading-none mb-1.5">
-              {experienceData.company}
-            </h3>
+      {/* -------------------- STAGE 3: CORE CONTRIBUTIONS -------------------- */}
+      <div 
+        ref={stage3Ref}
+        className="absolute inset-0 z-10 flex flex-col justify-center px-12 md:px-24 w-full opacity-0 pointer-events-none"
+      >
+        <div className="relative w-full max-w-6xl mx-auto h-[60vh] flex items-center justify-center">
+          {experienceData.contributions.map((con, idx) => {
+            const alignment = idx % 3;
+            let alignClasses = "";
+            if (alignment === 0) {
+              // Left
+              alignClasses = "items-start text-left left-0 max-w-2xl";
+            } else if (alignment === 1) {
+              // Right
+              alignClasses = "items-end text-right right-0 max-w-2xl ml-auto";
+            } else {
+              // Center (Middle)
+              alignClasses = "items-center text-center left-1/2 -translate-x-1/2 max-w-2xl";
+            }
 
-            <span className="text-xs font-mono font-bold tracking-[0.18em] text-slate-400 uppercase">
-              {experienceData.role}
-            </span>
-
-            <div className="h-[1px] w-full bg-white/[0.05] my-6" />
-
-            <p className="text-[13.5px] text-slate-400 font-sans leading-relaxed font-normal">
-              {experienceData.summary}
-            </p>
-
-            <div className="absolute bottom-4 right-4 text-[8.5px] font-mono text-slate-700 tracking-widest">
-              [SKYD-SYS-01]
-            </div>
-          </div>
-
-          {/* Staggered Contributions (Stage 3 Right Side) */}
-          <div className="absolute right-0 w-[470px] h-full flex flex-col justify-center gap-3.5 z-10">
-            {experienceData.contributions.map((con, idx) => (
+            return (
               <div
                 key={con.id}
-                ref={el => contributionCardsRef.current[idx] = el}
-                className="bg-[#050508]/80 border border-white/[0.04] p-4.5 rounded-xl flex gap-4 items-start select-none transition-all duration-300 hover:border-[#fca311]/30 hover:bg-[#07070a] hover:-translate-x-1 group relative overflow-hidden opacity-0"
-                style={{
-                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)"
-                }}
+                ref={el => contributionTextsRef.current[idx] = el}
+                className={`absolute flex flex-col justify-center opacity-0 pointer-events-none ${alignClasses}`}
               >
-                <CornerBracket color="border-white/5 group-hover:border-[#fca311]/30" />
-                <div className="w-10 h-10 rounded-lg bg-[#fca311]/5 border border-[#fca311]/12 flex items-center justify-center text-[#fca311] shrink-0 mt-0.5 group-hover:bg-[#fca311]/10 transition-colors duration-300">
-                  {getIcon(con.iconName)}
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="text-[13.5px] font-black tracking-wider text-white uppercase font-sans">
-                      {con.title}
-                    </h4>
-                    <span className="text-[8.5px] font-mono text-slate-600 group-hover:text-slate-400 transition-colors duration-300">
-                      [MOD-0{idx + 1}]
-                    </span>
-                  </div>
-                  <p className="text-[11.5px] text-slate-400 leading-relaxed font-sans">
-                    {con.explanation}
-                  </p>
-                </div>
+                <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase mb-2 stage3-title">
+                  // MODULE 0{idx + 1} : {con.title}
+                </span>
+                <h4 className="text-3xl md:text-4xl font-extrabold font-sans text-white uppercase tracking-tight leading-snug stage3-explanation">
+                  <SplitText text={con.explanation} charClassName="stage3-char" wordClassName="stage3-word" />
+                </h4>
               </div>
-            ))}
-          </div>
-
+            );
+          })}
         </div>
       </div>
 
@@ -525,31 +529,23 @@ export function ExperienceSection() {
         <span className="text-[10px] font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-4">
           ★ SYSTEM PERFORMANCE
         </span>
-        <h3 className="text-3xl font-black font-sans tracking-tight text-white uppercase leading-none mb-16">
-          ENGINEERING IMPACT
+        <h3 className="text-3xl font-black font-sans tracking-tight text-white uppercase leading-none mb-16 stage4-title">
+          <SplitText text="ENGINEERING IMPACT" />
         </h3>
 
-        <div className="grid grid-cols-3 gap-16 max-w-4xl w-full">
+        <div className="flex gap-20 max-w-4xl justify-center items-center w-full">
           {experienceData.metrics.map((metric, idx) => (
             <div 
               key={idx}
-              className="flex flex-col items-center p-8 border border-white/[0.04] bg-white/[0.005] rounded-2xl relative overflow-hidden group hover:border-[#fca311]/20 transition-all duration-300"
-              style={{
-                boxShadow: "0 15px 35px rgba(0, 0, 0, 0.4)"
-              }}
+              className="flex flex-col items-center select-none stage4-metric-col"
             >
-              <CornerBracket color="border-white/5 group-hover:border-[#fca311]/25" />
-
               <span 
                 ref={el => metricValuesRef.current[idx] = el}
-                className="text-7xl lg:text-8xl font-black font-sans tracking-tight leading-none text-white select-none bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent group-hover:text-[#fca311] transition-colors duration-300"
-                style={{
-                  textShadow: "0 10px 30px rgba(252, 163, 17, 0.02)"
-                }}
+                className="text-7xl lg:text-8xl font-black font-sans tracking-tight leading-none text-white select-none bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent"
               >
                 0{metric.suffix}
               </span>
-              <span className="text-[10px] font-mono text-slate-500 tracking-[0.2em] uppercase mt-4 text-center select-none font-bold leading-relaxed max-w-[150px] group-hover:text-slate-300 transition-colors duration-300">
+              <span className="text-[10px] font-mono text-slate-500 tracking-[0.2em] uppercase mt-4 text-center font-bold leading-relaxed max-w-[150px]">
                 {metric.label}
               </span>
             </div>
@@ -562,13 +558,10 @@ export function ExperienceSection() {
         ref={stage5Ref}
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-12 w-full opacity-0 pointer-events-none"
       >
-        <span className="text-[10px] font-mono tracking-[0.45em] text-[#fca311] font-bold uppercase mb-4">
-          ★ SYSTEM DISPATCH
-        </span>
-        <h2 className="text-4xl sm:text-5xl font-black font-sans tracking-tight text-white uppercase max-w-4xl leading-tight">
-          “Engineering products from architecture to experience.”
+        <h2 className="text-4xl sm:text-5xl font-black font-sans tracking-tight text-white uppercase max-w-4xl leading-tight stage5-title">
+          <SplitText text="“Engineering products from architecture to experience.”" />
         </h2>
-        <p className="text-xs font-mono text-slate-500 tracking-[0.3em] uppercase mt-6 select-none">
+        <p className="text-xs font-mono text-slate-500 tracking-[0.3em] uppercase mt-6 select-none stage5-subtext">
           SYSTEM STACK LOADED // NEXT SECTION JUMP
         </p>
       </div>

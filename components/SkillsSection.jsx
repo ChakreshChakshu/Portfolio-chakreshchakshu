@@ -5,6 +5,7 @@ import { skillsData } from '@/data/skills';
 import { gsap } from 'gsap';
 import TechIcon from './TechIcon';
 import OrbitImages from './OrbitImages';
+import SplitText from './SplitText';
 
 const getCategoryColor = (category) => {
   if (category === 'frontend') return '#7DD6FF';
@@ -18,6 +19,7 @@ const rightSkills = skillsData.tools.map(skill => ({ ...skill, category: 'tools'
 
 export function SkillsSection() {
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
   const apertureRef = useRef(null);
   const framesRef = useRef(null);
   const feOrbitRef = useRef(null);
@@ -34,7 +36,7 @@ export function SkillsSection() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Scroll listener for desktop (drives Aperture Zoom and board reveals)
+  // Scroll listener for desktop (drives Aperture Zoom, orbits, and 3D watermark)
   useEffect(() => {
     if (isMobile) return;
 
@@ -142,6 +144,39 @@ export function SkillsSection() {
         gsap.set(beEl, { opacity: beOp, scale: beScale });
         gsap.set(toEl, { opacity: toOp, scale: toScale });
       }
+
+      // 3D Watermark Typography Reveal
+      const chars = containerRef.current ? containerRef.current.querySelectorAll('.skills-watermark .char') : [];
+      if (chars.length > 0) {
+        chars.forEach((char, idx) => {
+          const charProgressStart = (idx / chars.length) * 0.5;
+          const charProgressEnd = charProgressStart + 0.35;
+          
+          let charProgress = 0;
+          if (progress < charProgressStart) {
+            charProgress = 0;
+          } else if (progress > charProgressEnd) {
+            charProgress = 1;
+          } else {
+            charProgress = (progress - charProgressStart) / (charProgressEnd - charProgressStart);
+          }
+
+          const rotateX = (1 - charProgress) * -90;
+          const rotateY = (1 - charProgress) * 45;
+          const z = (1 - charProgress) * -150;
+          const opacity = charProgress * 0.035; 
+          const blur = (1 - charProgress) * 12;
+
+          gsap.set(char, {
+            rotateX: rotateX,
+            rotateY: rotateY,
+            z: z,
+            opacity: opacity,
+            filter: `blur(${blur}px)`,
+            transformPerspective: 1000
+          });
+        });
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -205,6 +240,7 @@ export function SkillsSection() {
   return (
     <section
       id="skills"
+      ref={containerRef}
       className="w-full relative bg-[#000000] h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
       <style>{`
@@ -325,15 +361,18 @@ export function SkillsSection() {
         }}
       />
 
-      {/* Giant Wall Typography Watermark (Painted/Projected effect) */}
-      <div 
-        className="absolute top-[8%] md:top-[10%] left-1/2 -translate-x-1/2 text-[7vw] font-black font-mono tracking-[0.2em] text-white/[0.025] uppercase select-none pointer-events-none whitespace-nowrap z-0 mix-blend-overlay"
-        style={{
-          textShadow: '0 0 40px rgba(255,255,255,0.01)',
-        }}
-      >
-        Skills Showcase
-      </div>
+      {/* Giant Wall Typography Watermark (Painted/Projected effect with 3D reveal) */}
+      {!isMobile && (
+        <div 
+          className="absolute top-[8%] md:top-[10%] left-1/2 -translate-x-1/2 text-[7vw] font-black font-mono tracking-[0.2em] text-white/[0.035] uppercase select-none pointer-events-none whitespace-nowrap z-0 mix-blend-overlay skills-watermark"
+          style={{
+            perspective: '1000px',
+            transformStyle: 'preserve-3d'
+          }}
+        >
+          <SplitText text="SKILLS SHOWCASE" />
+        </div>
+      )}
 
       {/* Cinematic Cyber Aperture Zoom Portal (Desktop only) */}
       {!isMobile && (
