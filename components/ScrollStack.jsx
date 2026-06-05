@@ -219,7 +219,7 @@ const ScrollStack = ({
       const currentSectionOffset = scrollTop - activePinStart;
       
       let opacity = 1;
-      if (computedActiveIndex === cardsRef.current.length - 1) {
+      if (computedActiveIndex === cardsRef.current.length - 1 || computedActiveIndex === 2) {
         opacity = 0;
       } else {
         opacity = Math.max(0, 1 - currentSectionOffset / 400);
