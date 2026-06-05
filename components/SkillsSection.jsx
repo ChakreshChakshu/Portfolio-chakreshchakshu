@@ -19,31 +19,22 @@ export function SkillCard({ skill }) {
   const color = getCategoryColor(skill.category);
 
   return (
-    <div
-      className="group relative w-28 h-28 md:w-32 md:h-32 rounded-2xl border border-white/5 bg-slate-950/45 backdrop-blur-md transition-all duration-500 flex flex-col items-center justify-center p-3 hover:border-white/10 hover:bg-slate-950/55 hover:scale-105 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)]"
-      style={{
-        boxShadow: `0 10px 25px -6px ${color}08`,
-      }}
-    >
-      {/* Top glowing wire/highlight */}
-      <div 
-        className="absolute top-0 left-6 right-6 h-[1.5px] blur-[0.5px]" 
-        style={{
-          background: `linear-gradient(90deg, transparent, ${color}, transparent)`
-        }}
-      />
-      
+    <div className="flex flex-col items-center gap-2 select-none">
       {/* Icon Container */}
-      <div className="transition-transform duration-300 group-hover:scale-105 flex items-center justify-center mb-2">
+      <div 
+        className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center"
+        style={{
+          '--glow-color': color
+        }}
+      >
         <TechIcon
           name={skill.name}
-          className="w-9 h-9 md:w-11 md:h-11 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_0_10px_var(--glow-color)]"
-          style={{ '--glow-color': color }}
+          className="w-9 h-9 md:w-11 md:h-11 filter drop-shadow-[0_0_6px_rgba(255,255,255,0.15)]"
         />
       </div>
 
       {/* Title */}
-      <span className="text-[8px] md:text-[9px] font-bold font-mono tracking-widest text-slate-400 group-hover:text-white transition-colors uppercase text-center truncate max-w-full px-1">
+      <span className="text-[8px] md:text-[9px] font-bold font-mono tracking-widest text-slate-400 uppercase text-center truncate max-w-full px-1">
         {skill.name}
       </span>
     </div>
@@ -129,27 +120,97 @@ export function SkillsSection() {
     };
   }, [isMobile]);
 
-  const renderCategory = (title, skills, color) => (
-    <div className="flex flex-col items-center w-full max-w-sm">
-      {/* Category Heading */}
-      <div className="text-center mb-6">
-        <h3 
-          className="text-xs md:text-sm font-black font-mono tracking-widest uppercase"
-          style={{ color }}
-        >
-          {title}
-        </h3>
-        <div 
-          className="w-10 h-[2px] mx-auto mt-2 rounded-full opacity-35" 
-          style={{ backgroundColor: color }}
-        />
-      </div>
+  const renderCategoryFrame = (title, skills, color) => (
+    <div className="relative flex flex-col items-center max-w-[280px] md:max-w-[310px] w-full select-none pt-28">
+      {/* Hanging Wire SVG representing steel rope holding the frame */}
+      <svg 
+        className="absolute top-0 left-0 w-full h-28 pointer-events-none overflow-visible" 
+        viewBox="0 0 100 100" 
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id={`nailMetal-${title}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="30%" stopColor="#d1d5db" />
+            <stop offset="70%" stopColor="#6b7280" />
+            <stop offset="100%" stopColor="#374151" />
+          </linearGradient>
+          <filter id={`shadow-${title}`} x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="2" dy="4" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.8" />
+          </filter>
+        </defs>
 
-      {/* Grid of individual card frames */}
-      <div className="grid grid-cols-2 gap-4 justify-items-center w-full">
-        {skills.map((skill) => (
-          <SkillCard key={skill.name} skill={skill} />
-        ))}
+        {/* Suspended fine steel wires with drop shadow */}
+        <g filter={`url(#shadow-${title})`}>
+          <line 
+            x1="50" 
+            y1="10" 
+            x2="15" 
+            y2="96" 
+            stroke="#52525b" 
+            strokeWidth="1.2" 
+          />
+          <line 
+            x1="50" 
+            y1="10" 
+            x2="85" 
+            y2="96" 
+            stroke="#52525b" 
+            strokeWidth="1.2" 
+          />
+        </g>
+
+        {/* Hanger Nail / Pin with shadow */}
+        <g filter={`url(#shadow-${title})`}>
+          {/* Subtle background glow from nail hole */}
+          <circle cx="50" cy="10" r="5" stroke={color} strokeWidth="0.5" fill="none" className="opacity-25" />
+          {/* Real metallic nail head */}
+          <circle cx="50" cy="10" r="3" fill={`url(#nailMetal-${title})`} stroke="#1f2937" strokeWidth="0.5" />
+          <circle cx="49" cy="9" r="0.6" fill="#ffffff" className="opacity-90" />
+        </g>
+      </svg>
+
+      {/* Realistic Beveled Picture Frame (Opaque Glass) */}
+      <div 
+        className="relative flex flex-col items-center bg-[#09090b]/40 backdrop-blur-[2px] border-[12px] border-[#18181b] rounded-lg p-5 md:p-6 w-full flex-1"
+        style={{
+          boxShadow: `
+            0 35px 55px -15px rgba(0,0,0,0.95), 
+            0 0 40px -15px ${color}15, 
+            inset 0 1px 1px rgba(255,255,255,0.1),
+            inset 0 -1px 1px rgba(0,0,0,0.8)
+          `,
+        }}
+      >
+        {/* Inner wood highlight and passepartout */}
+        <div 
+          className="absolute inset-0.5 border border-white/5 pointer-events-none rounded" 
+        />
+        <div 
+          className="absolute inset-2 border border-dashed pointer-events-none rounded opacity-15" 
+          style={{ borderColor: color }}
+        />
+        
+        {/* Section Header */}
+        <div className="text-center mb-6 z-10">
+          <h3 
+            className="text-xs md:text-sm font-black font-mono tracking-widest uppercase"
+            style={{ color }}
+          >
+            {title}
+          </h3>
+          <div 
+            className="w-8 h-[1.5px] mx-auto mt-2 rounded-full opacity-35" 
+            style={{ backgroundColor: color }}
+          />
+        </div>
+
+        {/* Grid of icons inside the frame */}
+        <div className="grid grid-cols-3 gap-x-4 gap-y-6 w-full justify-items-center z-10">
+          {skills.map((skill) => (
+            <SkillCard key={skill.name} skill={skill} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -190,6 +251,16 @@ export function SkillsSection() {
         }}
       />
 
+      {/* Giant Wall Typography Watermark (Painted/Projected effect) */}
+      <div 
+        className="absolute top-[8%] md:top-[10%] left-1/2 -translate-x-1/2 text-[7vw] font-black font-mono tracking-[0.2em] text-white/[0.025] uppercase select-none pointer-events-none whitespace-nowrap z-0 mix-blend-overlay"
+        style={{
+          textShadow: '0 0 40px rgba(255,255,255,0.01)',
+        }}
+      >
+        Skills Showcase
+      </div>
+
       {/* Cinematic Cyber Aperture Zoom Portal (Desktop only) */}
       {!isMobile && (
         <div className="absolute inset-0 w-full h-full z-40 perspective-[600px] overflow-hidden pointer-events-none">
@@ -206,18 +277,18 @@ export function SkillsSection() {
         </div>
       )}
 
-      {/* Hanging Frames Grid Wrapper */}
+      {/* Hanging Frames Wrapper */}
       <div 
         ref={framesRef}
-        className="relative z-10 w-full max-w-5xl mx-auto px-6 flex flex-col lg:flex-row gap-8 lg:gap-12 justify-center items-center lg:items-start overflow-y-auto lg:overflow-visible max-h-[85vh] py-8 no-scrollbar"
+        className="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col lg:flex-row gap-8 lg:gap-10 justify-center items-center lg:items-stretch overflow-y-auto lg:overflow-visible max-h-[85vh] py-8 no-scrollbar"
         style={{
           opacity: isMobile ? 1 : 0,
           transform: isMobile ? 'none' : 'scale(0.75)'
         }}
       >
-        {renderCategory('Frontend', leftSkills, getCategoryColor('frontend'))}
-        {renderCategory('Backend', midSkills, getCategoryColor('backend'))}
-        {renderCategory('Tools', rightSkills, getCategoryColor('tools'))}
+        {renderCategoryFrame('Frontend', leftSkills, getCategoryColor('frontend'))}
+        {renderCategoryFrame('Backend', midSkills, getCategoryColor('backend'))}
+        {renderCategoryFrame('Tools', rightSkills, getCategoryColor('tools'))}
       </div>
     </section>
   );
