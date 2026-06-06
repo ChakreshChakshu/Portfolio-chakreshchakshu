@@ -303,9 +303,20 @@ export function ProjectsSection() {
               return (
                 <div 
                   key={project.title} 
-                  className="mobile-project-card flex flex-col gap-6 bg-white/[0.02] border border-white/5 p-6 rounded-3xl"
+                  className="mobile-project-card flex flex-col gap-6 bg-white/[0.02] border border-white/5 p-6 rounded-3xl relative overflow-hidden min-h-[340px] justify-end"
                 >
-                  <div className="flex flex-col items-start text-left">
+                  {/* Background Image on mobile card */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center z-0 scale-105"
+                    style={{ 
+                      backgroundImage: `url(${project.imageSrc})`,
+                      filter: 'brightness(0.35)'
+                    }}
+                  />
+                  {/* Dark gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-transparent z-5 pointer-events-none" />
+
+                  <div className="relative z-10 flex flex-col items-start text-left">
                     <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/40 mb-3 block font-bold">
                       ★ Build {i + 1}
                     </span>
@@ -314,7 +325,7 @@ export function ProjectsSection() {
                       {project.title}
                     </h3>
                     
-                    <p className="text-sm sm:text-base text-slate-400 font-sans leading-relaxed my-4">
+                    <p className="text-sm sm:text-base text-slate-300 font-sans leading-relaxed my-4">
                       {project.description}
                     </p>
 
@@ -402,16 +413,15 @@ export function ProjectsSection() {
           position: absolute;
           inset: 0;
           z-index: 10;
-          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 0px;
           width: 100%;
           height: 100%;
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: flex-start;
           justify-content: center;
-          text-align: center;
-          padding: 48px;
+          text-align: left;
+          padding: 48px 10%;
           will-change: transform, opacity;
         }
 
@@ -604,64 +614,67 @@ export function ProjectsSection() {
             >
               <div
                 ref={el => cardRefs.current[idx] = el}
-                className="project-card-overlay"
-                style={{
-                  backgroundColor: cardBgColors[idx % cardBgColors.length],
-                  borderColor: activeIndex === idx ? `${accentColors[idx % accentColors.length]}44` : 'rgba(255, 255, 255, 0.06)',
-                }}
+                className="project-card-overlay relative overflow-hidden"
               >
-                {/* Corner tech highlights */}
-                <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/20 pointer-events-none" />
-                <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-white/20 pointer-events-none" />
-                <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/20 pointer-events-none" />
-
-                {/* Build number & Project Title (ALWAYS visible in all stages!) */}
-                <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/40 mb-3 block font-bold select-none">
-                  ★ Build {idx}
-                </span>
-                <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-white font-sans uppercase">
-                  {project.title}
-                </h2>
-
-                {/* Hidden details container that slides & fades in during Step 2 */}
+                {/* Parallax/Static background image */}
                 <div 
-                  ref={el => detailRefs.current[idx] = el}
-                  className="flex flex-col items-center justify-center"
-                >
-                  <p className="text-sm sm:text-base md:text-lg text-slate-300 font-medium tracking-wide leading-relaxed max-w-2xl mt-5 font-sans">
-                    {project.description}
-                  </p>
+                  className="absolute inset-0 bg-cover bg-center z-0 scale-105 transition-transform duration-700 ease-out"
+                  style={{ 
+                    backgroundImage: `url(${project.imageSrc})`,
+                    filter: 'brightness(0.65)'
+                  }}
+                />
+                {/* Horizontal gradient overlay to fade to black on the left for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/30 z-5 pointer-events-none" />
 
-                  {/* Skills/Tags strip */}
-                  <div className="flex flex-wrap justify-center gap-2 mt-7 max-w-xl">
-                    {project.tags.map(tag => (
-                      <span 
-                        key={tag} 
-                        className="px-3 py-1.5 text-[9px] font-mono rounded-full border border-white/5 bg-white/[0.01] text-slate-400 uppercase tracking-wider font-semibold"
+                <div className="relative z-10 flex flex-col items-start max-w-2xl text-left">
+                  {/* Build number & Project Title (ALWAYS visible in all stages!) */}
+                  <span className="text-[10px] font-mono tracking-[0.4em] uppercase text-white/40 mb-3 block font-bold select-none">
+                    ★ Build {idx}
+                  </span>
+                  <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight text-white font-sans uppercase">
+                    {project.title}
+                  </h2>
+
+                  {/* Hidden details container that slides & fades in during Step 2 */}
+                  <div 
+                    ref={el => detailRefs.current[idx] = el}
+                    className="flex flex-col items-start text-left"
+                  >
+                    <p className="text-sm sm:text-base md:text-lg text-slate-300 font-medium tracking-wide leading-relaxed mt-5 font-sans">
+                      {project.description}
+                    </p>
+
+                    {/* Skills/Tags strip */}
+                    <div className="flex flex-wrap gap-2 mt-7">
+                      {project.tags.map(tag => (
+                        <span 
+                          key={tag} 
+                          className="px-3 py-1.5 text-[9px] font-mono rounded-full border border-white/5 bg-white/[0.01] text-slate-400 uppercase tracking-wider font-semibold"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Accent Walkthrough button */}
+                    <div className="mt-9">
+                      <a 
+                        href={project.href} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 px-6.5 py-3.5 rounded-full text-black font-sans font-bold text-xs uppercase tracking-widest hover:scale-105 hover:shadow-lg transition-all duration-300 pointer-events-auto" 
+                        style={{ 
+                          backgroundColor: accentColors[idx % accentColors.length],
+                          boxShadow: `0 0 20px ${thumbAccents[idx % thumbAccents.length].glow}`
+                        }}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Accent Walkthrough button */}
-                  <div className="mt-9">
-                    <a 
-                      href={project.href} 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 px-6.5 py-3.5 rounded-full text-black font-sans font-bold text-xs uppercase tracking-widest hover:scale-105 hover:shadow-lg transition-all duration-300 pointer-events-auto" 
-                      style={{ 
-                        backgroundColor: accentColors[idx % accentColors.length],
-                        boxShadow: `0 0 20px ${thumbAccents[idx % thumbAccents.length].glow}`
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none" className="shrink-0">
-                        <path fill="#121212" d="M5 2c0 1.105-1.895 2-3 2a2 2 0 1 1 0-4c1.105 0 3 .895 3 2ZM11 3.5c0 1.105-.895 3-2 3s-2-1.895-2-3a2 2 0 1 1 4 0ZM6 9a2 2 0 1 1-4 0c0-1.105.895-3 2-3s2 1.895 2 3Z" />
-                      </svg> 
-                      <span>Walkthrough</span>
-                    </a>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none" className="shrink-0">
+                          <path fill="#121212" d="M5 2c0 1.105-1.895 2-3 2a2 2 0 1 1 0-4c1.105 0 3 .895 3 2ZM11 3.5c0 1.105-.895 3-2 3s-2-1.895-2-3a2 2 0 1 1 4 0ZM6 9a2 2 0 1 1-4 0c0-1.105.895-3 2-3s2 1.895 2 3Z" />
+                        </svg> 
+                        <span>Walkthrough</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

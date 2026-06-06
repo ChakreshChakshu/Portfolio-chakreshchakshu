@@ -147,7 +147,7 @@ const ScrollStack = ({
       const rotation = rotationAmount ? i * rotationAmount * scaleProgress : 0;
 
       let blur = 0;
-      if (blurAmount) {
+      if (blurAmount && i !== cardsRef.current.length - 1) {
         const entryProgress = calculateProgress(
           scrollTop,
           pinStart - containerHeight,

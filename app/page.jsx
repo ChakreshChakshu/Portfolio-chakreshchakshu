@@ -65,17 +65,19 @@ export default function Home() {
         </ScrollStackItem>
       </ScrollStack>
 
-      <GradualBlur
-        target="page"
-        position="bottom"
-        height="8rem"
-        strength={3}
-        divCount={8}
-        curve="bezier"
-        exponential={true}
-        opacity={1}
-        zIndex={100}
-      />
+      {activeSectionIdx < 4 && (
+        <GradualBlur
+          target="page"
+          position="bottom"
+          height="8rem"
+          strength={3}
+          divCount={8}
+          curve="bezier"
+          exponential={true}
+          opacity={1}
+          zIndex={100}
+        />
+      )}
     </div>
   );
 }
