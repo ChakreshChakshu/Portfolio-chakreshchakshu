@@ -80,7 +80,7 @@ export default function TechIcon({ name, className = "w-10 h-10" }) {
       );
     case 'restapis':
       return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#D5FF37" strokeWidth="1.5">
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M8 7 h8 M8 12 h8 M8 17 h8 M4 3 h16 a2 2 0 0 1 2 2 v14 a2 2 0 0 1-2 2 H4 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 z" />
         </svg>
       );

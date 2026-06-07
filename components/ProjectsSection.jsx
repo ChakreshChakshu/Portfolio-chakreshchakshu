@@ -40,15 +40,15 @@ export function ProjectsSection() {
     ...activeProjects
   ];
 
-  const accentColors = ["#FFFFFF", "#7DD6FF", "#D5FF37", "#FFA0B0", "#FFA17B"];
-  const cardBgColors = ["#020a18", "#001d35", "#071a00", "#1c0020", "#1f0a00"];
-  const bgColors = ["#02050f", "#000a1f", "#001509", "#0f021f", "#1b0a00"];
+  const accentColors = ["#FFFFFA", "#FF312E", "#515052", "#FFFFFA", "#FF312E"];
+  const cardBgColors = ["#333138", "#333138", "#333138", "#333138", "#333138"];
+  const bgColors = ["#000103", "#000103", "#000103", "#000103", "#000103"];
   const thumbAccents = [
-    { color: '#FFFFFF', glow: 'rgba(255, 255, 255, 0.2)' },
-    { color: '#7DD6FF', glow: 'rgba(125, 214, 255, 0.2)' },
-    { color: '#D5FF37', glow: 'rgba(213, 255, 55, 0.2)' },
-    { color: '#FFA0B0', glow: 'rgba(255, 160, 176, 0.2)' },
-    { color: '#FFA17B', glow: 'rgba(255, 161, 123, 0.2)' }
+    { color: '#FFFFFA', glow: 'rgba(255, 255, 250, 0.2)' },
+    { color: '#FF312E', glow: 'rgba(255, 49, 46, 0.2)' },
+    { color: '#515052', glow: 'rgba(81, 80, 82, 0.2)' },
+    { color: '#FFFFFA', glow: 'rgba(255, 255, 250, 0.2)' },
+    { color: '#FF312E', glow: 'rgba(255, 49, 46, 0.2)' }
   ];
 
   const playTransition = (fromIdx, toIdx) => {

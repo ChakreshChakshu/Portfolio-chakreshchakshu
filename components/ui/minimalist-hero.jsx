@@ -136,8 +136,8 @@ export function MinimalistHero({ className }) {
         <div 
           className="absolute inset-0 opacity-[0.08] z-1"
           style={{
-            backgroundImage: `linear-gradient(rgba(233, 156, 22, 0.08) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(233, 156, 22, 0.08) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(255, 49, 46, 0.08) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255, 49, 46, 0.08) 1px, transparent 1px)`,
             backgroundSize: '45px 45px',
           }}
         />
@@ -250,21 +250,21 @@ export function MinimalistHero({ className }) {
         {/* --- Central Premium Portrait Base --- */}
         <div 
           className={cn(
-            "absolute w-[58%] h-[58%] rounded-full shadow-[0_0_40px_rgba(233,156,22,0.12)] border-2 border-accent/45 pointer-events-auto z-35 flex justify-center items-center overflow-hidden transition-all duration-500",
+            "absolute w-[58%] h-[58%] rounded-full shadow-[0_0_40px_rgba(255,49,46,0.12)] border-2 border-accent/45 pointer-events-auto z-35 flex justify-center items-center overflow-hidden transition-all duration-500",
             !isExpanded 
-              ? "hover:border-accent hover:shadow-[0_0_30px_rgba(233,156,22,0.25)] hover:scale-[1.03]" 
-              : "group-hover:border-accent group-hover:shadow-[0_0_35px_rgba(233,156,22,0.3)] group-hover:scale-[1.03]"
+              ? "hover:border-accent hover:shadow-[0_0_30px_rgba(255,49,46,0.25)] hover:scale-[1.03]" 
+              : "group-hover:border-accent group-hover:shadow-[0_0_35px_rgba(255,49,46,0.3)] group-hover:scale-[1.03]"
           )}
         >
           {/* Layered Background Base */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#0b0f19] via-[#14213d] to-[#1a2d54] overflow-hidden">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-background via-card to-muted overflow-hidden">
             
             {/* Tech grid texture overlay */}
             <div 
               className="absolute inset-0 opacity-[0.06]"
               style={{
-                backgroundImage: `linear-gradient(rgba(233, 156, 22, 0.2) 1px, transparent 1px), 
-                                  linear-gradient(90deg, rgba(233, 156, 22, 0.2) 1px, transparent 1px)`,
+                backgroundImage: `linear-gradient(rgba(255, 49, 46, 0.2) 1px, transparent 1px), 
+                                  linear-gradient(90deg, rgba(255, 49, 46, 0.2) 1px, transparent 1px)`,
                 backgroundSize: '12px 12px',
               }}
             />
@@ -354,7 +354,7 @@ export function MinimalistHero({ className }) {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-accent/25 bg-muted/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_12px_rgba(233,156,22,0.35)] hover:scale-115"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-accent/25 bg-muted/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_12px_rgba(255,49,46,0.35)] hover:scale-115"
                       >
                         <link.icon className="h-5 w-5" weight="fill" />
                       </a>

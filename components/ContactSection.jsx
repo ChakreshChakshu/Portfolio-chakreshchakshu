@@ -80,10 +80,10 @@ export function ContactSection() {
           font-size: 0.85rem;
         }
         #contact .field-line:focus {
-          border-bottom-color: #D5FF37;
+          border-bottom-color: var(--accent);
         }
         #contact .field-line:focus::placeholder {
-          color: rgba(213, 255, 55, 0.3);
+          color: rgba(255, 49, 46, 0.3);
         }
         #contact textarea.field-line {
           resize: none;
@@ -116,7 +116,7 @@ export function ContactSection() {
         }
         #contact .submit-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 40px rgba(213, 255, 55, 0.25);
+          box-shadow: 0 12px 40px rgba(255, 49, 46, 0.25);
         }
         #contact .email-row {
           transition: all 0.25s ease;
@@ -163,7 +163,7 @@ export function ContactSection() {
             Let&apos;s Build
           </h2>
           <h2 className="text-[clamp(3.5rem,10vw,8.5rem)] font-black tracking-[-0.03em] leading-[0.9] uppercase font-sans"
-            style={{ color: '#D5FF37', WebkitTextStroke: '0px', textShadow: '0 0 80px rgba(213,255,55,0.15)' }}
+            style={{ color: 'var(--accent)', WebkitTextStroke: '0px', textShadow: '0 0 80px rgba(255,49,46,0.15)' }}
           >
             Together
           </h2>
@@ -227,7 +227,7 @@ export function ContactSection() {
                     type="submit"
                     disabled={isSubmitting}
                     className="submit-btn px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest text-black font-sans cursor-pointer flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: '#D5FF37' }}
+                    style={{ backgroundColor: 'var(--accent)' }}
                   >
                     {isSubmitting ? (
                       <>
@@ -255,13 +255,13 @@ export function ContactSection() {
               /* Success state */
               <div className="flex flex-col gap-8 py-4">
                 <div className="success-circle w-16 h-16 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(213,255,55,0.08)', border: '1px solid rgba(213,255,55,0.25)' }}>
-                  <svg className="w-8 h-8" fill="none" stroke="#D5FF37" strokeWidth="2.5" viewBox="0 0 24 24">
+                  style={{ background: 'rgba(255,49,46,0.08)', border: '1px solid rgba(255,49,46,0.25)' }}>
+                  <svg className="w-8 h-8" fill="none" stroke="var(--accent)" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path className="success-check" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <div>
-                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase font-bold block mb-3" style={{ color: '#D5FF37' }}>
+                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase font-bold block mb-3" style={{ color: 'var(--accent)' }}>
                     Message sent
                   </span>
                   <h3 className="text-4xl font-black tracking-tight uppercase text-white font-sans leading-tight">
@@ -305,7 +305,7 @@ export function ContactSection() {
                 </div>
                 <div className="text-white/30 group-hover:text-white/70 transition-colors">
                   {copied ? (
-                    <span className="text-[9px] font-mono uppercase tracking-widest font-bold" style={{ color: '#D5FF37' }}>
+                    <span className="text-[9px] font-mono uppercase tracking-widest font-bold" style={{ color: 'var(--accent)' }}>
                       Copied!
                     </span>
                   ) : (
@@ -326,7 +326,7 @@ export function ContactSection() {
                     India — GMT +5:30
                   </span>
                 </div>
-                <span className="text-xs font-mono tabular-nums tracking-wider" style={{ color: '#D5FF37', opacity: 0.8 }}>
+                <span className="text-xs font-mono tabular-nums tracking-wider" style={{ color: 'var(--accent)', opacity: 0.8 }}>
                   {currentTime || '--:--:--'}
                 </span>
               </div>

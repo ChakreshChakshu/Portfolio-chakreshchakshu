@@ -8,9 +8,9 @@ import OrbitImages from './OrbitImages';
 import SplitText from './SplitText';
 
 const getCategoryColor = (category) => {
-  if (category === 'frontend') return '#7DD6FF';
-  if (category === 'backend') return '#D5FF37';
-  return '#FFA17B';
+  if (category === 'frontend') return 'var(--foreground)';
+  if (category === 'backend') return 'var(--accent)';
+  return 'var(--secondary)';
 };
 
 const leftSkills = skillsData.frontend.map(skill => ({ ...skill, category: 'frontend' }));
@@ -516,7 +516,7 @@ export function SkillsSection() {
           <div 
             className="absolute z-30 pointer-events-auto flex flex-col items-center justify-center p-6 bg-card/95 backdrop-blur-[10px] border border-white/10 rounded-[50%] w-36 h-20 md:w-48 md:h-26 shadow-[0_0_50px_rgba(0,0,0,0.95)] select-none"
             style={{
-              background: 'radial-gradient(ellipse, var(--color-midnight-violet-900) 0%, var(--color-midnight-violet-950) 100%)'
+              background: 'radial-gradient(ellipse, var(--color-palette-charcoal) 0%, var(--color-palette-black) 100%)'
             }}
           >
             <div className="absolute inset-2 border border-white/[0.03] rounded-[50%] pointer-events-none" />
