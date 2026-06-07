@@ -204,8 +204,8 @@ export function SkillsSection() {
             boxShadow: `0 0 12px rgba(0, 0, 0, 0.85)`
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = color;
-            e.currentTarget.style.boxShadow = `0 0 20px ${color}50`;
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+            e.currentTarget.style.boxShadow = `0 0 20px rgba(255, 255, 255, 0.15)`;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
@@ -325,28 +325,19 @@ export function SkillsSection() {
       <div 
         className="absolute inset-0 z-0 pointer-events-none select-none"
         style={{
-          background: 'radial-gradient(circle at center, #0a0818 0%, #030206 70%, #000000 100%)'
+          background: 'radial-gradient(circle at center, #06050b 0%, #010102 80%, #000000 100%)'
         }}
       >
-        <div className="stars-layer" />
-        <div className="stars-layer-2" />
-        
-        {/* Shooting Stars (appear in breaks) */}
-        <div className="shooting-stars-container">
-          <div className="shooting-star" style={{ top: '10%', right: '15%', width: '130px', animationDelay: '0s' }} />
-          <div className="shooting-star" style={{ top: '25%', right: '40%', width: '90px', animationDelay: '3s' }} />
-          <div className="shooting-star" style={{ top: '5%', right: '65%', width: '160px', animationDelay: '6s' }} />
-          <div className="shooting-star" style={{ top: '35%', right: '10%', width: '110px', animationDelay: '9s' }} />
-        </div>
+        <div className="stars-layer" style={{ opacity: 0.12 }} />
       </div>
 
       {/* Spatial Perspective Cyberpunk Grid Floor */}
       <div 
-        className="absolute inset-0 bg-size-[60px_60px] opacity-10 pointer-events-none z-0"
+        className="absolute inset-0 bg-size-[60px_60px] opacity-4 pointer-events-none z-0"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
           `,
           transform: 'perspective(1000px) rotateX(75deg) translateZ(-150px) translateY(10%)',
           transformOrigin: 'top center'
@@ -379,12 +370,11 @@ export function SkillsSection() {
         <div className="absolute inset-0 w-full h-full z-40 perspective-[600px] overflow-hidden pointer-events-none">
           <img 
             ref={apertureRef}
-            src="/cyber_aperture.png" 
-            alt="cyber aperture portal" 
+            src="/minimal_aperture.png" 
+            alt="minimal aperture portal" 
             className="w-full h-full object-cover object-center will-change-transform-opacity"
             style={{
-              maskImage: 'radial-gradient(circle at 50% 50%, transparent 20%, black 21.5%)',
-              WebkitMaskImage: 'radial-gradient(circle at 50% 50%, transparent 20%, black 21.5%)'
+              transformOrigin: '50% 49.3%'
             }}
           />
         </div>
@@ -460,8 +450,8 @@ export function SkillsSection() {
               duration={30}
               itemSize={56}
               showPath={true}
-              pathColor="#7DD6FF22"
-              pathWidth={1.5}
+              pathColor="rgba(255, 255, 255, 0.04)"
+              pathWidth={1.2}
               width="100%"
               height="100%"
               responsive={true}
@@ -488,8 +478,8 @@ export function SkillsSection() {
               direction="reverse"
               itemSize={64}
               showPath={true}
-              pathColor="#D5FF3722"
-              pathWidth={1.5}
+              pathColor="rgba(255, 255, 255, 0.04)"
+              pathWidth={1.2}
               width="100%"
               height="100%"
               responsive={true}
@@ -515,8 +505,8 @@ export function SkillsSection() {
               duration={42}
               itemSize={80}
               showPath={true}
-              pathColor="#FFA17B22"
-              pathWidth={1.5}
+              pathColor="rgba(255, 255, 255, 0.04)"
+              pathWidth={1.2}
               width="100%"
               height="100%"
               responsive={true}
