@@ -142,23 +142,50 @@ export function ProjectsSection() {
     });
   };
 
-  // Scroll listener — only detects index change, animation is auto-played
+  // Scroll listener — dynamically tracks index progression relative to parent card pinning
   const handleScroll = () => {
     if (isMobile) return;
 
     const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
-    const getElementOffset = (el) => {
-      return el ? el.offsetTop : 0;
-    };
+    const myCardIndex = cards.findIndex(card => card.querySelector('#projects'));
+    if (myCardIndex === -1) return;
 
-    const card4Top = cards[4] ? getElementOffset(cards[4]) : (4 * window.innerHeight);
-    const card5Top = cards[5] ? getElementOffset(cards[5]) : (5 * window.innerHeight);
+    const myCard = cards[myCardIndex];
+    const myCardTop = myCard ? myCard.offsetTop : 0;
 
-    const rangeStart = card4Top + 6400;
-    const contactPinStart = card5Top + 8000;
+    const itemDistance = 1600;
     
-    // Conclude transition 400px before the Contact section pins
-    const rangeEnd = contactPinStart - 400;
+    // Dynamically calculate cumulative delays for all cards
+    const cardDelays = cards.map((card, idx) => {
+      let delay = 0;
+      for (let i = 0; i < idx; i++) {
+        const c = cards[i];
+        const extraDelay = c ? (parseFloat(c.getAttribute('data-extra-delay')) || 0) : 0;
+        delay += itemDistance + extraDelay;
+      }
+      return delay;
+    });
+
+    const pinStart = myCardTop + cardDelays[myCardIndex];
+
+    const endElement = document.querySelector('.scroll-stack-end');
+    const endTop = endElement ? endElement.offsetTop : (myCardTop + cardDelays[myCardIndex] + 2000);
+
+    const rangeStart = pinStart + 200;
+    
+    // Dynamically calculate the end of the slide transition range
+    const nextCard = cards[myCardIndex + 1];
+    let rangeEnd;
+    if (nextCard) {
+      // If there is a subsequent section, finish transition before it pins
+      const nextPinStart = nextCard.offsetTop + cardDelays[myCardIndex + 1];
+      rangeEnd = nextPinStart - 400;
+    } else {
+      // If this is the final section, use the end of the scroll container
+      rangeEnd = endTop - window.innerHeight - 200;
+    }
+    rangeEnd = Math.max(rangeStart + 100, rangeEnd);
+
     const scroll = window.scrollY;
 
     let newIndex = 0;

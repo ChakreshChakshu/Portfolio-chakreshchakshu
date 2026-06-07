@@ -2,8 +2,8 @@ import { useLayoutEffect, useRef, useCallback, useState } from 'react';
 import Lenis from 'lenis';
 import './ScrollStack.css';
 
-export const ScrollStackItem = ({ children, itemClassName = '' }) => (
-  <div className={`scroll-stack-card ${itemClassName}`.trim()}>{children}</div>
+export const ScrollStackItem = ({ children, itemClassName = '', extraDelay = 0 }) => (
+  <div className={`scroll-stack-card ${itemClassName}`.trim()} data-extra-delay={extraDelay}>{children}</div>
 );
 
 const ScrollStack = ({
@@ -120,15 +120,22 @@ const ScrollStack = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
+    const delayPx = itemDistance || 0;
+    let cumulativeDelay = 0;
+    const cardDelays = cardsRef.current.map((card) => {
+      if (!card) return 0;
+      const delay = cumulativeDelay;
+      const extraDelay = parseFloat(card.getAttribute('data-extra-delay')) || 0;
+      cumulativeDelay += delayPx + extraDelay;
+      return delay;
+    });
+
     let computedActiveIndex = 0;
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
-      const delayPx = itemDistance || 0;
-      let delayOffset = delayPx * i;
-      // No extra delay buffers
-      
+      const delayOffset = cardDelays[i];
       const cardTop = cardsTop[i];
       const virtualTop = cardTop + delayOffset;
 
@@ -346,8 +353,16 @@ const ScrollStack = ({
       if (!isMobile && delayPx > 0 && cards.length > 1) {
         const spacer = document.createElement('div');
         spacer.className = 'scroll-delay-spacer';
-        let totalExtraDelay = 0;
-        spacer.style.height = `${(cards.length - 1) * delayPx + totalExtraDelay}px`;
+        
+        let cumulativeDelay = 0;
+        cards.forEach((card) => {
+          if (!card) return;
+          const extraDelay = parseFloat(card.getAttribute('data-extra-delay')) || 0;
+          cumulativeDelay += delayPx + extraDelay;
+        });
+        const totalDelay = cumulativeDelay - delayPx - (parseFloat(cards[cards.length - 1]?.getAttribute('data-extra-delay')) || 0);
+
+        spacer.style.height = `${totalDelay}px`;
         spacer.style.width = '100%';
         spacer.style.pointerEvents = 'none';
         
@@ -402,8 +417,14 @@ const ScrollStack = ({
     const { cardsTop, containerHeight } = dimensionsRef.current;
     const cardTop = cardsTop[idx];
     const delayPx = itemDistance || 0;
-    let delayOffset = delayPx * idx;
-    // No extra delay buffers
+    
+    let delayOffset = 0;
+    for (let i = 0; i < idx; i++) {
+      const card = cardsRef.current[i];
+      const extraDelay = card ? (parseFloat(card.getAttribute('data-extra-delay')) || 0) : 0;
+      delayOffset += delayPx + extraDelay;
+    }
+    
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     
     const targetScroll = cardTop + delayOffset - stackPositionPx - itemStackDistance * idx;
