@@ -72,7 +72,7 @@ export function MinimalistHero({ className }) {
     <div
       id="home"
       className={cn(
-        'relative flex h-full w-full flex-col items-center justify-between bg-[#000000] p-8 font-sans md:p-12 overflow-hidden select-none',
+        'relative flex h-full w-full flex-col items-center justify-between bg-background p-8 font-sans md:p-12 overflow-hidden select-none',
         className
       )}
     >
@@ -354,7 +354,7 @@ export function MinimalistHero({ className }) {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-accent/25 bg-[#0b0f19]/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_12px_rgba(233,156,22,0.35)] hover:scale-115"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-accent/25 bg-muted/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_12px_rgba(233,156,22,0.35)] hover:scale-115"
                       >
                         <link.icon className="h-5 w-5" weight="fill" />
                       </a>

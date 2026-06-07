@@ -171,10 +171,10 @@ export function TerminalUI() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full min-h-[420px] rounded-xl border border-accent/25 bg-[#07090e]/95 shadow-2xl backdrop-blur-md overflow-hidden relative group/term">
+    <div className="flex flex-col w-full h-full min-h-[420px] rounded-xl border border-accent/25 bg-card/95 shadow-2xl backdrop-blur-md overflow-hidden relative group/term">
       
       {/* Symmetrical Terminal Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0b0f19] border-b border-accent/15 shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-muted border-b border-accent/15 shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500/80" />
           <div className="w-3 h-3 rounded-full bg-accent/80" />

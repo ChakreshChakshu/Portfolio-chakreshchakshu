@@ -468,10 +468,10 @@ export function ExperienceSection() {
     return (
       <section
         id="experience"
-        className="w-full relative bg-[#020204] py-20 px-6 overflow-y-auto select-none font-sans"
+        className="w-full relative bg-background py-20 px-6 overflow-y-auto select-none font-sans"
       >
         <div 
-          className="absolute inset-0 bg-[linear-gradient(rgba(252,163,17,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(252,163,17,0.06)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"
+          className="absolute inset-0 bg-[linear-gradient(rgba(233,156,22,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(233,156,22,0.06)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"
           style={{ opacity: 0.5 }}
         />
         

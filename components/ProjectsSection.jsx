@@ -294,7 +294,7 @@ export function ProjectsSection() {
     return (
       <section 
         id="projects" 
-        className="w-full relative bg-[#000000] py-16 px-6 overflow-y-auto select-none"
+        className="w-full relative bg-background py-16 px-6 overflow-y-auto select-none"
       >
         <div className="max-w-2xl mx-auto flex flex-col gap-12 pt-8">
           <div className="flex flex-col gap-10">
@@ -368,7 +368,7 @@ export function ProjectsSection() {
     <section 
       id="projects" 
       ref={sectionRef}
-      className="w-full relative bg-[#000000] h-[100vh] flex flex-col justify-start select-none overflow-hidden"
+      className="w-full relative bg-background h-[100vh] flex flex-col justify-start select-none overflow-hidden"
     >
       <style>{`
         #projects .slides {

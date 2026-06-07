@@ -199,7 +199,7 @@ export function SkillsSection() {
         className="flex flex-col items-center justify-center select-none cursor-pointer group pointer-events-auto"
       >
         <div 
-          className={`${sizeClass} flex items-center justify-center rounded-full bg-[#030303]/95 border border-white/10 transition-all duration-300 relative`}
+          className={`${sizeClass} flex items-center justify-center rounded-full bg-card/95 border border-white/10 transition-all duration-300 relative`}
           style={{
             boxShadow: `0 0 12px rgba(0, 0, 0, 0.85)`
           }}
@@ -219,7 +219,7 @@ export function SkillsSection() {
           
           {/* Tooltip */}
           <div 
-            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#040406]/98 border px-3 py-1 rounded-md text-[10px] font-extrabold font-mono tracking-[0.18em] text-white uppercase opacity-0 translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none whitespace-nowrap z-50 shadow-[0_4px_25px_rgba(0,0,0,0.95)]"
+            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-muted/98 border px-3 py-1 rounded-md text-[10px] font-extrabold font-mono tracking-[0.18em] text-white uppercase opacity-0 translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none whitespace-nowrap z-50 shadow-[0_4px_25px_rgba(0,0,0,0.95)]"
             style={{ 
               borderColor: color,
               textShadow: `0 0 8px ${color}60`,
@@ -241,7 +241,7 @@ export function SkillsSection() {
     <section
       id="skills"
       ref={containerRef}
-      className="w-full relative bg-[#000000] h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full relative bg-background h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
@@ -513,11 +513,10 @@ export function SkillsSection() {
             />
           </div>
 
-          {/* Shared Center Hub */}
           <div 
-            className="absolute z-30 pointer-events-auto flex flex-col items-center justify-center p-6 bg-[#040406]/95 backdrop-blur-[10px] border border-white/10 rounded-[50%] w-36 h-20 md:w-48 md:h-26 shadow-[0_0_50px_rgba(0,0,0,0.95)] select-none"
+            className="absolute z-30 pointer-events-auto flex flex-col items-center justify-center p-6 bg-card/95 backdrop-blur-[10px] border border-white/10 rounded-[50%] w-36 h-20 md:w-48 md:h-26 shadow-[0_0_50px_rgba(0,0,0,0.95)] select-none"
             style={{
-              background: 'radial-gradient(ellipse, #0e0e12 0%, #040406 100%)'
+              background: 'radial-gradient(ellipse, var(--color-midnight-violet-900) 0%, var(--color-midnight-violet-950) 100%)'
             }}
           >
             <div className="absolute inset-2 border border-white/[0.03] rounded-[50%] pointer-events-none" />
