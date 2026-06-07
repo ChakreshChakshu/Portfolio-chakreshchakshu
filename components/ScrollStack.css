@@ -63,8 +63,8 @@
 
 .scroll-stack-dot.active {
   height: 24px;
-  background: #fca311;
-  box-shadow: 0 0 15px rgba(252, 163, 17, 0.6);
+  background: var(--accent);
+  box-shadow: 0 0 15px rgba(233, 156, 22, 0.6);
 }
 
 .scroll-stack-indicator {
@@ -96,8 +96,8 @@
 }
 
 .scroll-stack-indicator:hover .scroll-stack-indicator-text {
-  color: #fca311;
-  text-shadow: 0 0 8px rgba(252, 163, 17, 0.3);
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(233, 156, 22, 0.3);
 }
 
 .scroll-stack-indicator-mouse {
@@ -110,14 +110,14 @@
 }
 
 .scroll-stack-indicator:hover .scroll-stack-indicator-mouse {
-  border-color: #fca311;
-  box-shadow: 0 0 10px rgba(252, 163, 17, 0.4);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(233, 156, 22, 0.4);
 }
 
 .scroll-stack-indicator-wheel {
   width: 4px;
   height: 8px;
-  background: #fca311;
+  background: var(--accent);
   border-radius: 9999px;
   position: absolute;
   top: 6px;
@@ -135,7 +135,7 @@
 }
 
 .scroll-stack-indicator:hover .scroll-stack-indicator-chevron {
-  stroke: #fca311;
+  stroke: var(--accent);
 }
 
 @keyframes scroll-wheel {

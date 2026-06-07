@@ -136,15 +136,15 @@ export function MinimalistHero({ className }) {
         <div 
           className="absolute inset-0 opacity-[0.08] z-1"
           style={{
-            backgroundImage: `linear-gradient(rgba(252, 163, 17, 0.08) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(252, 163, 17, 0.08) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(233, 156, 22, 0.08) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(233, 156, 22, 0.08) 1px, transparent 1px)`,
             backgroundSize: '45px 45px',
           }}
         />
         {/* Soft atmospheric gradient */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.95)_100%)] z-1" />
         {/* Centered gold ambient blob */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-[#fca311]/5 blur-[160px] animate-pulse duration-[10000ms] z-1" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-accent/5 blur-[160px] animate-pulse duration-[10000ms] z-1" />
       </div>
 
 
@@ -161,9 +161,9 @@ export function MinimalistHero({ className }) {
               : "opacity-0 -translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
         >
-          <div className="flex flex-col justify-center h-full min-h-[220px] md:min-h-[260px] border-l-2 border-[#fca311]/30 pl-6 md:pl-8">
+          <div className="flex flex-col justify-center h-full min-h-[220px] md:min-h-[260px] border-l-2 border-accent/30 pl-6 md:pl-8">
             <h2 className="text-3xl md:text-[35px] font-extrabold tracking-tight text-white leading-[1.45] font-sans">
-              I engineer <span className="text-[#fca311] font-semibold underline decoration-[#fca311]/25 decoration-2 underline-offset-[6px]">interfaces</span>, systems and interactive product experiences.
+              I engineer <span className="text-accent font-semibold underline decoration-accent/25 decoration-2 underline-offset-[6px]">interfaces</span>, systems and interactive product experiences.
             </h2>
           </div>
 
@@ -182,11 +182,11 @@ export function MinimalistHero({ className }) {
           )}
         >
           {/* Symmetrical Right Specs Table Container */}
-          <div className="flex flex-col justify-center h-full w-full min-h-[220px] md:min-h-[260px] border-r-2 border-[#fca311]/30 pr-6 md:pr-8 text-left md:text-right">
+          <div className="flex flex-col justify-center h-full w-full min-h-[220px] md:min-h-[260px] border-r-2 border-accent/30 pr-6 md:pr-8 text-left md:text-right">
             <div className="w-full pt-2 border-b md:border-b-0 md:border-t border-[#e5e5e5]/10 md:pt-6">
               <div className="grid grid-cols-2 md:grid-cols-1 gap-y-6 gap-x-8 md:gap-x-0">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#fca311] font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
                     Role
                   </span>
                   <span className="text-sm text-white font-sans font-medium tracking-wide">
@@ -194,7 +194,7 @@ export function MinimalistHero({ className }) {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#fca311] font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
                     Core Stack
                   </span>
                   <span className="text-sm text-white font-sans font-medium tracking-wide">
@@ -202,7 +202,7 @@ export function MinimalistHero({ className }) {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#fca311] font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
                     Specialization
                   </span>
                   <span className="text-sm text-[#e5e5e5] font-sans font-medium tracking-wide leading-relaxed">
@@ -210,7 +210,7 @@ export function MinimalistHero({ className }) {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#fca311] font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
                     Current Upgrade
                   </span>
                   <span className="text-sm text-[#e5e5e5] font-sans font-medium tracking-wide">
@@ -231,13 +231,13 @@ export function MinimalistHero({ className }) {
       >
         
         {/* Ambient Background Aura Glow (Reacts to group hover) */}
-        <div className="absolute w-[110%] h-[110%] rounded-full bg-[radial-gradient(circle_at_center,rgba(252,163,17,0.12)_0%,rgba(252,163,17,0)_65%)] blur-3xl z-0 pointer-events-none transition-all duration-700 group-hover:scale-110 group-hover:opacity-100 opacity-80" />
+        <div className="absolute w-[110%] h-[110%] rounded-full bg-[radial-gradient(circle_at_center,rgba(233,156,22,0.12)_0%,rgba(233,156,22,0)_65%)] blur-3xl z-0 pointer-events-none transition-all duration-700 group-hover:scale-110 group-hover:opacity-100 opacity-80" />
 
         {/* --- Explosion Shockwave Rings --- */}
         {isExploding && (
           <>
             <div 
-              className="absolute w-[60%] h-[60%] rounded-full border-4 border-[#fca311]/50 pointer-events-none z-50 animate-ping"
+              className="absolute w-[60%] h-[60%] rounded-full border-4 border-accent/50 pointer-events-none z-50 animate-ping"
               style={{ animationDuration: '0.8s' }}
             />
             <div 
@@ -250,10 +250,10 @@ export function MinimalistHero({ className }) {
         {/* --- Central Premium Portrait Base --- */}
         <div 
           className={cn(
-            "absolute w-[58%] h-[58%] rounded-full shadow-[0_0_40px_rgba(252,163,17,0.12)] border-2 border-[#fca311]/45 pointer-events-auto z-35 flex justify-center items-center overflow-hidden transition-all duration-500",
+            "absolute w-[58%] h-[58%] rounded-full shadow-[0_0_40px_rgba(233,156,22,0.12)] border-2 border-accent/45 pointer-events-auto z-35 flex justify-center items-center overflow-hidden transition-all duration-500",
             !isExpanded 
-              ? "hover:border-[#fca311] hover:shadow-[0_0_30px_rgba(252,163,17,0.25)] hover:scale-[1.03]" 
-              : "group-hover:border-[#fca311] group-hover:shadow-[0_0_35px_rgba(252,163,17,0.3)] group-hover:scale-[1.03]"
+              ? "hover:border-accent hover:shadow-[0_0_30px_rgba(233,156,22,0.25)] hover:scale-[1.03]" 
+              : "group-hover:border-accent group-hover:shadow-[0_0_35px_rgba(233,156,22,0.3)] group-hover:scale-[1.03]"
           )}
         >
           {/* Layered Background Base */}
@@ -263,14 +263,14 @@ export function MinimalistHero({ className }) {
             <div 
               className="absolute inset-0 opacity-[0.06]"
               style={{
-                backgroundImage: `linear-gradient(rgba(252, 163, 17, 0.2) 1px, transparent 1px), 
-                                  linear-gradient(90deg, rgba(252, 163, 17, 0.2) 1px, transparent 1px)`,
+                backgroundImage: `linear-gradient(rgba(233, 156, 22, 0.2) 1px, transparent 1px), 
+                                  linear-gradient(90deg, rgba(233, 156, 22, 0.2) 1px, transparent 1px)`,
                 backgroundSize: '12px 12px',
               }}
             />
 
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(252,163,17,0.3)_0%,transparent_65%)]" />
-            <div className="absolute inset-2 rounded-full border border-[#fca311]/10 pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(233,156,22,0.3)_0%,transparent_65%)]" />
+            <div className="absolute inset-2 rounded-full border border-accent/10 pointer-events-none" />
 
             {/* Portrait Crop Base */}
             {imageSrc && (
@@ -309,12 +309,12 @@ export function MinimalistHero({ className }) {
           
           {/* Ring 1: Orbit Guide Path for Socials (Outer) */}
           <div 
-            className="absolute w-[96%] h-[96%] rounded-full border border-dashed border-[#fca311]/30 pointer-events-none z-0 animate-[spin_100s_linear_infinite]"
+            className="absolute w-[96%] h-[96%] rounded-full border border-dashed border-accent/30 pointer-events-none z-0 animate-[spin_100s_linear_infinite]"
           />
 
           {/* Ring 2: HUD Accent Ring with gaps (Middle-Outer) */}
           <div 
-            className="absolute w-[82%] h-[82%] rounded-full border-2 border-[#fca311]/40 border-t-transparent border-b-transparent animate-[spin_35s_linear_infinite] pointer-events-none z-0"
+            className="absolute w-[82%] h-[82%] rounded-full border-2 border-accent/40 border-t-transparent border-b-transparent animate-[spin_35s_linear_infinite] pointer-events-none z-0"
           />
 
           {/* Ring 3: Concentric Dotted Ring (Middle) */}
@@ -349,12 +349,12 @@ export function MinimalistHero({ className }) {
                   >
                     <div className="group/icon relative">
                       {/* Gold ring ambient glow on hover */}
-                      <div className="absolute -inset-1.5 rounded-full bg-[#fca311]/25 opacity-0 blur transition-all duration-300 group-hover/icon:opacity-100 group-hover/icon:scale-110" />
+                      <div className="absolute -inset-1.5 rounded-full bg-accent/25 opacity-0 blur transition-all duration-300 group-hover/icon:opacity-100 group-hover/icon:scale-110" />
                       <a
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#fca311]/25 bg-[#0b0f19]/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] hover:shadow-[0_0_12px_rgba(252,163,17,0.35)] hover:scale-115"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-accent/25 bg-[#0b0f19]/90 text-[#e5e5e5] shadow-lg backdrop-blur-md transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-[0_0_12px_rgba(233,156,22,0.35)] hover:scale-115"
                       >
                         <link.icon className="h-5 w-5" weight="fill" />
                       </a>
@@ -378,7 +378,7 @@ export function MinimalistHero({ className }) {
               : "opacity-100 translate-y-0"
           )}
         >
-          <span className="text-[15px] md:text-[18px] font-mono tracking-[0.5em] text-[#fca311] font-bold uppercase drop-shadow-[0_0_12px_rgba(252,163,17,0.45)]">
+          <span className="text-[15px] md:text-[18px] font-mono tracking-[0.5em] text-accent font-bold uppercase drop-shadow-[0_0_12px_rgba(233,156,22,0.45)]">
             WELCOME
           </span>
           <span className="text-[10px] md:text-[11px] font-mono tracking-[0.25em] text-[#e5e5e5]/40 uppercase mt-2.5 whitespace-nowrap">

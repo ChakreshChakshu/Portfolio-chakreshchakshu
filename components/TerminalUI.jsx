@@ -171,22 +171,22 @@ export function TerminalUI() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full min-h-[420px] rounded-xl border border-[#fca311]/25 bg-[#07090e]/95 shadow-2xl backdrop-blur-md overflow-hidden relative group/term">
+    <div className="flex flex-col w-full h-full min-h-[420px] rounded-xl border border-accent/25 bg-[#07090e]/95 shadow-2xl backdrop-blur-md overflow-hidden relative group/term">
       
       {/* Symmetrical Terminal Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0b0f19] border-b border-[#fca311]/15 shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-[#0b0f19] border-b border-accent/15 shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500/80" />
-          <div className="w-3 h-3 rounded-full bg-[#fca311]/80" />
+          <div className="w-3 h-3 rounded-full bg-accent/80" />
           <div className="w-3 h-3 rounded-full bg-green-500/80" />
         </div>
         <span className="text-[10px] font-mono tracking-widest text-[#e5e5e5]/40 uppercase flex items-center gap-1.5">
-          <TermIcon size={12} className="text-[#fca311]" /> API: /api/about
+          <TermIcon size={12} className="text-accent" /> API: /api/about
         </span>
         <button
           onClick={() => fetchAboutData(true)}
           disabled={loading}
-          className="text-gray-500 hover:text-[#fca311] active:scale-95 transition-colors disabled:opacity-30 cursor-pointer"
+          className="text-gray-500 hover:text-accent active:scale-95 transition-colors disabled:opacity-30 cursor-pointer"
           title="Re-query API Endpoint"
         >
           <ArrowClockwise size={13} className={cn(loading && "animate-spin")} />
@@ -200,7 +200,7 @@ export function TerminalUI() {
         onWheel={handleTerminalWheel}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
-        className="flex-grow p-5 overflow-y-auto font-mono text-xs md:text-sm space-y-2 cursor-text select-text scrollbar-thin scrollbar-thumb-[#fca311]/20"
+        className="flex-grow p-5 overflow-y-auto font-mono text-xs md:text-sm space-y-2 cursor-text select-text scrollbar-thin scrollbar-thumb-accent/20"
       >
         {terminalHistory.map((item, idx) => (
           <div 
@@ -210,7 +210,7 @@ export function TerminalUI() {
               item.type === "system" && "text-blue-400/90",
               item.type === "prompt" && "text-[#e5e5e5]/40",
               item.type === "user" && "text-white font-semibold",
-              item.type === "command" && "text-[#fca311] font-bold pl-4",
+              item.type === "command" && "text-accent font-bold pl-4",
               item.type === "success" && "text-green-400 font-bold",
               item.type === "error" && "text-red-400 font-medium",
               item.type === "text" && "text-[#e5e5e5]/80 pl-4"
@@ -231,7 +231,7 @@ export function TerminalUI() {
             onSubmit={handleTerminalSubmit}
             className="flex items-center pt-1"
           >
-            <span className="text-[#fca311] font-mono font-bold mr-2 text-xs md:text-sm shrink-0 select-none">
+            <span className="text-accent font-mono font-bold mr-2 text-xs md:text-sm shrink-0 select-none">
               user@chakresh:~$
             </span>
             <input

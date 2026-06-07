@@ -478,13 +478,13 @@ export function ExperienceSection() {
         <div className="max-w-xl mx-auto flex flex-col gap-16 text-left relative z-10">
           {/* Hero Statement */}
           <div className="flex flex-col">
-            <span className="text-[11px] font-mono tracking-[0.45em] text-[#fca311] font-bold uppercase mb-2">
+            <span className="text-[11px] font-mono tracking-[0.45em] text-accent font-bold uppercase mb-2">
               ★ SYSTEM LOG
             </span>
             <h2 className="text-5xl font-extrabold tracking-tight text-white uppercase font-heading">
               EXPERIENCE
             </h2>
-            <div className="h-[1px] w-28 bg-[#fca311]/50 mt-4 mb-6" />
+            <div className="h-[1px] w-28 bg-accent/50 mt-4 mb-6" />
             <p className="text-xl text-slate-400 font-sans leading-relaxed mt-4">
               Building production systems.<br />Shipping products.<br />Solving real problems.
             </p>
@@ -492,8 +492,8 @@ export function ExperienceSection() {
 
           {/* Company Details */}
           <div className="flex flex-col gap-3 p-6 rounded-xl border border-white/5 bg-black/40 backdrop-blur-md">
-            <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest text-[#fca311] uppercase mb-1">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#fca311] animate-pulse" />
+            <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest text-accent uppercase mb-1">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               SYSTEM ACTIVE {"//"} {experienceData.duration}
             </div>
             <h3 className="text-4xl font-extrabold tracking-tight text-white uppercase font-heading">
@@ -520,7 +520,7 @@ export function ExperienceSection() {
                   className="flex flex-col gap-3 p-6 rounded-xl border border-white/5 bg-black/40 backdrop-blur-sm relative text-left"
                 >
                   <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
-                    <h4 className="text-sm font-mono tracking-wider text-[#fca311] uppercase">
+                    <h4 className="text-sm font-mono tracking-wider text-accent uppercase">
                       {con.title}
                     </h4>
                   </div>
@@ -556,7 +556,7 @@ export function ExperienceSection() {
 
           {/* Closing Statement */}
           <div className="py-8 border-t border-white/5 text-center mt-4">
-            <p className="text-xl font-light tracking-wider text-[#fca311] italic font-sans">
+            <p className="text-xl font-light tracking-wider text-accent italic font-sans">
               “Engineering products from architecture to experience.”
             </p>
           </div>
@@ -565,12 +565,11 @@ export function ExperienceSection() {
     );
   }
 
-  // Desktop storytelling presentation
   return (
     <section
       id="experience"
       ref={containerRef}
-      className="w-full relative bg-[#020204] h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full relative bg-background h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
       {/* Interactive Constellation & Warp Beams Canvas Background */}
       <canvas 
@@ -580,16 +579,16 @@ export function ExperienceSection() {
 
       {/* Subtle HUD tech accents framing the viewport */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-16 left-16 w-8 h-8 border-t border-l border-[#fca311]/20" />
-        <div className="absolute top-16 right-16 w-8 h-8 border-t border-r border-[#fca311]/20" />
-        <div className="absolute bottom-16 left-16 w-8 h-8 border-b border-l border-[#fca311]/20" />
-        <div className="absolute bottom-16 right-16 w-8 h-8 border-b border-r border-[#fca311]/20" />
+        <div className="absolute top-16 left-16 w-8 h-8 border-t border-l border-accent/20" />
+        <div className="absolute top-16 right-16 w-8 h-8 border-t border-r border-accent/20" />
+        <div className="absolute bottom-16 left-16 w-8 h-8 border-b border-l border-accent/20" />
+        <div className="absolute bottom-16 right-16 w-8 h-8 border-b border-r border-accent/20" />
       </div>
 
       {/* Dynamic backdrop lighting flare - Follows cursor and transforms intensity/color by active stage (high contrast amber glow) */}
       <div 
         ref={bgLightRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#fca311]/[0.08] blur-[150px] pointer-events-none z-0 transition-all duration-700" 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent/[0.08] blur-[150px] pointer-events-none z-0 transition-all duration-700" 
       />
 
       {/* -------------------- STAGE 1: HERO STATEMENT -------------------- */}
@@ -601,13 +600,13 @@ export function ExperienceSection() {
           <SplitText text="EXPERIENCE" />
         </h2>
         
-        <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#fca311] to-transparent mt-6 mb-8 stage1-line" />
+        <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-accent to-transparent mt-6 mb-8 stage1-line" />
 
         <div className="flex flex-col gap-5 max-w-2xl stage1-fade-in mt-6">
           <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
             Building production systems.
           </p>
-          <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-[#fca311]/85 tracking-tight leading-none uppercase">
+          <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-accent/85 tracking-tight leading-none uppercase">
             Shipping products.
           </p>
           <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
@@ -622,7 +621,7 @@ export function ExperienceSection() {
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-0 pointer-events-none"
       >
         <div className="relative max-w-5xl w-full px-16 py-20 border border-white/5 rounded-2xl bg-black/45 backdrop-blur-md shadow-[0_30px_100px_rgba(0,0,0,0.85)] overflow-hidden stage2-card">
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#fca311]/[0.015] to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
           
           <h3 className="text-6xl md:text-7xl lg:text-8xl font-extrabold font-heading tracking-tight text-white leading-none mb-6 stage2-company">
             <SplitText text={experienceData.company} />
@@ -668,7 +667,7 @@ export function ExperienceSection() {
                 <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent rounded-2xl pointer-events-none" />
                 
                 <div className="flex items-center gap-3 mb-6 stage3-header">
-                  <span className="text-xs md:text-sm lg:text-base font-mono text-[#fca311] tracking-[0.25em] uppercase font-bold">
+                  <span className="text-xs md:text-sm lg:text-base font-mono text-accent tracking-[0.25em] uppercase font-bold">
                     {con.title}
                   </span>
                 </div>
@@ -702,8 +701,8 @@ export function ExperienceSection() {
               className="flex flex-col items-center p-12 rounded-2xl border border-white/5 bg-black/40 backdrop-blur-md relative select-none stage4-metric-col group overflow-hidden"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#fca311]/[0.015] to-transparent pointer-events-none" />
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#fca311]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <span 
                 ref={el => metricValuesRef.current[idx] = el}
@@ -726,7 +725,7 @@ export function ExperienceSection() {
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-12 w-full opacity-0 pointer-events-none"
       >
         {/* Lens flare */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-radial from-[#fca311]/[0.04] to-transparent blur-[130px] pointer-events-none stage5-flare" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-radial from-accent/[0.04] to-transparent blur-[130px] pointer-events-none stage5-flare" />
         
         <h2 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-light tracking-wide text-white max-w-6xl leading-tight stage5-title italic font-sans">
           <SplitText text="“Engineering products from architecture to experience.”" />

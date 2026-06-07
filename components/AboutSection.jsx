@@ -8,7 +8,7 @@ import { Cpu, HandPointing, Rocket } from '@phosphor-icons/react';
 const ringColors = [
   { color: '#ffffff', colorTwo: '#cccccc' }, // Slide 1: Who I Am
   { color: '#38bdf8', colorTwo: '#0284c7' }, // Slide 2: Sky / Blue (Description slide)
-  { color: '#ffe169', colorTwo: '#fca311' }, // Slide 3: Gold / Warm Orange
+  { color: '#ffe169', colorTwo: '#e99c16' }, // Slide 3: Honey Bronze
   { color: '#818cf8', colorTwo: '#c084fc' }, // Slide 4: Indigo / Purple
   { color: '#34d399', colorTwo: '#2dd4bf' }  // Slide 5: Emerald / Teal
 ];
@@ -186,14 +186,14 @@ export function AboutSection() {
     <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-transparent text-white relative overflow-hidden select-none">
       
       {/* Cinematic Ambient Background Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full bg-[#fca311]/4 blur-[300px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full bg-accent/4 blur-[300px] pointer-events-none z-0" />
       <div className="absolute bottom-10 left-10 w-[600px] h-[600px] rounded-full bg-blue-500/4 blur-[200px] pointer-events-none z-0" />
 
       {/* Dynamic Three.js Magic Rings Background */}
       <div className="absolute inset-0 z-0 opacity-80 mix-blend-screen pointer-events-none">
         <MagicRings 
-          color={ringColors[activeIndex]?.color || '#fca311'}
-          colorTwo={ringColors[activeIndex]?.colorTwo || '#d97706'}
+          color={ringColors[activeIndex]?.color || '#e99c16'}
+          colorTwo={ringColors[activeIndex]?.colorTwo || '#ba7d12'}
           speed={0.6}
           ringCount={8}
           attenuation={7.5}
@@ -225,13 +225,13 @@ export function AboutSection() {
             <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white font-sans">
               Who I Am
             </h1>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-sky-400 via-[#fca311] to-[#ffe169] mt-6 rounded-full shadow-[0_0_12px_rgba(252,163,17,0.5)]" />
+            <div className="h-1.5 w-24 bg-gradient-to-r from-sky-400 via-accent to-[#ffe169] mt-6 rounded-full shadow-[0_0_12px_rgba(233,156,22,0.5)]" />
           </div>
 
           {/* Line 2: Hero Description Slide */}
           <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.3] text-white font-sans max-w-5xl">
-              I am a <span className="bg-gradient-to-r from-sky-400 via-[#fca311] to-[#ffe169] bg-clip-text text-transparent">full-stack developer</span> focused on frontend systems, interaction engineering, and production-grade UX architectures.
+              I am a <span className="bg-gradient-to-r from-sky-400 via-accent to-[#ffe169] bg-clip-text text-transparent">full-stack developer</span> focused on frontend systems, interaction engineering, and production-grade UX architectures.
             </h2>
           </div>
 
@@ -241,7 +241,7 @@ export function AboutSection() {
               I don&apos;t just build interfaces.
             </p>
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none text-white font-sans">
-              I <span className="bg-gradient-to-r from-[#ffe169] via-[#fca311] to-[#d97706] bg-clip-text text-transparent">engineer experiences.</span>
+              I <span className="bg-gradient-to-r from-[#ffe169] via-accent to-[#d97706] bg-clip-text text-transparent">engineer experiences.</span>
             </h2>
           </div>
 
@@ -256,14 +256,14 @@ export function AboutSection() {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full px-4">
               {/* Card 1: Systems */}
-              <div className="group relative p-6 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.02] to-white/[0.01] backdrop-blur-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:border-[#fca311]/30 hover:shadow-[0_15px_30px_-10px_rgba(252,163,17,0.15)]">
-                <div className="w-12 h-12 rounded-xl bg-[#fca311]/10 border border-[#fca311]/20 flex items-center justify-center text-[#fca311] mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="group relative p-6 rounded-2xl border border-white/5 bg-gradient-to-b from-white/[0.02] to-white/[0.01] backdrop-blur-xl flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:border-accent/30 hover:shadow-[0_15px_30px_-10px_rgba(233,156,22,0.15)]">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-5 group-hover:scale-110 transition-transform duration-300">
                   <Cpu size={24} weight="duotone" />
                 </div>
                 <h3 className="text-xl font-bold text-white tracking-wider mb-2 font-sans">
                   SYSTEMS
                 </h3>
-                <div className="w-8 h-0.5 bg-[#fca311]/30 mb-4" />
+                <div className="w-8 h-0.5 bg-accent/30 mb-4" />
                 <p className="text-sm text-white/60 leading-relaxed font-sans">
                   Scalable architecture, strict typescript engineering, and robust backend integrations.
                 </p>
@@ -308,7 +308,7 @@ export function AboutSection() {
             {/* Specs Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-10 w-full max-w-4xl px-4 z-40">
               {stats.map((stat, i) => (
-                <div key={i} className="flex flex-col items-center p-5 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-md hover:border-[#fca311]/20 hover:bg-white/[0.03] transition-all duration-300 select-none">
+                <div key={i} className="flex flex-col items-center p-5 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-md hover:border-accent/20 hover:bg-white/[0.03] transition-all duration-300 select-none">
                   <span 
                     className="stat-number text-2xl sm:text-3xl md:text-4xl font-black text-white font-sans bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent"
                     data-target={stat.target} 
