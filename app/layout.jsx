@@ -58,6 +58,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Chakresh Chakshu",
+    "url": "https://chakreshchakshu.github.io",
+    "image": "https://chakreshchakshu.github.io/images/chakresh.png",
+    "jobTitle": "Frontend Focused Full Stack Developer",
+    "sameAs": [
+      process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu",
+      process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/in/chakreshchakshu"
+    ],
+    "email": process.env.NEXT_PUBLIC_EMAIL || "chakshuchakresh@gmail.com",
+    "description": "Portfolio of Chakresh Chakshu, a Frontend Focused Full Stack Developer specializing in crafting interactive, high-performance web experiences."
+  };
+
   return (
     <html
       lang="en"
@@ -65,6 +80,10 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <NavbarWrapper />
         <main className="grow">{children}</main>
       </body>

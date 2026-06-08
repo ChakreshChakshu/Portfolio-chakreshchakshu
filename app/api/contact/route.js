@@ -1,19 +1,30 @@
 import { Resend } from 'resend';
+import { z } from 'zod';
+
+const contactSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(50, 'First name is too long'),
+  lastName: z.string().min(1, 'Last name is required').max(50, 'Last name is too long'),
+  email: z.string().email('Invalid email address'),
+  message: z.string().min(10, 'Message must be at least 10 characters long').max(1000, 'Message must be under 1000 characters'),
+});
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, message } = body;
-
-    // Server-side validation
-    if (!firstName || !email || !message) {
+    
+    // Server-side Zod validation
+    const parsedData = contactSchema.safeParse(body);
+    if (!parsedData.success) {
+      const errorMsg = parsedData.error.errors.map(err => err.message).join(', ');
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ error: errorMsg }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    const { firstName, lastName, email, message } = parsedData.data;
 
     const recipient = process.env.NEXT_PUBLIC_EMAIL || 'chakreshchakshu@gmail.com';
 
