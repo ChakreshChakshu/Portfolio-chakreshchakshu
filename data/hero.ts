@@ -14,8 +14,8 @@ export const heroData: {
   imageSrc: "/images/chakresh.png",
   imageAlt: "Chakresh Chakshu Portfolio Image",
   overlayText: {
-    part1: "Frontend Engineer",
-    part2: "with full stack expertise",
+    part1: "Frontend Focused",
+    part2: "Full Stack Developer",
   },
   socialLinks: [
     { icon: GithubLogo, href: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu" },

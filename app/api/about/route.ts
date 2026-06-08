@@ -13,7 +13,7 @@ export async function GET() {
       },
       profile: {
         name: "Chakresh Chakshu",
-        role: "Frontend Engineer (Full Stack Expertise)",
+        role: "Frontend Focused Full Stack Developer",
         experience: "3+ Years Professional",
         location: "India",
         availability: "Open to High-Impact Opportunities"
