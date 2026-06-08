@@ -41,8 +41,8 @@ export function ProjectsSection() {
   ];
 
   const accentColors = ["#FFFFFA", "#FF312E", "#515052", "#FFFFFA", "#FF312E"];
-  const cardBgColors = ["rgba(51, 49, 56, 0.4)", "rgba(51, 49, 56, 0.4)", "rgba(51, 49, 56, 0.4)", "rgba(51, 49, 56, 0.4)", "rgba(51, 49, 56, 0.4)"];
-  const bgColors = ["rgba(0, 1, 3, 0.45)", "rgba(0, 1, 3, 0.45)", "rgba(0, 1, 3, 0.45)", "rgba(0, 1, 3, 0.45)", "rgba(0, 1, 3, 0.45)"];
+  const cardBgColors = ["#333138", "#333138", "#333138", "#333138", "#333138"];
+  const bgColors = ["#000103", "#000103", "#000103", "#000103", "#000103"];
   const thumbAccents = [
     { color: '#FFFFFA', glow: 'rgba(255, 255, 250, 0.2)' },
     { color: '#FF312E', glow: 'rgba(255, 49, 46, 0.2)' },
@@ -321,7 +321,7 @@ export function ProjectsSection() {
     return (
       <section 
         id="projects" 
-        className="w-full relative bg-transparent py-16 px-6 overflow-y-auto select-none"
+        className="w-full relative bg-background py-16 px-6 overflow-y-auto select-none"
       >
         <div className="max-w-2xl mx-auto flex flex-col gap-12 pt-8">
           <div className="flex flex-col gap-10">
@@ -395,7 +395,7 @@ export function ProjectsSection() {
     <section 
       id="projects" 
       ref={sectionRef}
-      className="w-full relative bg-transparent h-[100vh] flex flex-col justify-start select-none overflow-hidden"
+      className="w-full relative bg-background h-[100vh] flex flex-col justify-start select-none overflow-hidden"
     >
       <style>{`
         #projects .slides {
@@ -597,7 +597,7 @@ export function ProjectsSection() {
               >
                 <div
                   ref={el => cardRefs.current[idx] = el}
-                  className="project-card-overlay backdrop-blur-xl border border-white/5"
+                  className="project-card-overlay"
                   style={{ backgroundColor: cardBgColors[0] }}
                 >
 

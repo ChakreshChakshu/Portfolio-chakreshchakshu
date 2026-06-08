@@ -468,7 +468,7 @@ export function ExperienceSection() {
     return (
       <section
         id="experience"
-        className="w-full relative bg-transparent py-20 px-6 overflow-y-auto select-none font-sans"
+        className="w-full relative bg-background py-20 px-6 overflow-y-auto select-none font-sans"
       >
         <div 
           className="absolute inset-0 bg-[linear-gradient(rgba(233,156,22,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(233,156,22,0.06)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"
@@ -569,7 +569,7 @@ export function ExperienceSection() {
     <section
       id="experience"
       ref={containerRef}
-      className="w-full relative bg-transparent h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full relative bg-background h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
       {/* Interactive Constellation & Warp Beams Canvas Background */}
       <canvas 
