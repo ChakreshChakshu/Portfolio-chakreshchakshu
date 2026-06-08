@@ -241,7 +241,7 @@ export function SkillsSection() {
     <section
       id="skills"
       ref={containerRef}
-      className="w-full relative bg-background h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full relative bg-transparent h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
@@ -325,7 +325,7 @@ export function SkillsSection() {
       <div 
         className="absolute inset-0 z-0 pointer-events-none select-none"
         style={{
-          background: 'radial-gradient(circle at center, #06050b 0%, #010102 80%, #000000 100%)'
+          background: 'radial-gradient(circle at center, rgba(6, 5, 11, 0.4) 0%, rgba(1, 1, 2, 0.55) 80%, rgba(0, 0, 0, 0.6) 100%)'
         }}
       >
         <div className="stars-layer" style={{ opacity: 0.12 }} />

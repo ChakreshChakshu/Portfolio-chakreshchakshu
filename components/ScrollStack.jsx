@@ -154,15 +154,35 @@ const ScrollStack = ({
       const rotation = rotationAmount ? i * rotationAmount * scaleProgress : 0;
 
       let blur = 0;
-      if (blurAmount && i !== cardsRef.current.length - 1) {
-        const entryProgress = calculateProgress(
-          scrollTop,
-          pinStart - containerHeight,
-          pinStart
-        );
-        if (entryProgress < 1) {
-          // Use a smooth quadratic curve for a premium focus transition
-          blur = Math.pow(1 - entryProgress, 2) * blurAmount;
+      if (blurAmount) {
+        // Blur on entry
+        if (i !== cardsRef.current.length - 1) {
+          const entryProgress = calculateProgress(
+            scrollTop,
+            pinStart - containerHeight,
+            pinStart
+          );
+          if (entryProgress < 1) {
+            // Use a smooth quadratic curve for a premium focus transition
+            blur = Math.pow(1 - entryProgress, 2) * blurAmount;
+          }
+        }
+        // Blur on exit (as next section covers this one)
+        if (i < cardsRef.current.length - 1) {
+          const nextIdx = i + 1;
+          const nextCardTop = cardsTop[nextIdx];
+          const nextDelayOffset = cardDelays[nextIdx];
+          const nextVirtualTop = nextCardTop + nextDelayOffset;
+          const nextPinStart = nextVirtualTop - stackPositionPx - itemStackDistance * nextIdx;
+          
+          const nextEntryProgress = calculateProgress(
+            scrollTop,
+            nextPinStart - containerHeight,
+            nextPinStart
+          );
+          if (nextEntryProgress > 0) {
+            blur = Math.max(blur, nextEntryProgress * blurAmount);
+          }
         }
       }
 

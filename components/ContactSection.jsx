@@ -59,7 +59,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="w-full relative bg-background overflow-hidden select-none"
+      className="w-full relative bg-transparent overflow-hidden select-none"
     >
       <style>{`
         #contact .field-line {

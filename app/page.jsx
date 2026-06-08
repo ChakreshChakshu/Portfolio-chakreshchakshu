@@ -24,7 +24,7 @@ export default function Home() {
         scaleEndPosition="0%"
         baseScale={1.0}
         itemScale={0}
-        blurAmount={12}
+        blurAmount={24}
         showDots={true}
         className="w-full relative"
         onStackComplete={() => { }}
@@ -36,27 +36,27 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-black/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-hidden py-12 lg:py-0">
             <AboutSection isActive={activeSectionIdx === 1} />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-black/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-hidden py-12 lg:py-0">
             <SkillsSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-28 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-black/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-28 overflow-hidden py-12 lg:py-0">
             <ExperienceSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem extraDelay={4800}>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30 overflow-hidden">
+          <div className="min-h-screen lg:h-screen w-full bg-black/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30 overflow-hidden">
             <ProjectsSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-black/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden py-12 lg:py-0">
             <div className="flex-1 flex flex-col items-center justify-center px-4">
               <ContactSection />
             </div>
