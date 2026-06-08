@@ -54,8 +54,8 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-hidden py-12 lg:py-0">
-            <div className="flex-1 flex flex-col items-center justify-center px-4">
+          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-y-auto py-12 lg:py-0">
+            <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
               <ContactSection />
             </div>
             <Footer />

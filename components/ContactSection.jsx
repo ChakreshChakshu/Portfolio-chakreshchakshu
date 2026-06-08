@@ -38,22 +38,40 @@ export function ContactSection() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
       setIsSubmitting(false);
-      setIsSubmitted(true);
-      setTimeout(() => {
-        const check = document.querySelector('.success-circle');
-        const checkPath = document.querySelector('.success-check');
-        if (check && checkPath) {
-          gsap.fromTo(check, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.7)' });
-          gsap.fromTo(checkPath, { strokeDasharray: 50, strokeDashoffset: 50 }, { strokeDashoffset: 0, duration: 0.4, delay: 0.3, ease: 'power2.out' });
-        }
-      }, 50);
-    }, 1500);
+
+      if (response.ok && result.success) {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          const check = document.querySelector('.success-circle');
+          const checkPath = document.querySelector('.success-check');
+          if (check && checkPath) {
+            gsap.fromTo(check, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.7)' });
+            gsap.fromTo(checkPath, { strokeDasharray: 50, strokeDashoffset: 50 }, { strokeDashoffset: 0, duration: 0.4, delay: 0.3, ease: 'power2.out' });
+          }
+        }, 50);
+      } else {
+        alert(result.error || 'Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      alert('Network error. Please try again later.');
+    }
   };
 
   const resetForm = () => {
@@ -64,8 +82,11 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="w-full relative bg-background overflow-hidden select-none"
+      className="w-full relative bg-background overflow-hidden select-none group"
     >
+      {/* Volumetric White Spotlight effect from section top left to form */}
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18)_0%,transparent_70%)] blur-[70px] pointer-events-none select-none hidden lg:block z-0" />
+      <div className="absolute top-0 left-0 w-[950px] h-[350px] bg-gradient-to-r from-white/[0.12] via-white/[0.03] to-transparent origin-top-left rotate-[28deg] blur-[35px] pointer-events-none select-none hidden lg:block z-0 transition-all duration-1000 ease-out group-hover:rotate-[30deg] group-hover:from-white/[0.16]" />
       <style>{`
         #contact .field-line {
           background: transparent;
@@ -132,42 +153,25 @@ export function ContactSection() {
         }
       `}</style>
 
-      {/* Subtle grid background */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 opacity-[0.03]"
-        style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '80px 80px'
-        }}
-      />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 pt-20 pb-24">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 pt-8 pb-12">
 
         {/* Top label row */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <span className="w-5 h-px bg-white/20" />
             <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-white/35 font-bold">
               Contact
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <span className="text-[10px] font-mono tracking-wider uppercase text-emerald-400 font-bold">
-              Available
-            </span>
-          </div>
         </div>
 
         {/* Giant heading */}
         <div ref={headingRef} className="mb-2">
-          <h2 className="text-[clamp(3.5rem,10vw,8.5rem)] font-black tracking-[-0.03em] leading-[0.9] text-white uppercase font-sans">
+          <h2 className="text-[clamp(3.5rem,10vw,8.5rem)] font-black tracking-[-0.03em] leading-[0.9] text-white uppercase font-heading">
             Let&apos;s Build
           </h2>
-          <h2 className="text-[clamp(3.5rem,10vw,8.5rem)] font-black tracking-[-0.03em] leading-[0.9] uppercase font-sans"
+          <h2 className="text-[clamp(3.5rem,10vw,8.5rem)] font-black tracking-[-0.03em] leading-[0.9] uppercase font-heading"
             style={{ color: 'var(--accent)', WebkitTextStroke: '0px', textShadow: '0 0 80px rgba(255,49,46,0.15)' }}
           >
             Together
@@ -175,18 +179,18 @@ export function ContactSection() {
         </div>
 
         {/* Horizontal rule */}
-        <div className="w-full h-px bg-white/8 mt-12 mb-14" />
+        <div className="w-full h-px bg-white/8 mt-6 mb-8" />
 
         {/* Two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16 lg:gap-20">
 
           {/* LEFT: Form */}
-          <div>
+          <div className="relative group">
             {!isSubmitted ? (
               <form className="my-8 flex flex-col gap-6" onSubmit={handleSubmit}>
                 <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
                   <LabelInputContainer>
-                    <Label htmlFor="firstname" className="text-white/60">First name</Label>
+                    <Label htmlFor="firstname" className="text-[10px] font-mono tracking-[0.2em] text-slate-400 font-bold uppercase">First name</Label>
                     <Input
                       id="firstname"
                       placeholder="Tyler"
@@ -197,7 +201,7 @@ export function ContactSection() {
                     />
                   </LabelInputContainer>
                   <LabelInputContainer>
-                    <Label htmlFor="lastname" className="text-white/60">Last name</Label>
+                    <Label htmlFor="lastname" className="text-[10px] font-mono tracking-[0.2em] text-slate-400 font-bold uppercase">Last name</Label>
                     <Input
                       id="lastname"
                       placeholder="Durden"
@@ -209,7 +213,7 @@ export function ContactSection() {
                   </LabelInputContainer>
                 </div>
                 <LabelInputContainer>
-                  <Label htmlFor="email" className="text-white/60">Email Address</Label>
+                  <Label htmlFor="email" className="text-[10px] font-mono tracking-[0.2em] text-slate-400 font-bold uppercase">Email Address</Label>
                   <Input
                     id="email"
                     placeholder="projectmayhem@fc.com"
@@ -220,7 +224,7 @@ export function ContactSection() {
                   />
                 </LabelInputContainer>
                 <LabelInputContainer>
-                  <Label htmlFor="message" className="text-white/60">Your Message</Label>
+                  <Label htmlFor="message" className="text-[10px] font-mono tracking-[0.2em] text-slate-400 font-bold uppercase">Your Message</Label>
                   <Textarea
                     id="message"
                     placeholder="Tell me about your project, idea, or collaboration..."
@@ -285,6 +289,16 @@ export function ContactSection() {
                 </button>
               </div>
             )}
+
+
+            {/* Avatar image standing with support of the form */}
+            <div className="absolute bottom-[-10px] -left-[200px] w-[360px] h-[360px] pointer-events-none select-none hidden lg:block z-20">
+              <img
+                src="/images/character-Photoroom.png"
+                alt="Developer Avatar"
+                className="w-full h-full object-contain filter drop-shadow-[0_15px_20px_rgba(0,0,0,0.6)]"
+              />
+            </div>
           </div>
 
           {/* RIGHT: Info panel */}
@@ -292,20 +306,20 @@ export function ContactSection() {
 
             {/* Description */}
             <div className="flex flex-col gap-5">
-              <p className="text-base text-slate-400 font-sans leading-relaxed">
+              <p className="text-base text-slate-400 font-sans leading-relaxed font-medium">
                 Have a project idea, want to collaborate, or just want to talk tech? I&apos;m open to freelance work, full-time roles, and interesting conversations.
               </p>
-
+ 
               {/* Email row */}
               <div
                 onClick={handleCopyEmail}
                 className="email-row flex items-center justify-between py-4 cursor-pointer group"
               >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/25 font-bold">
+                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-slate-500 font-bold">
                     Email
                   </span>
-                  <span className="text-sm font-mono text-white/80 group-hover:text-white transition-colors">
+                  <span className="text-sm font-mono text-white/90 group-hover:text-white transition-colors font-medium">
                     {process.env.NEXT_PUBLIC_EMAIL || "chakreshchakshu@gmail.com"}
                   </span>
                 </div>
@@ -321,26 +335,26 @@ export function ContactSection() {
                   )}
                 </div>
               </div>
-
+ 
               {/* Location + time */}
               <div className="flex items-center justify-between py-3 border-t border-white/[0.06]">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/25 font-bold">
+                  <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-slate-500 font-bold">
                     Location
                   </span>
-                  <span className="text-sm font-sans text-white/70">
+                  <span className="text-sm font-sans text-white/80 font-medium">
                     India — GMT +5:30
                   </span>
                 </div>
-                <span className="text-xs font-mono tabular-nums tracking-wider" style={{ color: 'var(--accent)', opacity: 0.8 }}>
+                <span className="text-xs font-mono tabular-nums tracking-widest font-semibold" style={{ color: 'var(--accent)', opacity: 0.8 }}>
                   {currentTime || '--:--:--'}
                 </span>
               </div>
             </div>
-
+ 
             {/* Socials */}
             <div className="flex flex-col gap-4">
-              <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/25 font-bold">
+              <span className="text-[9px] font-mono tracking-[0.35em] uppercase text-slate-500 font-bold">
                 Find me on
               </span>
               <div className="flex gap-3">
