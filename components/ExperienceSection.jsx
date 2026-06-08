@@ -63,81 +63,7 @@ export function ExperienceSection() {
     };
   }, [isMobile]);
 
-  // Interactive Neural Constellation & Warp Beams Canvas Animation
-  useEffect(() => {
-    if (isMobile) return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    let animationFrameId;
-
-    // Resize handler
-    const resizeCanvas = () => {
-      const rect = containerRef.current?.getBoundingClientRect() || { width: window.innerWidth, height: window.innerHeight };
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    // Fixed vertical ambient beams that slide and pulse with scroll parallax and follow cursor
-    const ambientBeams = [
-      { xPercent: 0.15, width: 100, speed: 0.15, maxAlpha: 0.08, phase: 0, mouseParallax: 40 },
-      { xPercent: 0.38, width: 180, speed: -0.25, maxAlpha: 0.12, phase: 2, mouseParallax: -60 },
-      { xPercent: 0.55, width: 130, speed: 0.2, maxAlpha: 0.09, phase: 4, mouseParallax: 30 },
-      { xPercent: 0.72, width: 220, speed: -0.15, maxAlpha: 0.11, phase: 1.5, mouseParallax: -50 },
-      { xPercent: 0.90, width: 90, speed: 0.25, maxAlpha: 0.07, phase: 6, mouseParallax: 20 }
-    ];
-
-    // Animation loop
-    const render = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const mouse = mouseRef.current;
-      const scrollProgress = scrollProgressRef.current;
-      
-      // Decay scroll velocity smoothly
-      scrollVelocityRef.current *= 0.93;
-      const velocity = scrollVelocityRef.current;
-
-      // Draw Scroll-Parallax & Mouse-Move Ambient Vertical Beams
-      ambientBeams.forEach((beam) => {
-        // Calculate offset from cursor horizontal position
-        const mouseXOffset = mouse.x !== null ? (mouse.x - canvas.width / 2) : 0;
-        
-        // Final horizontal center of the beam (merges scroll progress and mouse position)
-        const currentX = (beam.xPercent * canvas.width) + 
-                         (scrollProgress * canvas.width * beam.speed) + 
-                         (mouseXOffset * (beam.mouseParallax / 300));
-        
-        // Slowly pulse beam alpha
-        beam.phase += 0.006;
-        const pulse = Math.sin(beam.phase);
-        
-        // Brighten slightly on scroll speed (velocity)
-        const currentAlpha = beam.maxAlpha * (0.6 + pulse * 0.4) * (1.0 + Math.min(1.5, velocity / 10));
-        const currentWidth = beam.width * (0.95 + pulse * 0.05);
-
-        // Draw vertical linear gradient column (light beam)
-        const grad = ctx.createLinearGradient(currentX - currentWidth / 2, 0, currentX + currentWidth / 2, 0);
-        grad.addColorStop(0, "rgba(252, 163, 17, 0)");
-        grad.addColorStop(0.5, `rgba(252, 163, 17, ${currentAlpha})`);
-        grad.addColorStop(1, "rgba(252, 163, 17, 0)");
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(currentX - currentWidth / 2, 0, currentWidth, canvas.height);
-      });
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-    render();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isMobile]);
 
   // GSAP scroll listener for driving desktop storytelling steps
   useEffect(() => {
@@ -238,77 +164,40 @@ export function ExperienceSection() {
     tl.set(stage3Ref.current, { pointerEvents: "auto" }, 38);
     tl.to(stage3Ref.current, { opacity: 1, duration: 2, ease: "power2.out" }, 38);
 
-    // Animate each contribution sequentially
-    experienceData.contributions.forEach((con, idx) => {
-      const el = contributionTextsRef.current[idx];
-      if (!el) return;
-
-      const start = 40 + idx * 8;
-      const exitStart = start + 5.5;
-
-      const card = el;
-      const header = el.querySelector(".stage3-header");
-      const titleChars = el.querySelectorAll(".stage3-explanation .char");
-
-      // Initial reset of card to 3D skewed state completely below the viewport
-      gsap.set(card, { 
+    const s3Cards = stage3Ref.current.querySelectorAll(".stage3-card");
+    if (s3Cards.length > 0) {
+      gsap.set(s3Cards, { 
         opacity: 0, 
-        yPercent: 180, 
-        rotateY: idx % 2 === 0 ? 20 : -20, 
+        yPercent: 120, 
         rotateX: 10 
       });
 
-      // Enter (Emerge completely from below to center)
-      tl.set(card, { pointerEvents: "auto" }, start);
-      tl.fromTo(card, 
+      tl.fromTo(s3Cards, 
         { 
           opacity: 0, 
-          yPercent: 180, 
-          rotateY: idx % 2 === 0 ? 20 : -20, 
+          yPercent: 120, 
           rotateX: 10 
         }, 
         { 
           opacity: 1, 
           yPercent: 0, 
-          rotateY: idx % 2 === 0 ? 5 : -5, 
-          rotateX: 2, 
-          duration: 4.5, 
+          rotateX: 0, 
+          duration: 8, 
+          stagger: 0.15, 
           ease: "power3.out" 
         }, 
-        start
+        40
       );
-      
-      if (header) {
-        tl.fromTo(header, { opacity: 0, x: -15 }, { opacity: 1, x: 0, duration: 2.5, ease: "power2.out" }, start + 0.5);
-      }
-      
-      if (titleChars.length > 0) {
-        tl.fromTo(titleChars,
-          { 
-            opacity: 0,
-          },
-          { 
-            opacity: 1, 
-            stagger: 0.03,
-            ease: "none", 
-            duration: 0.001
-          },
-          start + 0.8
-        );
-      }
 
-      // Exit (Slide completely up out of the viewport)
-      tl.to(card, { 
+      tl.to(s3Cards, { 
         opacity: 0, 
-        yPercent: -180, 
-        rotateY: idx % 2 === 0 ? -20 : 20,
+        yPercent: -120, 
         rotateX: -10,
-        duration: 4.5, 
+        duration: 8, 
+        stagger: 0.1, 
         ease: "power3.in" 
-      }, exitStart);
-      
-      tl.set(card, { pointerEvents: "none" }, exitStart + 4.5);
-    });
+      }, 70);
+    }
 
     // Stage 3 Exit
     tl.to(stage3Ref.current, { opacity: 0, duration: 3, ease: "power2.inOut" }, 78);
@@ -421,34 +310,25 @@ export function ExperienceSection() {
         overwrite: "auto" 
       });
 
-      // Metric count-up trigger
-      if (progress >= 0.71 && progress < 0.86) {
-        if (!hasCountedUp) {
-          hasCountedUp = true;
-          experienceData.metrics.forEach((metric, mIdx) => {
-            const el = metricValuesRef.current[mIdx];
-            if (!el) return;
-            
-            const targetVal = metric.value;
-            metricsArr[mIdx] = 0;
-
-            gsap.to(metricsArr, {
-              [mIdx]: targetVal,
-              duration: 1.1,
-              ease: "power2.out",
-              onUpdate: () => {
-                if (el) {
-                  el.innerText = Math.floor(metricsArr[mIdx]) + metric.suffix;
-                }
-              }
-            });
-          });
-        }
+      // Scroll-aware metric count-up
+      const metricStart = 0.80;
+      const metricEnd = 0.88;
+      let metricP = 0;
+      if (progress < metricStart) {
+        metricP = 0;
+      } else if (progress > metricEnd) {
+        metricP = 1;
       } else {
-        if (progress < 0.66 || progress > 0.88) {
-          hasCountedUp = false;
-        }
+        metricP = (progress - metricStart) / (metricEnd - metricStart);
       }
+
+      experienceData.metrics.forEach((metric, mIdx) => {
+        const el = metricValuesRef.current[mIdx];
+        if (el) {
+          const currentVal = Math.floor(metricP * metric.value);
+          el.innerText = currentVal + metric.suffix;
+        }
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -468,13 +348,8 @@ export function ExperienceSection() {
     return (
       <section
         id="experience"
-        className="w-full relative bg-background py-20 px-6 overflow-y-auto select-none font-sans"
+        className="w-full relative bg-transparent py-20 px-6 overflow-y-auto select-none font-sans"
       >
-        <div 
-          className="absolute inset-0 bg-[linear-gradient(rgba(233,156,22,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(233,156,22,0.06)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"
-          style={{ opacity: 0.5 }}
-        />
-        
         <div className="max-w-xl mx-auto flex flex-col gap-16 text-left relative z-10">
           {/* Hero Statement */}
           <div className="flex flex-col">
@@ -569,28 +444,8 @@ export function ExperienceSection() {
     <section
       id="experience"
       ref={containerRef}
-      className="w-full relative bg-background h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full relative bg-transparent h-screen flex flex-col justify-center items-center overflow-hidden select-none"
     >
-      {/* Interactive Constellation & Warp Beams Canvas Background */}
-      <canvas 
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      />
-
-      {/* Subtle HUD tech accents framing the viewport */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-16 left-16 w-8 h-8 border-t border-l border-accent/20" />
-        <div className="absolute top-16 right-16 w-8 h-8 border-t border-r border-accent/20" />
-        <div className="absolute bottom-16 left-16 w-8 h-8 border-b border-l border-accent/20" />
-        <div className="absolute bottom-16 right-16 w-8 h-8 border-b border-r border-accent/20" />
-      </div>
-
-      {/* Dynamic backdrop lighting flare - Follows cursor and transforms intensity/color by active stage (high contrast amber glow) */}
-      <div 
-        ref={bgLightRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent/[0.08] blur-[150px] pointer-events-none z-0 transition-all duration-700" 
-      />
-
       {/* -------------------- STAGE 1: HERO STATEMENT -------------------- */}
       <div 
         ref={stage1Ref}
@@ -640,44 +495,37 @@ export function ExperienceSection() {
       {/* -------------------- STAGE 3: CORE CONTRIBUTIONS -------------------- */}
       <div 
         ref={stage3Ref}
-        className="absolute inset-0 z-10 flex flex-col justify-center px-12 md:px-24 w-full opacity-0 pointer-events-none"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 md:px-12 w-full opacity-0 pointer-events-none"
       >
-        <div className="relative w-full max-w-6xl mx-auto h-[60vh] flex items-center justify-center">
-          {experienceData.contributions.map((con, idx) => {
-            const alignment = idx % 3;
-            let alignClasses = "";
-            if (alignment === 0) {
-              // Left
-              alignClasses = "items-start text-left left-0 max-w-3xl";
-            } else if (alignment === 1) {
-              // Right
-              alignClasses = "items-end text-right right-0 max-w-3xl ml-auto";
-            } else {
-              // Center (Middle)
-              alignClasses = "items-center text-center left-1/2 -translate-x-1/2 max-w-3xl";
-            }
-
-            return (
-              <div
-                key={con.id}
-                ref={el => contributionTextsRef.current[idx] = el}
-                className={`absolute flex flex-col justify-center opacity-0 pointer-events-none p-12 rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl shadow-[0_30px_90px_rgba(0,0,0,0.65)] ${alignClasses} stage3-card`}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent rounded-2xl pointer-events-none" />
-                
-                <div className="flex items-center gap-3 mb-6 stage3-header">
-                  <span className="text-xs md:text-sm lg:text-base font-mono text-accent tracking-[0.25em] uppercase font-bold">
-                    {con.title}
-                  </span>
-                </div>
-                
-                <h4 className="text-3xl md:text-4xl lg:text-5xl font-extrabold font-heading text-white uppercase tracking-tight leading-snug stage3-explanation mb-4">
-                  <SplitText text={con.explanation} charClassName="stage3-char" wordClassName="stage3-word" />
+        <span className="text-xs md:text-sm font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-6">
+          ★ CAPABILITIES & SOLUTIONS
+        </span>
+        <h3 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white uppercase leading-none mb-12 text-center">
+          CORE CONTRIBUTIONS
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[95rem] w-full justify-center items-stretch stage3-grid">
+          {experienceData.contributions.map((con, idx) => (
+            <div
+              key={con.id}
+              ref={el => contributionTextsRef.current[idx] = el}
+              className="relative flex flex-col p-8 rounded-2xl border border-white/[0.08] bg-[#0A0A0C]/80 backdrop-blur-xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] stage3-card h-full justify-start text-left group hover:border-accent/30 transition-all duration-300"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent rounded-2xl pointer-events-none" />
+              
+              <div className="flex flex-col mb-4 stage3-header">
+                <h4 className="text-xl md:text-2xl font-black font-heading text-white uppercase tracking-tight leading-none">
+                  {con.title}
                 </h4>
               </div>
-            );
-          })}
+              
+              <p className="text-sm md:text-base text-slate-300 font-sans font-medium leading-relaxed tracking-wide stage3-explanation">
+                {con.explanation}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -730,10 +578,6 @@ export function ExperienceSection() {
         <h2 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-light tracking-wide text-white max-w-6xl leading-tight stage5-title italic font-sans">
           <SplitText text="“Engineering products from architecture to experience.”" />
         </h2>
-        
-        <p className="text-sm md:text-base font-mono text-slate-500 tracking-[0.3em] uppercase mt-10 select-none stage5-subtext">
-          SYSTEM STACK LOADED {"//"} NEXT SECTION JUMP
-        </p>
       </div>
 
     </section>

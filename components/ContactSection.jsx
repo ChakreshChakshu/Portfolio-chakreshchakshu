@@ -1,10 +1,15 @@
 'use client';
 
+import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useMotionTemplate, useMotionValue, motion } from "motion/react";
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -35,7 +40,7 @@ export function ContactSection() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) return;
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
@@ -52,7 +57,7 @@ export function ContactSection() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', email: '', message: '' });
+    setFormData({ firstName: '', lastName: '', email: '', message: '' });
     setIsSubmitted(false);
   };
 
@@ -178,73 +183,74 @@ export function ContactSection() {
           {/* LEFT: Form */}
           <div>
             {!isSubmitted ? (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/30 font-bold">
-                      Your Name
-                    </label>
-                    <input
+              <form className="my-8 flex flex-col gap-6" onSubmit={handleSubmit}>
+                <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+                  <LabelInputContainer>
+                    <Label htmlFor="firstname" className="text-white/60">First name</Label>
+                    <Input
+                      id="firstname"
+                      placeholder="Tyler"
                       type="text"
                       required
-                      placeholder="John Doe"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="field-line"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/30 font-bold">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
+                  </LabelInputContainer>
+                  <LabelInputContainer>
+                    <Label htmlFor="lastname" className="text-white/60">Last name</Label>
+                    <Input
+                      id="lastname"
+                      placeholder="Durden"
+                      type="text"
                       required
-                      placeholder="john@company.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="field-line"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                     />
-                  </div>
+                  </LabelInputContainer>
                 </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-[9px] font-mono tracking-[0.35em] uppercase text-white/30 font-bold">
-                    Your Message
-                  </label>
-                  <textarea
+                <LabelInputContainer>
+                  <Label htmlFor="email" className="text-white/60">Email Address</Label>
+                  <Input
+                    id="email"
+                    placeholder="projectmayhem@fc.com"
+                    type="email"
                     required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor="message" className="text-white/60">Your Message</Label>
+                  <Textarea
+                    id="message"
                     placeholder="Tell me about your project, idea, or collaboration..."
+                    required
+                    rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="field-line"
-                    rows={4}
                   />
-                </div>
+                </LabelInputContainer>
 
-                <div className="flex items-center gap-6 pt-2">
+                <div className="flex items-center gap-6 pt-4">
                   <button
+                    className="group/btn relative block h-12 w-full max-w-xs rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                     type="submit"
                     disabled={isSubmitting}
-                    className="submit-btn px-8 py-4 rounded-full font-black text-xs uppercase tracking-widest text-black font-sans cursor-pointer flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: 'var(--accent)' }}
                   >
                     {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin h-3.5 w-3.5 text-black shrink-0" fill="none" viewBox="0 0 24 24">
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
-                        <span>Sending...</span>
-                      </>
+                        Sending...
+                      </span>
                     ) : (
-                      <>
-                        <span>Send Message</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 14 14" className="shrink-0">
-                          <path fill="#000" d="M13.5.5a.5.5 0 0 0-.62-.48l-12 3a.5.5 0 0 0-.07.93l4.5 1.8 1.8 4.5a.5.5 0 0 0 .93-.07l3-12A.5.5 0 0 0 13.5.5ZM5.28 7.66l-3.23-1.29 9.38-2.35-6.15 3.64Z" />
-                        </svg>
-                      </>
+                      <span className="flex items-center justify-center gap-2">
+                        Send Message &rarr;
+                      </span>
                     )}
+                    <BottomGradient />
                   </button>
                   <span className="text-[10px] font-mono text-white/20 tracking-wider hidden sm:block">
                     Usually respond within 24h
@@ -369,3 +375,62 @@ export function ContactSection() {
     </section>
   );
 }
+
+const BottomGradient = () => {
+  return (
+    <>
+      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+    </>
+  );
+};
+
+const LabelInputContainer = ({ children, className }) => {
+  return (
+    <div className={cn("flex w-full flex-col space-y-2", className)}>
+      {children}
+    </div>
+  );
+};
+
+const Textarea = React.forwardRef(({ className, ...props }, ref) => {
+  const radius = 100;
+  const [visible, setVisible] = React.useState(false);
+
+  let mouseX = useMotionValue(0);
+  let mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    let { left, top } = currentTarget.getBoundingClientRect();
+
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+  return (
+    <motion.div
+      style={{
+        background: useMotionTemplate`
+      radial-gradient(
+        ${visible ? radius + "px" : "0px"} circle at ${mouseX}px ${mouseY}px,
+        #3b82f6,
+        transparent 80%
+      )
+    `,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      className="group/input rounded-lg p-[2px] transition duration-300"
+    >
+      <textarea
+        className={cn(
+          `shadow-input dark:placeholder-text-neutral-600 flex w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600 resize-none min-h-[100px]`,
+          className,
+        )}
+        ref={ref}
+        {...props}
+      />
+    </motion.div>
+  );
+});
+Textarea.displayName = "Textarea";

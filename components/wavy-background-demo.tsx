@@ -35,7 +35,8 @@ export default function WavyBackgroundDemo() {
       let delayOffset = 0;
       for (let j = 0; j < cardIndex; j++) {
         const c = cards[j] as HTMLElement;
-        const extraDelay = c ? (parseFloat(c.getAttribute('data-extra-delay')) || 0) : 0;
+        const attr = c ? c.getAttribute('data-extra-delay') : null;
+        const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
         delayOffset += 1600 + extraDelay;
       }
       
