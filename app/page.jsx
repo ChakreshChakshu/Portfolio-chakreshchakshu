@@ -29,7 +29,7 @@ export default function Home() {
         onActiveIndexChange={(idx) => setActiveSectionIdx(idx)}
       >
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-visible lg:overflow-hidden">
             <MinimalistHero />
           </div>
         </ScrollStackItem>
