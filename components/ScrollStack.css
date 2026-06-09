@@ -178,4 +178,14 @@
   .scroll-stack-indicator {
     display: none !important;
   }
+  .scroll-stack-card {
+    transform: none !important;
+    -webkit-transform: none !important;
+    transform-style: flat !important;
+    backface-visibility: visible !important;
+    will-change: auto !important;
+  }
+  .scroll-stack-scroller {
+    overscroll-behavior: auto !important;
+  }
 }
