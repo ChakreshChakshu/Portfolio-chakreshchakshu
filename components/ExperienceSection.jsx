@@ -41,7 +41,8 @@ export function ExperienceSection() {
 
   // Track mouse coordinates relative to container
   useEffect(() => {
-    if (isMobile) return;
+    const isMobileViewport = window.innerWidth < 1024;
+    if (isMobileViewport) return;
 
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
@@ -61,14 +62,12 @@ export function ExperienceSection() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [isMobile]);
+  }, []);
 
 
 
   // GSAP scroll listener for driving desktop storytelling steps
   useEffect(() => {
-    if (isMobile) return;
-
     // Create the master timeline (using 100 duration to represent percentage mapping)
     const tl = gsap.timeline({ paused: true });
 
@@ -262,10 +261,6 @@ export function ExperienceSection() {
       );
     }
 
-    // Initialize counts for count-up
-    const metricsArr = [0, 0, 0];
-    let hasCountedUp = false;
-
     // Capture scroll speed to drive background warp beams
     lastScrollYRef.current = window.scrollY;
     lastScrollTimeRef.current = Date.now();
@@ -276,24 +271,46 @@ export function ExperienceSection() {
         return el ? el.offsetTop : 0;
       };
 
-      // Experience is the 4th section (index 3)
-      const card3Top = cards[3] ? getElementOffset(cards[3]) : 3 * window.innerHeight;
-      const rangeStart = card3Top + 4800; // 3 preceding cards * 1600 scroll space = 4800
-      const rangeEnd = rangeStart + 1600;
-      const scroll = window.scrollY;
-
+      const isMobileViewport = window.innerWidth < 1024;
       let progress = 0;
-      if (scroll < rangeStart) {
-        progress = 0;
-      } else if (scroll > rangeEnd) {
-        progress = 1;
+
+      if (!isMobileViewport) {
+        // Experience is the 4th section (index 3)
+        const card3Top = cards[3] ? getElementOffset(cards[3]) : 3 * window.innerHeight;
+        const rangeStart = card3Top + 4800; // 3 preceding cards * 1600 scroll space = 4800
+        const rangeEnd = rangeStart + 1600;
+        const scroll = window.scrollY;
+
+        if (scroll < rangeStart) {
+          progress = 0;
+        } else if (scroll > rangeEnd) {
+          progress = 1;
+        } else {
+          progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
+        }
       } else {
-        progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const containerHeight = rect.height;
+        const windowHeight = window.innerHeight;
+        const totalScrollableDistance = containerHeight - windowHeight;
+
+        if (totalScrollableDistance > 0) {
+          const scrolled = -rect.top;
+          if (scrolled < 0) {
+            progress = 0;
+          } else if (scrolled > totalScrollableDistance) {
+            progress = 1;
+          } else {
+            progress = scrolled / totalScrollableDistance;
+          }
+        }
       }
 
       // Calculate scroll velocity
       const now = Date.now();
       const dt = Math.max(1, now - lastScrollTimeRef.current);
+      const scroll = window.scrollY;
       const dy = Math.abs(scroll - lastScrollYRef.current);
       const velocity = dy / dt; // pixels per ms
       scrollVelocityRef.current = Math.min(25, velocity * 15); // cap at 25 speed
@@ -341,245 +358,151 @@ export function ExperienceSection() {
       clearTimeout(timer);
       tl.kill();
     };
-  }, [isMobile]);
-
-  // Mobile layout: Minimalist vertical layout with high design quality
-  if (isMobile) {
-    return (
-      <section
-        id="experience"
-        className="w-full relative bg-transparent py-20 px-6 overflow-y-auto select-none font-sans"
-      >
-        <div className="max-w-xl mx-auto flex flex-col gap-16 text-left relative z-10">
-          {/* Hero Statement */}
-          <div className="flex flex-col">
-            <span className="text-[11px] font-mono tracking-[0.45em] text-accent font-bold uppercase mb-2">
-              ★ SYSTEM LOG
-            </span>
-            <h2 className="text-5xl font-extrabold tracking-tight text-white uppercase font-heading">
-              EXPERIENCE
-            </h2>
-            <div className="h-[1px] w-28 bg-accent/50 mt-4 mb-6" />
-            <p className="text-xl text-slate-400 font-sans leading-relaxed mt-4">
-              Building production systems.<br />Shipping products.<br />Solving real problems.
-            </p>
-          </div>
-
-          {/* Company Details */}
-          <div className="flex flex-col gap-3 p-6 rounded-xl border border-white/5 bg-black/40 backdrop-blur-md">
-            <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest text-accent uppercase mb-1">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              SYSTEM ACTIVE {"//"} {experienceData.duration}
-            </div>
-            <h3 className="text-4xl font-extrabold tracking-tight text-white uppercase font-heading">
-              {experienceData.company}
-            </h3>
-            <p className="text-sm font-mono text-slate-400 tracking-wider">
-              {experienceData.role}
-            </p>
-            <p className="text-base text-slate-300 leading-relaxed font-sans font-light mt-4">
-              {experienceData.summary}
-            </p>
-          </div>
-
-          {/* Contributions */}
-          <div className="flex flex-col gap-8">
-            <span className="text-[11px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold">
-              ENGINEERING MODULES
-            </span>
-            
-            <div className="flex flex-col gap-6">
-              {experienceData.contributions.map((con) => (
-                <div 
-                  key={con.id} 
-                  className="flex flex-col gap-3 p-6 rounded-xl border border-white/5 bg-black/40 backdrop-blur-sm relative text-left"
-                >
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
-                    <h4 className="text-sm font-mono tracking-wider text-accent uppercase">
-                      {con.title}
-                    </h4>
-                  </div>
-                  <p className="text-base text-slate-300 leading-relaxed font-sans font-light">
-                    {con.explanation}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Impact Metrics */}
-          <div className="flex flex-col gap-6">
-            <span className="text-[11px] font-mono tracking-[0.3em] text-slate-500 uppercase font-bold">
-              METRIC HIGHLIGHTS
-            </span>
-            <div className="grid grid-cols-3 gap-4">
-              {experienceData.metrics.map((metric, idx) => (
-                <div 
-                  key={idx} 
-                  className="flex flex-col items-center justify-center p-5 rounded-lg border border-white/5 bg-black/40 text-center select-none"
-                >
-                  <span className="text-3xl font-bold text-white font-heading tracking-tighter">
-                    {metric.value}{metric.suffix}
-                  </span>
-                  <span className="text-[8px] font-mono text-slate-500 tracking-wider mt-2.5 leading-tight uppercase">
-                    {metric.label.replace('Production ', '').replace('Reusable ', '')}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Closing Statement */}
-          <div className="py-8 border-t border-white/5 text-center mt-4">
-            <p className="text-xl font-light tracking-wider text-accent italic font-sans">
-              “Engineering products from architecture to experience.”
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  }, []);
 
   return (
     <section
       id="experience"
       ref={containerRef}
-      className="w-full relative bg-transparent h-screen flex flex-col justify-center items-center overflow-hidden select-none"
+      className="w-full h-[250vh] lg:h-screen relative bg-transparent flex flex-col overflow-visible lg:overflow-hidden select-none"
     >
-      {/* -------------------- STAGE 1: HERO STATEMENT -------------------- */}
-      <div 
-        ref={stage1Ref}
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-1"
-      >
-        <h2 className="text-8xl md:text-9xl lg:text-[10rem] font-extrabold font-heading tracking-tight text-white uppercase leading-none py-2 select-none stage1-title">
-          <SplitText text="EXPERIENCE" />
-        </h2>
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-10">
         
-        <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-accent to-transparent mt-6 mb-8 stage1-line" />
-
-        <div className="flex flex-col gap-5 max-w-2xl stage1-fade-in mt-6">
-          <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
-            Building production systems.
-          </p>
-          <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-accent/85 tracking-tight leading-none uppercase">
-            Shipping products.
-          </p>
-          <p className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
-            Solving real problems.
-          </p>
-        </div>
-      </div>
-
-      {/* -------------------- STAGE 2: COMPANY & ROLE -------------------- */}
-      <div 
-        ref={stage2Ref}
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-0 pointer-events-none"
-      >
-        <div className="relative max-w-5xl w-full px-16 py-20 border border-white/5 rounded-2xl bg-black/45 backdrop-blur-md shadow-[0_30px_100px_rgba(0,0,0,0.85)] overflow-hidden stage2-card">
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
+        {/* -------------------- STAGE 1: HERO STATEMENT -------------------- */}
+        <div 
+          ref={stage1Ref}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-1"
+        >
+          <h2 className="text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] font-extrabold font-heading tracking-tight text-white uppercase leading-none py-2 select-none stage1-title">
+            <SplitText text="EXPERIENCE" />
+          </h2>
           
-          <h3 className="text-6xl md:text-7xl lg:text-8xl font-extrabold font-heading tracking-tight text-white leading-none mb-6 stage2-company">
-            <SplitText text={experienceData.company} />
+          <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-accent to-transparent mt-6 mb-8 stage1-line" />
+
+          <div className="flex flex-col gap-3 sm:gap-5 max-w-2xl stage1-fade-in mt-4 sm:mt-6">
+            <p className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
+              Building production systems.
+            </p>
+            <p className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-accent/85 tracking-tight leading-none uppercase">
+              Shipping products.
+            </p>
+            <p className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-slate-300 tracking-tight leading-none uppercase">
+              Solving real problems.
+            </p>
+          </div>
+        </div>
+
+        {/* -------------------- STAGE 2: COMPANY & ROLE -------------------- */}
+        <div 
+          ref={stage2Ref}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 w-full opacity-0 pointer-events-none"
+        >
+          <div className="relative max-w-5xl w-full px-6 sm:px-16 py-12 sm:py-20 border border-white/5 rounded-2xl bg-black/45 backdrop-blur-md shadow-[0_30px_100px_rgba(0,0,0,0.85)] overflow-hidden stage2-card">
+            <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
+            
+            <h3 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold font-heading tracking-tight text-white leading-none mb-4 sm:mb-6 stage2-company">
+              <SplitText text={experienceData.company} />
+            </h3>
+            
+            <div className="text-[10px] sm:text-xs md:text-sm lg:text-base font-mono tracking-widest text-slate-400 uppercase mb-6 sm:mb-8 stage2-fade-in font-bold">
+              {experienceData.role} // {experienceData.duration}
+            </div>
+            
+            <p className="text-sm sm:text-lg md:text-xl lg:text-2xl text-slate-300 font-sans leading-relaxed max-w-3xl mx-auto stage2-fade-in font-light">
+              {experienceData.summary}
+            </p>
+          </div>
+        </div>
+
+        {/* -------------------- STAGE 3: CORE CONTRIBUTIONS -------------------- */}
+        <div 
+          ref={stage3Ref}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 md:px-12 w-full opacity-0 pointer-events-none"
+        >
+          <span className="text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-4 sm:mb-6">
+            ★ CAPABILITIES & SOLUTIONS
+          </span>
+          <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white uppercase leading-none mb-6 sm:mb-12 text-center">
+            CORE CONTRIBUTIONS
           </h3>
           
-          <div className="text-xs md:text-sm lg:text-base font-mono tracking-widest text-slate-400 uppercase mb-8 stage2-fade-in font-bold">
-            {experienceData.role} // {experienceData.duration}
-          </div>
-          
-          <p className="text-lg md:text-xl lg:text-2xl text-slate-300 font-sans leading-relaxed max-w-3xl mx-auto stage2-fade-in font-light">
-            {experienceData.summary}
-          </p>
-        </div>
-      </div>
-
-      {/* -------------------- STAGE 3: CORE CONTRIBUTIONS -------------------- */}
-      <div 
-        ref={stage3Ref}
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 md:px-12 w-full opacity-0 pointer-events-none"
-      >
-        <span className="text-xs md:text-sm font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-6">
-          ★ CAPABILITIES & SOLUTIONS
-        </span>
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white uppercase leading-none mb-12 text-center">
-          CORE CONTRIBUTIONS
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[95rem] w-full justify-center items-stretch stage3-grid">
-          {experienceData.contributions.map((con, idx) => (
-            <div
-              key={con.id}
-              ref={el => contributionTextsRef.current[idx] = el}
-              className="relative flex flex-col p-8 rounded-2xl border border-white/[0.08] bg-[#0A0A0C]/80 backdrop-blur-xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] stage3-card h-full justify-start text-left group hover:border-accent/30 transition-all duration-300"
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent rounded-2xl pointer-events-none" />
-              
-              <div className="flex flex-col mb-4 stage3-header">
-                <h4 className="text-xl md:text-2xl font-black font-heading text-white uppercase tracking-tight leading-none">
-                  {con.title}
-                </h4>
-              </div>
-              
-              <p className="text-sm md:text-base text-slate-300 font-sans font-medium leading-relaxed tracking-wide stage3-explanation">
-                {con.explanation}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* -------------------- STAGE 4: IMPACT METRICS -------------------- */}
-      <div 
-        ref={stage4Ref}
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center px-12 w-full opacity-0 pointer-events-none"
-      >
-        <span className="text-xs md:text-sm font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-6">
-          ★ SYSTEM PERFORMANCE
-        </span>
-        
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white uppercase leading-none mb-20 stage4-title">
-          <SplitText text="ENGINEERING IMPACT" />
-        </h3>
-
-        <div className="grid grid-cols-3 gap-10 max-w-6xl justify-center items-center w-full">
-          {experienceData.metrics.map((metric, idx) => (
-            <div 
-              key={idx}
-              className="flex flex-col items-center p-12 rounded-2xl border border-white/5 bg-black/40 backdrop-blur-md relative select-none stage4-metric-col group overflow-hidden"
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <span 
-                ref={el => metricValuesRef.current[idx] = el}
-                className="text-7xl md:text-8xl lg:text-[7rem] font-bold font-heading tracking-tighter leading-none text-white select-none bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent mb-4"
+          <div className="flex lg:grid overflow-x-auto lg:overflow-visible snap-x snap-mandatory lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6 max-w-[95rem] w-full justify-start lg:justify-center items-stretch stage3-grid pb-6 lg:pb-0 px-6 lg:px-0 scrollbar-none">
+            {experienceData.contributions.map((con, idx) => (
+              <div
+                key={con.id}
+                ref={el => contributionTextsRef.current[idx] = el}
+                className="relative flex flex-col p-6 lg:p-8 rounded-2xl border border-white/[0.08] bg-[#0A0A0C]/80 backdrop-blur-xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] stage3-card h-full min-w-[280px] sm:min-w-[320px] lg:min-w-0 snap-center justify-start text-left group hover:border-accent/30 transition-all duration-300"
+                style={{ transformStyle: "preserve-3d" }}
               >
-                0{metric.suffix}
-              </span>
-              
-              <span className="text-xs md:text-sm font-mono text-slate-400 tracking-[0.2em] uppercase mt-4 text-center font-bold leading-relaxed max-w-[200px]">
-                {metric.label}
-              </span>
-            </div>
-          ))}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-2xl" />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent rounded-2xl pointer-events-none" />
+                
+                <div className="flex flex-col mb-3 sm:mb-4 stage3-header">
+                  <h4 className="text-lg md:text-2xl font-black font-heading text-white uppercase tracking-tight leading-none">
+                    {con.title}
+                  </h4>
+                </div>
+                
+                <p className="text-xs sm:text-base text-slate-300 font-sans font-medium leading-relaxed tracking-wide stage3-explanation">
+                  {con.explanation}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* -------------------- STAGE 5: CLOSING MOMENT -------------------- */}
-      <div 
-        ref={stage5Ref}
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-12 w-full opacity-0 pointer-events-none"
-      >
-        {/* Lens flare */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-radial from-accent/[0.04] to-transparent blur-[130px] pointer-events-none stage5-flare" />
-        
-        <h2 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-light tracking-wide text-white max-w-6xl leading-tight stage5-title italic font-sans">
-          <SplitText text="“Engineering products from architecture to experience.”" />
-        </h2>
-      </div>
+        {/* -------------------- STAGE 4: IMPACT METRICS -------------------- */}
+        <div 
+          ref={stage4Ref}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 md:px-12 w-full opacity-0 pointer-events-none"
+        >
+          <span className="text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.45em] text-slate-500 font-bold uppercase mb-4 sm:mb-6">
+            ★ SYSTEM PERFORMANCE
+          </span>
+          
+          <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-white uppercase leading-none mb-10 sm:mb-20 stage4-title">
+            <SplitText text="ENGINEERING IMPACT" />
+          </h3>
 
+          <div className="grid grid-cols-3 gap-3 md:gap-10 max-w-6xl justify-center items-center w-full px-2 md:px-0">
+            {experienceData.metrics.map((metric, idx) => (
+              <div 
+                key={idx}
+                className="flex flex-col items-center p-4 md:p-12 rounded-2xl border border-white/5 bg-black/40 backdrop-blur-md relative select-none stage4-metric-col group overflow-hidden"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-tr from-accent/[0.015] to-transparent pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <span 
+                  ref={el => metricValuesRef.current[idx] = el}
+                  className="text-3xl sm:text-7xl md:text-8xl lg:text-[7rem] font-bold font-heading tracking-tighter leading-none text-white select-none bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent mb-2 sm:mb-4"
+                >
+                  0{metric.suffix}
+                </span>
+                
+                <span className="text-[8px] sm:text-xs md:text-sm font-mono text-slate-400 tracking-[0.2em] uppercase mt-2 sm:mt-4 text-center font-bold leading-relaxed max-w-[200px]">
+                  {metric.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* -------------------- STAGE 5: CLOSING MOMENT -------------------- */}
+        <div 
+          ref={stage5Ref}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 sm:px-12 w-full opacity-0 pointer-events-none"
+        >
+          {/* Lens flare */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-radial from-accent/[0.04] to-transparent blur-[130px] pointer-events-none stage5-flare" />
+          
+          <h2 className="text-2xl sm:text-5xl lg:text-[5.5rem] font-light tracking-wide text-white max-w-6xl leading-tight stage5-title italic font-sans">
+            <SplitText text="“Engineering products from architecture to experience.”" />
+          </h2>
+        </div>
+
+      </div>
     </section>
   );
 }
