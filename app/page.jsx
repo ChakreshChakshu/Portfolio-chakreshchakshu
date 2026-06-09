@@ -39,7 +39,7 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-visible lg:overflow-hidden py-12 lg:py-0">
             <SkillsSection />
           </div>
         </ScrollStackItem>
