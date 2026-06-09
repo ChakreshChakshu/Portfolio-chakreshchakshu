@@ -41,8 +41,7 @@ export function ExperienceSection() {
 
   // Track mouse coordinates relative to container
   useEffect(() => {
-    const isMobileViewport = window.innerWidth < 1024;
-    if (isMobileViewport) return;
+    if (isMobile) return;
 
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
@@ -62,7 +61,7 @@ export function ExperienceSection() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
 
 
 
@@ -358,7 +357,7 @@ export function ExperienceSection() {
       clearTimeout(timer);
       tl.kill();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section
