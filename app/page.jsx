@@ -14,7 +14,7 @@ export default function Home() {
   const [activeSectionIdx, setActiveSectionIdx] = useState(0);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background overflow-x-hidden relative">
+    <div className="flex flex-col min-h-screen bg-background overflow-x-clip lg:overflow-x-hidden relative">
       <ScrollStack
         useWindowScroll={true}
         itemDistance={1600}
