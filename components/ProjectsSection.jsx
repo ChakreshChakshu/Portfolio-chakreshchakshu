@@ -321,7 +321,7 @@ export function ProjectsSection() {
     return (
       <section 
         id="projects" 
-        className="w-full relative bg-background py-16 px-6 overflow-y-auto select-none"
+        className="w-full relative bg-background py-16 px-6 overflow-visible select-none"
       >
         <div className="max-w-2xl mx-auto flex flex-col gap-12 pt-8">
           <div className="flex flex-col gap-10">

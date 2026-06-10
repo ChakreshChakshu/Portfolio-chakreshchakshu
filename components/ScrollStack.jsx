@@ -324,15 +324,25 @@ const ScrollStack = ({
     const isMobile = window.innerWidth < 1024;
 
     cards.forEach((card, i) => {
-      // Remove physical margin to prevent DOM space issues on desktop, add small spacing on mobile
-      card.style.marginBottom = isMobile ? '40px' : '0px';
-      card.style.willChange = 'transform, filter';
-      card.style.transformOrigin = 'top center';
-      card.style.backfaceVisibility = 'hidden';
-      card.style.transform = 'translateZ(0)';
-      card.style.webkitTransform = 'translateZ(0)';
-      card.style.perspective = '1000px';
-      card.style.webkitPerspective = '1000px';
+      if (isMobile) {
+        card.style.marginBottom = '40px';
+        card.style.willChange = 'auto';
+        card.style.transformOrigin = 'initial';
+        card.style.backfaceVisibility = 'visible';
+        card.style.transform = 'none';
+        card.style.webkitTransform = 'none';
+        card.style.perspective = 'none';
+        card.style.webkitPerspective = 'none';
+      } else {
+        card.style.marginBottom = '0px';
+        card.style.willChange = 'transform, filter';
+        card.style.transformOrigin = 'top center';
+        card.style.backfaceVisibility = 'hidden';
+        card.style.transform = 'translateZ(0)';
+        card.style.webkitTransform = 'translateZ(0)';
+        card.style.perspective = '1000px';
+        card.style.webkitPerspective = '1000px';
+      }
     });
 
     if (scrollerInner) {

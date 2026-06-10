@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { WavyBackground } from "@/components/ui/wavy-background";
 
 export default function WavyBackgroundDemo() {
+  const outerContainerRef = useRef<HTMLDivElement>(null);
   const skillsContainerRef = useRef<HTMLDivElement>(null);
   const skillsTitleRef = useRef<HTMLHeadingElement>(null);
   
@@ -21,35 +22,56 @@ export default function WavyBackgroundDemo() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      
-      const card = document.getElementById('skills')?.closest('.scroll-stack-card');
-      if (!card) return;
-      
-      const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
-      const cardIndex = cards.indexOf(card as HTMLElement);
-      if (cardIndex === -1) return;
-      
-      const cardTop = (card as HTMLElement).offsetTop;
-      
-      let delayOffset = 0;
-      for (let j = 0; j < cardIndex; j++) {
-        const c = cards[j] as HTMLElement;
-        const attr = c ? c.getAttribute('data-extra-delay') : null;
-        const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
-        delayOffset += 1600 + extraDelay;
-      }
-      
-      const rangeStart = cardTop + delayOffset;
-      const rangeEnd = rangeStart + 1600;
-      
+      const isMobile = window.innerWidth < 1024;
       let progress = 0;
-      if (currentScroll < rangeStart) {
-        progress = 0;
-      } else if (currentScroll > rangeEnd) {
-        progress = 1;
+
+      if (!isMobile) {
+        const currentScroll = window.scrollY;
+        
+        const card = document.getElementById('skills')?.closest('.scroll-stack-card');
+        if (!card) return;
+        
+        const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+        const cardIndex = cards.indexOf(card as HTMLElement);
+        if (cardIndex === -1) return;
+        
+        const cardTop = (card as HTMLElement).offsetTop;
+        
+        let delayOffset = 0;
+        for (let j = 0; j < cardIndex; j++) {
+          const c = cards[j] as HTMLElement;
+          const attr = c ? c.getAttribute('data-extra-delay') : null;
+          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+          delayOffset += 1600 + extraDelay;
+        }
+        
+        const rangeStart = cardTop + delayOffset;
+        const rangeEnd = rangeStart + 1600;
+        
+        if (currentScroll < rangeStart) {
+          progress = 0;
+        } else if (currentScroll > rangeEnd) {
+          progress = 1;
+        } else {
+          progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
+        }
       } else {
-        progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
+        if (!outerContainerRef.current) return;
+        const rect = outerContainerRef.current.getBoundingClientRect();
+        const containerHeight = rect.height;
+        const windowHeight = window.innerHeight;
+        const totalScrollableDistance = containerHeight - windowHeight;
+
+        if (totalScrollableDistance > 0) {
+          const scrolled = -rect.top;
+          if (scrolled < 0) {
+            progress = 0;
+          } else if (scrolled > totalScrollableDistance) {
+            progress = 1;
+          } else {
+            progress = scrolled / totalScrollableDistance;
+          }
+        }
       }
 
       // 1. "SKILLS" scaling -> persistent across entire scroll
@@ -154,58 +176,62 @@ export default function WavyBackgroundDemo() {
   }, []);
 
   return (
-    <WavyBackground className="max-w-6xl mx-auto flex flex-col items-center justify-center h-full relative">
-      <div className="flex flex-col items-center justify-center text-center relative w-full h-[60vh] select-none overflow-visible">
-        
-        {/* 1. SKILLS (Persistent & Scaling) */}
-        <div ref={skillsContainerRef} className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <h2 ref={skillsTitleRef} className="text-7xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-white uppercase font-sans drop-shadow-[0_0_35px_rgba(255,255,255,0.15)] whitespace-nowrap transition-transform duration-75 will-change-transform">
-            SKILLS
-          </h2>
-        </div>
+    <div ref={outerContainerRef} className="w-full h-[250vh] lg:h-full flex flex-col relative overflow-visible lg:overflow-hidden select-none">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10">
+        <WavyBackground className="max-w-6xl mx-auto flex flex-col items-center justify-center h-full relative">
+          <div className="flex flex-col items-center justify-center text-center relative w-full h-[60vh] select-none overflow-visible">
+            
+            {/* 1. SKILLS (Persistent & Scaling) */}
+            <div ref={skillsContainerRef} className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <h2 ref={skillsTitleRef} className="text-5xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-white uppercase font-sans drop-shadow-[0_0_35px_rgba(255,255,255,0.15)] whitespace-nowrap transition-transform duration-75 will-change-transform">
+                SKILLS
+              </h2>
+            </div>
 
-        {/* 2. FRONTEND */}
-        <div ref={frontendContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
-          <h2 className="text-7xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#7DD6FF] uppercase font-sans drop-shadow-[0_0_35px_rgba(125,214,255,0.25)] whitespace-nowrap">
-            <span ref={frontRef} className="inline-block transition-transform duration-75 will-change-transform">FRONT</span>
-            <span ref={endRef} className="inline-block transition-transform duration-75 will-change-transform">END</span>
-          </h2>
-          <div 
-            ref={feSubRef} 
-            className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold transition-transform duration-75 will-change-transform whitespace-nowrap"
-          >
-            React &nbsp;•&nbsp; Next.js &nbsp;•&nbsp; TypeScript &nbsp;•&nbsp; Tailwind &nbsp;•&nbsp; GSAP
+            {/* 2. FRONTEND */}
+            <div ref={frontendContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
+              <h2 className="text-5xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#7DD6FF] uppercase font-sans drop-shadow-[0_0_35px_rgba(125,214,255,0.25)] whitespace-nowrap">
+                <span ref={frontRef} className="inline-block transition-transform duration-75 will-change-transform">FRONT</span>
+                <span ref={endRef} className="inline-block transition-transform duration-75 will-change-transform">END</span>
+              </h2>
+              <div 
+                ref={feSubRef} 
+                className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold transition-transform duration-75 will-change-transform whitespace-nowrap"
+              >
+                React &nbsp;•&nbsp; Next.js &nbsp;•&nbsp; TypeScript &nbsp;•&nbsp; Tailwind &nbsp;•&nbsp; GSAP
+              </div>
+            </div>
+
+            {/* 3. BACKEND */}
+            <div ref={backendContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
+              <h2 className="text-5xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#FF312E] uppercase font-sans drop-shadow-[0_0_35px_rgba(255,49,46,0.25)] whitespace-nowrap">
+                <span ref={backRef} className="inline-block transition-transform duration-75 will-change-transform">BACK</span>
+                <span ref={backEndRef} className="inline-block transition-transform duration-75 will-change-transform">END</span>
+              </h2>
+              <div 
+                ref={beSubRef} 
+                className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold transition-transform duration-75 will-change-transform whitespace-nowrap"
+              >
+                Node.js &nbsp;•&nbsp; PostgreSQL &nbsp;•&nbsp; MongoDB &nbsp;•&nbsp; REST APIs
+              </div>
+            </div>
+
+            {/* 4. TOOLS */}
+            <div ref={toolsContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
+              <h2 className="text-5xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#10B981] uppercase font-sans drop-shadow-[0_0_35px_rgba(16,185,129,0.25)] whitespace-nowrap">
+                TOOLS
+              </h2>
+              <div 
+                ref={toSubRef} 
+                className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold whitespace-nowrap"
+              >
+                Git &nbsp;•&nbsp; Docker &nbsp;•&nbsp; Figma &nbsp;•&nbsp; Vercel &nbsp;•&nbsp; AI Agents
+              </div>
+            </div>
+
           </div>
-        </div>
-
-        {/* 3. BACKEND */}
-        <div ref={backendContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
-          <h2 className="text-7xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#FF312E] uppercase font-sans drop-shadow-[0_0_35px_rgba(255,49,46,0.25)] whitespace-nowrap">
-            <span ref={backRef} className="inline-block transition-transform duration-75 will-change-transform">BACK</span>
-            <span ref={backEndRef} className="inline-block transition-transform duration-75 will-change-transform">END</span>
-          </h2>
-          <div 
-            ref={beSubRef} 
-            className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold transition-transform duration-75 will-change-transform whitespace-nowrap"
-          >
-            Node.js &nbsp;•&nbsp; PostgreSQL &nbsp;•&nbsp; MongoDB &nbsp;•&nbsp; REST APIs
-          </div>
-        </div>
-
-        {/* 4. TOOLS */}
-        <div ref={toolsContainerRef} className="absolute inset-0 flex flex-col items-center justify-center">
-          <h2 className="text-7xl sm:text-9xl lg:text-[12rem] font-black tracking-tighter leading-none text-[#10B981] uppercase font-sans drop-shadow-[0_0_35px_rgba(16,185,129,0.25)] whitespace-nowrap">
-            TOOLS
-          </h2>
-          <div 
-            ref={toSubRef} 
-            className="absolute bottom-[2rem] text-xs sm:text-sm md:text-base font-mono tracking-[0.2em] text-slate-300 font-semibold whitespace-nowrap"
-          >
-            Git &nbsp;•&nbsp; Docker &nbsp;•&nbsp; Figma &nbsp;•&nbsp; Vercel &nbsp;•&nbsp; AI Agents
-          </div>
-        </div>
-
+        </WavyBackground>
       </div>
-    </WavyBackground>
+    </div>
   );
 }

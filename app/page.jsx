@@ -29,32 +29,32 @@ export default function Home() {
         onActiveIndexChange={(idx) => setActiveSectionIdx(idx)}
       >
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-hidden">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-visible lg:overflow-hidden">
             <MinimalistHero />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-20 overflow-visible lg:overflow-hidden py-12 lg:py-0">
             <AboutSection isActive={activeSectionIdx === 1} />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-visible lg:overflow-hidden py-12 lg:py-0">
             <SkillsSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-28 overflow-hidden py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-28 overflow-visible lg:overflow-hidden py-12 lg:py-0">
             <ExperienceSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem extraDelay={4800}>
-          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30 overflow-hidden">
+          <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-30 overflow-visible lg:overflow-hidden">
             <ProjectsSection />
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-y-auto py-12 lg:py-0">
+          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-visible lg:overflow-y-auto py-12 lg:py-0">
             <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
               <ContactSection />
             </div>
