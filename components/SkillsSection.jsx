@@ -6,7 +6,7 @@ export function SkillsSection() {
   return (
     <section 
       id="skills" 
-      className="w-full h-screen bg-transparent relative z-10"
+      className="w-full min-h-screen lg:h-screen bg-transparent relative z-10"
     >
       <WavyBackgroundDemo />
     </section>
