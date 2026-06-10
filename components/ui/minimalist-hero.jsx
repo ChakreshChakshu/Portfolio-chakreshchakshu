@@ -38,6 +38,14 @@ export function MinimalistHero({ className }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   // Scroll Listener: Activates layout symmetrically and triggers orbital explosion burst on first scroll down
   useEffect(() => {
     const handleScroll = () => {
@@ -155,14 +163,14 @@ export function MinimalistHero({ className }) {
         {/* Column 1: Left specs content panel (Glides in from Left) */}
         <div 
           className={cn(
-            "order-2 md:order-1 flex flex-col items-start justify-center text-left max-w-sm py-6 md:py-12 mx-auto md:mx-0 transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-            isExpanded 
-              ? "opacity-100 translate-x-0 scale-100 pointer-events-auto" 
+            "order-2 md:order-1 flex flex-col items-start justify-center text-left max-w-sm py-2 md:py-12 mx-auto md:mx-0 transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
+            isExpanded
+              ? "opacity-100 translate-x-0 scale-100 pointer-events-auto"
               : "opacity-0 -translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
         >
-          <div className="flex flex-col justify-center h-full min-h-[220px] md:min-h-[260px] border-l-2 border-accent/30 pl-6 md:pl-8">
-            <h2 className="text-2xl sm:text-3xl md:text-[35px] font-extrabold tracking-tight text-white leading-[1.45] font-sans">
+          <div className="flex flex-col justify-center h-full min-h-0 md:min-h-[260px] border-l-2 border-accent/30 pl-6 md:pl-8">
+            <h2 className="text-2xl sm:text-3xl md:text-[35px] font-extrabold tracking-tight text-white leading-[1.25] md:leading-[1.45] font-sans">
               I engineer <span className="text-accent font-semibold underline decoration-accent/25 decoration-2 underline-offset-[6px]">interfaces</span>, systems and interactive product experiences.
             </h2>
           </div>
@@ -170,11 +178,11 @@ export function MinimalistHero({ className }) {
         </div>
 
         {/* Column 2: Centered Avatar System */}
-        <div className="order-1 md:order-2 flex justify-center items-center h-full min-h-[340px] md:min-h-[400px] relative">
-          <div 
+        <div className="order-1 md:order-2 flex justify-center items-center h-full min-h-[260px] md:min-h-[400px] relative">
+          <div
             onMouseEnter={() => setIsAvatarHovered(true)}
             onMouseLeave={() => setIsAvatarHovered(false)}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[480px] aspect-square overflow-visible shrink-0 flex justify-center items-center z-30 group pointer-events-none"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[220px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[480px] aspect-square overflow-visible shrink-0 flex justify-center items-center z-30 group pointer-events-none"
           >
             
             {/* Ambient Background Aura Glow (Reacts to group hover) */}
@@ -277,10 +285,11 @@ export function MinimalistHero({ className }) {
               {/* --- Social Icons Fly-out Deploy (Revealed only when active, underneath in orbit crescent) --- */}
               {socialLinks.map((link, index) => {
                 const total = socialLinks.length;
-                const startAngle = 45;
-                const endAngle = 135;
+                const startAngle = isMobile ? 60 : 45;
+                const endAngle = isMobile ? 120 : 135;
                 const angle = startAngle + (index * (endAngle - startAngle)) / (total - 1);
-                
+                const radius = isMobile ? 58 : 48;
+
                 return (
                   <div
                     key={index}
@@ -289,8 +298,8 @@ export function MinimalistHero({ className }) {
                       isExpanded ? "opacity-100 scale-100" : "opacity-0 scale-50 pointer-events-none"
                     )}
                     style={{
-                      left: `${50 + Math.cos((angle * Math.PI) / 180) * 48}%`,
-                      top: `${50 + Math.sin((angle * Math.PI) / 180) * 48}%`,
+                      left: `${50 + Math.cos((angle * Math.PI) / 180) * radius}%`,
+                      top: `${50 + Math.sin((angle * Math.PI) / 180) * radius}%`,
                       transform: 'translate(-50%, -50%)',
                     }}
                   >
@@ -317,42 +326,42 @@ export function MinimalistHero({ className }) {
         {/* Column 3: Right specs content panel (Glides in from Right) */}
         <div 
           className={cn(
-            "order-3 flex flex-col items-start md:items-end justify-center text-left md:text-right max-w-sm py-6 md:py-12 mx-auto md:ml-auto transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-            isExpanded 
-              ? "opacity-100 translate-x-0 scale-100 pointer-events-auto" 
+            "order-3 flex flex-col items-start md:items-end justify-center text-left md:text-right max-w-sm py-2 md:py-12 mx-auto md:ml-auto transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
+            isExpanded
+              ? "opacity-100 translate-x-0 scale-100 pointer-events-auto"
               : "opacity-0 translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
         >
           {/* Symmetrical Right Specs Table Container */}
-          <div className="flex flex-col justify-center h-full w-full min-h-[220px] md:min-h-[260px] border-l-2 md:border-l-0 md:border-r-2 border-accent/30 pl-6 md:pl-0 pr-0 md:pr-8 text-left md:text-right">
+          <div className="flex flex-col justify-center h-full w-full min-h-0 md:min-h-[260px] border-l-2 md:border-l-0 md:border-r-2 border-accent/30 pl-6 md:pl-0 pr-0 md:pr-8 text-left md:text-right">
             <div className="w-full pt-2 border-b md:border-b-0 md:border-t border-[#e5e5e5]/10 md:pt-6">
-              <div className="grid grid-cols-2 md:grid-cols-1 gap-y-6 gap-x-8 md:gap-x-0">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-y-3 gap-x-8 md:gap-x-0">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Role
                   </span>
-                  <span className="text-sm text-white font-sans font-medium tracking-wide">
+                  <span className="text-[15px] md:text-sm text-white font-sans font-medium tracking-wide leading-snug">
                     {role}
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Core Stack
                   </span>
-                  <span className="text-sm text-white font-sans font-medium tracking-wide">
+                  <span className="text-[15px] md:text-sm text-white font-sans font-medium tracking-wide leading-snug">
                     {coreStack}
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Specialization
                   </span>
-                  <span className="text-sm text-[#e5e5e5] font-sans font-medium tracking-wide leading-relaxed">
+                  <span className="text-[15px] md:text-sm text-[#e5e5e5] font-sans font-medium tracking-wide leading-snug md:leading-relaxed">
                     {specialization}
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-accent font-sans font-bold tracking-wider uppercase mb-1.5 opacity-90">
+                  <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Current Upgrade
                   </span>
                   <span className="text-sm text-[#e5e5e5] font-sans font-medium tracking-wide">
@@ -376,10 +385,10 @@ export function MinimalistHero({ className }) {
               : "opacity-100 translate-y-0"
           )}
         >
-          <span className="text-[15px] md:text-[18px] font-mono tracking-[0.5em] text-accent font-bold uppercase drop-shadow-[0_0_12px_rgba(233,156,22,0.45)]">
+          <span className="text-[13px] md:text-[18px] font-mono tracking-[0.35em] md:tracking-[0.5em] text-accent font-bold uppercase drop-shadow-[0_0_12px_rgba(233,156,22,0.45)]">
             WELCOME
           </span>
-          <span className="text-[10px] md:text-[11px] font-mono tracking-[0.25em] text-[#e5e5e5]/40 uppercase mt-2.5 whitespace-nowrap">
+          <span className="text-[9px] md:text-[11px] font-mono tracking-[0.18em] md:tracking-[0.25em] text-[#e5e5e5]/40 uppercase mt-2 md:mt-2.5 whitespace-nowrap">
             Scroll to explore
           </span>
         </div>
@@ -393,7 +402,7 @@ export function MinimalistHero({ className }) {
               : "opacity-0 translate-y-4"
           )}
         >
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-none font-sans drop-shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <h1 className="text-[28px] md:text-4xl font-extrabold tracking-tight text-white leading-none font-sans drop-shadow-[0_0_15px_rgba(255,255,255,0.05)]">
             {name}
           </h1>
         </div>
@@ -403,13 +412,13 @@ export function MinimalistHero({ className }) {
       {/* Bottom Right Location Anchor */}
       <footer 
         className={cn(
-          "absolute bottom-8 right-8 md:right-12 z-30 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
+          "absolute bottom-3 right-4 md:bottom-8 md:right-12 z-30 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
           isExpanded 
             ? "opacity-100 translate-y-0" 
             : "opacity-0 translate-y-6"
         )}
       >
-        <div className="text-xs md:text-sm font-medium text-[#e5e5e5]/40 font-mono tracking-wider">
+        <div className="text-[10px] md:text-sm font-medium text-[#e5e5e5]/40 font-mono tracking-[0.2em] md:tracking-wider">
           {locationText}
         </div>
       </footer>
