@@ -85,9 +85,9 @@ export function MinimalistHero({ className }) {
       )}
     >
       {/* 1. Cyber-Beams Grid Background */}
-      <div 
+      <div
         className={cn(
-          "absolute inset-0 z-0 pointer-events-none transition-opacity duration-[2000ms] ease-out",
+          "hidden md:block absolute inset-0 z-0 pointer-events-none transition-opacity duration-[2000ms] ease-out",
           isExpanded ? "opacity-100" : "opacity-40"
         )}
       >
@@ -169,7 +169,7 @@ export function MinimalistHero({ className }) {
               : "opacity-0 -translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
         >
-          <div className="flex flex-col justify-center h-full min-h-0 md:min-h-[260px] border-l-2 border-accent/30 pl-6 md:pl-8">
+          <div className="flex flex-col justify-center items-center text-center h-full min-h-0 md:min-h-[260px] md:items-stretch md:text-left border-l-0 md:border-l-2 border-accent/30 pl-0 md:pl-8">
             <h2 className="text-2xl sm:text-3xl md:text-[35px] font-extrabold tracking-tight text-white leading-[1.25] md:leading-[1.45] font-sans">
               I engineer <span className="text-accent font-semibold underline decoration-accent/25 decoration-2 underline-offset-[6px]">interfaces</span>, systems and interactive product experiences.
             </h2>
@@ -326,17 +326,17 @@ export function MinimalistHero({ className }) {
         {/* Column 3: Right specs content panel (Glides in from Right) */}
         <div 
           className={cn(
-            "order-3 flex flex-col items-start md:items-end justify-center text-left md:text-right max-w-sm py-2 md:py-12 mx-auto md:ml-auto transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
+            "order-3 flex flex-col items-center md:items-end justify-center text-center md:text-right max-w-sm py-2 md:py-12 mx-auto md:ml-auto transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
             isExpanded
               ? "opacity-100 translate-x-0 scale-100 pointer-events-auto"
               : "opacity-0 translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
         >
           {/* Symmetrical Right Specs Table Container */}
-          <div className="flex flex-col justify-center h-full w-full min-h-0 md:min-h-[260px] border-l-2 md:border-l-0 md:border-r-2 border-accent/30 pl-6 md:pl-0 pr-0 md:pr-8 text-left md:text-right">
+          <div className="flex flex-col justify-center h-full w-full min-h-0 md:min-h-[260px] border-l-0 md:border-l-0 md:border-r-2 border-accent/30 pl-0 md:pl-0 pr-0 md:pr-8 text-center md:text-right">
             <div className="w-full pt-2 border-b md:border-b-0 md:border-t border-[#e5e5e5]/10 md:pt-6">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-y-3 gap-x-8 md:gap-x-0">
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center text-center md:items-stretch md:text-right">
                   <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Role
                   </span>
@@ -344,7 +344,7 @@ export function MinimalistHero({ className }) {
                     {role}
                   </span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center text-center md:items-stretch md:text-right">
                   <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Core Stack
                   </span>
@@ -352,7 +352,7 @@ export function MinimalistHero({ className }) {
                     {coreStack}
                   </span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center text-center md:items-stretch md:text-right">
                   <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Specialization
                   </span>
@@ -360,11 +360,11 @@ export function MinimalistHero({ className }) {
                     {specialization}
                   </span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center text-center md:items-stretch md:text-right">
                   <span className="text-[10px] text-accent font-sans font-bold tracking-[0.15em] md:tracking-wider uppercase mb-1 md:mb-1.5 opacity-90">
                     Current Upgrade
                   </span>
-                  <span className="text-sm text-[#e5e5e5] font-sans font-medium tracking-wide">
+                  <span className="text-[15px] md:text-sm text-[#e5e5e5] font-sans font-medium tracking-wide leading-snug">
                     {currentUpgrade}
                   </span>
                 </div>
@@ -412,7 +412,7 @@ export function MinimalistHero({ className }) {
       {/* Bottom Right Location Anchor */}
       <footer 
         className={cn(
-          "absolute bottom-3 right-4 md:bottom-8 md:right-12 z-30 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
+          "absolute bottom-3 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-12 z-30 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
           isExpanded 
             ? "opacity-100 translate-y-0" 
             : "opacity-0 translate-y-6"
