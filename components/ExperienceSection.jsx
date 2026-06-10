@@ -276,8 +276,8 @@ export function ExperienceSection() {
       if (!isMobileViewport) {
         // Experience is the 4th section (index 3)
         const card3Top = cards[3] ? getElementOffset(cards[3]) : 3 * window.innerHeight;
-        const rangeStart = card3Top + 4800; // 3 preceding cards * 1600 scroll space = 4800
-        const rangeEnd = rangeStart + 1600;
+        const rangeStart = card3Top + 3300; // 3 preceding cards * 1100 scroll space = 3300
+        const rangeEnd = rangeStart + 1100;
         const scroll = window.scrollY;
 
         if (scroll < rangeStart) {

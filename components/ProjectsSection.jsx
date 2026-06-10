@@ -153,7 +153,7 @@ export function ProjectsSection() {
     const myCard = cards[myCardIndex];
     const myCardTop = myCard ? myCard.offsetTop : 0;
 
-    const itemDistance = 1600;
+    const itemDistance = 1100;
     
     // Dynamically calculate cumulative delays for all cards
     const cardDelays = cards.map((card, idx) => {

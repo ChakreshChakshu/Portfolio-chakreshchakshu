@@ -42,11 +42,11 @@ export default function WavyBackgroundDemo() {
           const c = cards[j] as HTMLElement;
           const attr = c ? c.getAttribute('data-extra-delay') : null;
           const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
-          delayOffset += 1600 + extraDelay;
+          delayOffset += 1100 + extraDelay;
         }
-        
+
         const rangeStart = cardTop + delayOffset;
-        const rangeEnd = rangeStart + 1600;
+        const rangeEnd = rangeStart + 1100;
         
         if (currentScroll < rangeStart) {
           progress = 0;

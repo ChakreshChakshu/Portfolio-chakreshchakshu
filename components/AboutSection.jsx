@@ -137,10 +137,10 @@ export function AboutSection() {
 
       if (!isMobile) {
         const cardTop = 1 * window.innerHeight;
-        // Card 1 (AboutSection) starts pinning at cardTop + 1600
-        // Transitions text over exactly 1600px of scrolling space
-        const rangeStart = cardTop + 1600;
-        const rangeEnd = rangeStart + 1600;
+        // Card 1 (AboutSection) starts pinning at cardTop + 1100
+        // Transitions text over exactly 1100px of scrolling space
+        const rangeStart = cardTop + 1100;
+        const rangeEnd = rangeStart + 1100;
         const currentScroll = window.scrollY;
 
         if (currentScroll < rangeStart) {

@@ -17,7 +17,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background overflow-x-clip lg:overflow-x-hidden relative">
       <ScrollStack
         useWindowScroll={true}
-        itemDistance={1600}
+        itemDistance={1100}
         itemStackDistance={0}
         stackPosition="0%"
         scaleEndPosition="0%"
