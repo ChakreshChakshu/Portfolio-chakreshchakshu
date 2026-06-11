@@ -136,11 +136,26 @@ export function AboutSection() {
       let progress = 0;
 
       if (!isMobile) {
-        const cardTop = 1 * window.innerHeight;
-        // Card 1 (AboutSection) starts pinning at cardTop + 1100
-        // Transitions text over exactly 1100px of scrolling space
-        const rangeStart = cardTop + 1100;
-        const rangeEnd = rangeStart + 1100;
+        const card = containerRef.current?.closest('.scroll-stack-card');
+        if (!card) return;
+
+        const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+        const cardIndex = cards.indexOf(card);
+        if (cardIndex === -1) return;
+
+        const cardTop = card.offsetTop;
+        const itemDistance = 1100;
+
+        let delayOffset = 0;
+        for (let j = 0; j < cardIndex; j++) {
+          const c = cards[j];
+          const attr = c ? c.getAttribute('data-extra-delay') : null;
+          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+          delayOffset += itemDistance + extraDelay;
+        }
+
+        const rangeStart = cardTop + delayOffset;
+        const rangeEnd = rangeStart + itemDistance;
         const currentScroll = window.scrollY;
 
         if (currentScroll < rangeStart) {

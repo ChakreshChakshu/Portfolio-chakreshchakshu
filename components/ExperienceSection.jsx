@@ -274,10 +274,25 @@ export function ExperienceSection() {
       let progress = 0;
 
       if (!isMobileViewport) {
-        // Experience is the 4th section (index 3)
-        const card3Top = cards[3] ? getElementOffset(cards[3]) : 3 * window.innerHeight;
-        const rangeStart = card3Top + 3300; // 3 preceding cards * 1100 scroll space = 3300
-        const rangeEnd = rangeStart + 1100;
+        const card = containerRef.current?.closest('.scroll-stack-card');
+        if (!card) return;
+
+        const cardIndex = cards.indexOf(card);
+        if (cardIndex === -1) return;
+
+        const cardTop = card.offsetTop;
+        const itemDistance = 1100;
+
+        let delayOffset = 0;
+        for (let j = 0; j < cardIndex; j++) {
+          const c = cards[j];
+          const attr = c ? c.getAttribute('data-extra-delay') : null;
+          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+          delayOffset += itemDistance + extraDelay;
+        }
+
+        const rangeStart = cardTop + delayOffset;
+        const rangeEnd = rangeStart + itemDistance;
         const scroll = window.scrollY;
 
         if (scroll < rangeStart) {

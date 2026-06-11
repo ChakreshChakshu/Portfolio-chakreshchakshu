@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { AboutSection } from '@/components/AboutSection';
 import { SkillsSection } from '@/components/SkillsSection';
@@ -12,6 +12,18 @@ import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function Home() {
   const [activeSectionIdx, setActiveSectionIdx] = useState(0);
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister().then((success) => {
+            if (success) console.log('Stale service worker unregistered');
+          });
+        }
+      });
+    }
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-background overflow-x-clip lg:overflow-x-hidden relative">
@@ -28,7 +40,7 @@ export default function Home() {
         onStackComplete={() => { }}
         onActiveIndexChange={(idx) => setActiveSectionIdx(idx)}
       >
-        <ScrollStackItem>
+        <ScrollStackItem extraDelay={-700}>
           <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-10 overflow-visible lg:overflow-hidden">
             <MinimalistHero />
           </div>
