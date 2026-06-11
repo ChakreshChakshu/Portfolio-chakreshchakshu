@@ -80,7 +80,7 @@ export function MinimalistHero({ className }) {
     <div
       id="home"
       className={cn(
-        'relative flex h-full w-full flex-col items-center justify-between bg-background p-8 font-sans md:p-12 overflow-hidden select-none',
+        'relative flex h-auto min-h-screen md:h-full w-full flex-col items-center justify-between bg-background p-8 font-sans md:p-12 overflow-visible md:overflow-hidden select-none',
         className
       )}
     >
@@ -164,7 +164,7 @@ export function MinimalistHero({ className }) {
         <div 
           className={cn(
             "order-2 md:order-1 flex flex-col items-start justify-center text-left max-w-sm py-2 md:py-12 mx-auto md:mx-0 transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-            isExpanded
+            (isExpanded || isMobile)
               ? "opacity-100 translate-x-0 scale-100 pointer-events-auto"
               : "opacity-0 -translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
@@ -327,7 +327,7 @@ export function MinimalistHero({ className }) {
         <div 
           className={cn(
             "order-3 flex flex-col items-center md:items-end justify-center text-center md:text-right max-w-sm py-2 md:py-12 mx-auto md:ml-auto transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-            isExpanded
+            (isExpanded || isMobile)
               ? "opacity-100 translate-x-0 scale-100 pointer-events-auto"
               : "opacity-0 translate-x-8 scale-95 pointer-events-none hidden md:flex md:h-0 md:py-0 md:overflow-hidden"
           )}
@@ -380,7 +380,7 @@ export function MinimalistHero({ className }) {
         <div 
           className={cn(
             "transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center",
-            (isExpanded || isAvatarHovered)
+            (isExpanded || isAvatarHovered || isMobile)
               ? "opacity-0 -translate-y-4" 
               : "opacity-100 translate-y-0"
           )}
@@ -397,7 +397,7 @@ export function MinimalistHero({ className }) {
         <div 
           className={cn(
             "absolute inset-0 flex flex-col items-center justify-center transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-            isExpanded 
+            (isExpanded || isMobile)
               ? "opacity-100 translate-y-0" 
               : "opacity-0 translate-y-4"
           )}
@@ -413,7 +413,7 @@ export function MinimalistHero({ className }) {
       <footer 
         className={cn(
           "absolute bottom-3 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-12 z-30 pointer-events-none transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1)",
-          isExpanded 
+          (isExpanded || isMobile)
             ? "opacity-100 translate-y-0" 
             : "opacity-0 translate-y-6"
         )}
