@@ -51,96 +51,7 @@ export function ProjectsSection() {
     { color: '#FF312E', glow: 'rgba(255, 49, 46, 0.2)' }
   ];
 
-  const playTransition = (fromIdx, toIdx) => {
-    const prevSlide   = slideRefs.current[fromIdx];
-    const prevDetails = detailRefs.current[fromIdx];
-    const nextSlide   = slideRefs.current[toIdx];
-    const nextCard    = cardRefs.current[toIdx];
-    const nextDetails = detailRefs.current[toIdx];
-
-    if (!nextSlide) return;
-
-    gsap.killTweensOf([prevSlide, prevDetails, nextSlide, nextCard, nextDetails].filter(Boolean));
-
-    const getSlideDirection = (idx) => {
-      const directions = [
-        { xPercent: -100, yPercent: 0 },  // Left
-        { xPercent: 100, yPercent: 0 },   // Right
-        { xPercent: 0, yPercent: -100 },  // Top
-        { xPercent: 0, yPercent: 100 }    // Bottom
-      ];
-      return directions[idx % directions.length];
-    };
-
-    const dir = getSlideDirection(toIdx);
-
-    // Dynamic zIndex layering: active slide on top, previous slide right below, others underneath
-    slidesData.forEach((_, idx) => {
-      if (slideRefs.current[idx]) {
-        slideRefs.current[idx].style.zIndex = idx === toIdx ? '20' : idx === fromIdx ? '15' : '10';
-      }
-    });
-
-    // Reset next slide to enter from its respective direction, full viewport coverage
-    gsap.set(nextSlide, { 
-      visibility: 'visible', 
-      xPercent: dir.xPercent, 
-      yPercent: dir.yPercent, 
-      scale: 1.0, 
-      opacity: 1 
-    });
-    if (nextCard) {
-      gsap.set(nextCard, { borderRadius: '0px' });
-    }
-    if (nextDetails) {
-      gsap.set(nextDetails, { opacity: 0, y: 20 });
-    }
-
-    const tl = gsap.timeline();
-
-    // Slide incoming project card into center (covering full viewport)
-    tl.to(nextSlide, {
-      xPercent: 0,
-      yPercent: 0,
-      duration: 0.9,
-      ease: 'power3.inOut'
-    });
-
-    // Fade/rise project details into view
-    if (nextDetails) {
-      tl.to(nextDetails, {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, '-=0.25');
-    }
-
-    // Shift previous slide slightly in the opposite direction and fade it
-    if (prevSlide) {
-      tl.to(prevSlide, {
-        xPercent: -dir.xPercent * 0.25,
-        yPercent: -dir.yPercent * 0.25,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.inOut'
-      }, 0);
-    }
-    if (prevDetails) {
-      tl.to(prevDetails, {
-        opacity: 0,
-        duration: 0.35,
-        ease: 'power2.in'
-      }, 0);
-    }
-
-    // Smooth background color blend
-    gsap.to(sectionRef.current, {
-      backgroundColor: bgColors[toIdx % bgColors.length],
-      duration: 0.8,
-      ease: 'power2.inOut',
-    });
-  };
+  const timelineRef = useRef(null);
 
   // Scroll listener — dynamically tracks index progression relative to parent card pinning
   const handleScroll = () => {
@@ -188,39 +99,46 @@ export function ProjectsSection() {
 
     const scroll = window.scrollY;
 
-    let newIndex = 0;
+    let progress = 0;
     if (scroll >= rangeStart && scroll <= rangeEnd) {
-      const progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
-      newIndex = Math.min(
-        Math.floor(progress * slidesData.length),
-        slidesData.length - 1
-      );
+      progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
     } else if (scroll > rangeEnd) {
-      newIndex = slidesData.length - 1;
+      progress = 1;
     }
+
+    if (timelineRef.current) {
+      timelineRef.current.progress(progress);
+    }
+
+    const newIndex = Math.min(
+      Math.floor(progress * slidesData.length),
+      slidesData.length - 1
+    );
 
     const prev = activeIndexRef.current;
     if (newIndex !== prev) {
       activeIndexRef.current = newIndex;
       setActiveIndex(newIndex);
-      playTransition(prev, newIndex);
     }
   };
 
-  // Initial GSAP state setup
+  // Initial GSAP scroll-scrubbed timeline setup
   useEffect(() => {
     if (isMobile) return;
 
-    const getSlideDirection = (idx) => {
-      const directions = [
-        { xPercent: -100, yPercent: 0 },  // Left
-        { xPercent: 100, yPercent: 0 },   // Right
-        { xPercent: 0, yPercent: -100 },  // Top
-        { xPercent: 0, yPercent: 100 }    // Bottom
-      ];
-      return directions[idx % directions.length];
-    };
+    // Build the master timeline
+    const tl = gsap.timeline({ paused: true });
+    timelineRef.current = tl;
 
+    const slideDirections = [
+      { xPercent: 0, yPercent: 0 },       // Slide 0: starts centered
+      { xPercent: -100, yPercent: 0 },    // Slide 1: comes from Left
+      { xPercent: 100, yPercent: 0 },     // Slide 2: comes from Right
+      { xPercent: 0, yPercent: -100 },    // Slide 3: comes from Top
+      { xPercent: 0, yPercent: 100 }      // Slide 4: comes from Bottom
+    ];
+
+    // Initialize all slides to their start states
     slidesData.forEach((_, idx) => {
       const slide   = slideRefs.current[idx];
       const card    = cardRefs.current[idx];
@@ -228,16 +146,85 @@ export function ProjectsSection() {
       if (!slide) return;
 
       if (idx === 0) {
-        gsap.set(slide,   { scale: 1.0, opacity: 1, xPercent: 0, yPercent: 0, visibility: 'visible', zIndex: 20 });
+        gsap.set(slide, { scale: 1.0, opacity: 1, xPercent: 0, yPercent: 0, visibility: 'visible', zIndex: 20, pointerEvents: 'auto' });
         if (card)    gsap.set(card,    { borderRadius: '0px' });
         if (details) gsap.set(details, { opacity: 1, y: 0 });
       } else {
-        const dir = getSlideDirection(idx);
-        gsap.set(slide,   { scale: 1.0, opacity: 0, xPercent: dir.xPercent, yPercent: dir.yPercent, visibility: 'hidden', zIndex: 10 });
+        const dir = slideDirections[idx] || { xPercent: 100, yPercent: 0 };
+        gsap.set(slide, { scale: 1.0, opacity: 0, xPercent: dir.xPercent, yPercent: dir.yPercent, visibility: 'hidden', zIndex: 10, pointerEvents: 'none' });
         if (card)    gsap.set(card,    { borderRadius: '0px' });
         if (details) gsap.set(details, { opacity: 0, y: 20 });
       }
     });
+
+    const duration = 1.0;
+
+    for (let i = 0; i < slidesData.length - 1; i++) {
+      const fromIdx = i;
+      const toIdx = i + 1;
+
+      const prevSlide   = slideRefs.current[fromIdx];
+      const prevDetails = detailRefs.current[fromIdx];
+      const nextSlide   = slideRefs.current[toIdx];
+      const nextDetails = detailRefs.current[toIdx];
+
+      const dir = slideDirections[toIdx] || { xPercent: 100, yPercent: 0 };
+      const startTime = i * duration;
+
+      // Make next slide visible and set zIndex
+      tl.set(nextSlide, { visibility: 'visible' }, startTime);
+
+      // Slide incoming slide in
+      tl.fromTo(nextSlide, 
+        { xPercent: dir.xPercent, yPercent: dir.yPercent, opacity: 0 },
+        { xPercent: 0, yPercent: 0, opacity: 1, duration: duration, ease: 'power2.inOut' },
+        startTime
+      );
+
+      // Slide previous slide out slightly in the opposite direction and fade it
+      tl.to(prevSlide, 
+        { xPercent: -dir.xPercent * 0.25, yPercent: -dir.yPercent * 0.25, opacity: 0, duration: duration, ease: 'power2.inOut' },
+        startTime
+      );
+
+      // Fade details of previous slide
+      if (prevDetails) {
+        tl.to(prevDetails, { opacity: 0, duration: duration * 0.4, ease: 'power2.in' }, startTime);
+      }
+
+      // Fade details of next slide
+      if (nextDetails) {
+        tl.fromTo(nextDetails,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: duration * 0.4, ease: 'power2.out' },
+          startTime + duration * 0.6
+        );
+      }
+
+      // Blend background color of sectionRef
+      tl.to(sectionRef.current, {
+        backgroundColor: bgColors[toIdx % bgColors.length],
+        duration: duration,
+        ease: 'power2.inOut',
+      }, startTime);
+
+      // Manage pointer events and active indexing
+      tl.set(nextSlide, { pointerEvents: 'auto', zIndex: 20 }, startTime + duration * 0.5);
+      tl.set(prevSlide, { pointerEvents: 'none', zIndex: 15 }, startTime + duration * 0.5);
+
+      // For all other slides, ensure low z-index
+      slidesData.forEach((_, idx) => {
+        if (idx !== fromIdx && idx !== toIdx) {
+          const otherSlide = slideRefs.current[idx];
+          if (otherSlide) {
+            tl.set(otherSlide, { zIndex: 10 }, startTime);
+          }
+        }
+      });
+    }
+
+    // Buffer at the end of the timeline
+    tl.to({}, { duration: 0.1 });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
