@@ -7,7 +7,6 @@ import { SkillsSection } from '@/components/SkillsSection';
 import { ExperienceSection } from '@/components/ExperienceSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
 import { ContactSection } from '@/components/ContactSection';
-import { Footer } from '@/components/Footer';
 import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function Home() {
@@ -66,11 +65,10 @@ export default function Home() {
           </div>
         </ScrollStackItem>
         <ScrollStackItem>
-          <div className="min-h-screen lg:h-screen flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-visible lg:overflow-y-auto py-12 lg:py-0">
+          <div className="min-h-screen lg:min-h-screen lg:h-auto flex flex-col w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-40 overflow-visible pt-12 pb-0 lg:pt-20 lg:pb-0">
             <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
               <ContactSection />
             </div>
-            <Footer />
           </div>
         </ScrollStackItem>
       </ScrollStack>

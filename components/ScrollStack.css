@@ -29,7 +29,7 @@
 
 .scroll-stack-end {
   width: 100%;
-  height: 10vh;
+  height: 0;
 }
 
 .scroll-stack-dots {

@@ -383,6 +383,11 @@ export function ContactSection() {
               </div>
             </div>
 
+            {/* Copyright */}
+            <div className="pt-8 border-t border-white/[0.06] text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-8">
+              &copy; {new Date().getFullYear()} Chakresh Chakshu. All rights reserved.
+            </div>
+
           </div>
         </div>
       </div>

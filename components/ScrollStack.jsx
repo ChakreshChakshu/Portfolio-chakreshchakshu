@@ -156,11 +156,12 @@ const ScrollStack = ({
       let blur = 0;
 
       let translateY = delayOffset;
-      const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
+      const isLastCard = i === cardsRef.current.length - 1;
+      const isPinned = !isLastCard && scrollTop >= pinStart && scrollTop <= pinEnd;
 
       if (isPinned) {
         translateY = scrollTop - cardTop + stackPositionPx + itemStackDistance * i;
-      } else if (scrollTop > pinEnd) {
+      } else if (!isLastCard && scrollTop > pinEnd) {
         translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
       }
 
