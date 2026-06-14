@@ -46,7 +46,9 @@ export default function WavyBackgroundDemo() {
         }
 
         const rangeStart = cardTop + delayOffset;
-        const rangeEnd = rangeStart + 1100;
+        const myExtraDelayAttr = card.getAttribute('data-extra-delay');
+        const myExtraDelay = myExtraDelayAttr ? (parseFloat(myExtraDelayAttr) || 0) : 0;
+        const rangeEnd = rangeStart + 1100 + myExtraDelay;
         
         if (currentScroll < rangeStart) {
           progress = 0;
@@ -81,24 +83,29 @@ export default function WavyBackgroundDemo() {
           const scale = 1 - p * 0.70; // Scale from 1.0 down to 0.30
           const translateY = p * -28; // Move up to -28vh
           skillsTitleRef.current.style.transform = `translate3d(0, ${translateY}vh, 0) scale(${scale})`;
+        } else if (progress > 0.92) {
+          // Exit phase: slide up to the top end
+          const p = (progress - 0.92) / 0.08;
+          const translateY = -28 - p * 80; // Slide up off-screen
+          skillsTitleRef.current.style.transform = `translate3d(0, ${translateY}vh, 0) scale(0.30)`;
         } else {
           skillsTitleRef.current.style.transform = `translate3d(0, -28vh, 0) scale(0.30)`;
         }
       }
 
-      // 2. "FRONTEND" -> active 0.10 to 0.60
+      // 2. "FRONTEND" -> active 0.08 to 0.55
       if (frontendContainerRef.current && frontRef.current && endRef.current && feSubRef.current) {
-        if (progress > 0.10 && progress <= 0.60) {
+        if (progress > 0.08 && progress <= 0.55) {
           frontendContainerRef.current.style.display = 'flex';
           
-          if (progress <= 0.25) {
+          if (progress <= 0.20) {
             // Entry phase (whole container slides up from bottom to center)
-            const p = (progress - 0.10) / 0.15;
+            const p = (progress - 0.08) / 0.12;
             frontendContainerRef.current.style.transform = `translate3d(0, ${(1 - p) * 120}vh, 0)`;
             frontRef.current.style.transform = 'translate3d(0, 0, 0)';
             endRef.current.style.transform = 'translate3d(0, 0, 0)';
             feSubRef.current.style.transform = 'translate3d(0, 0, 0)';
-          } else if (progress <= 0.45) {
+          } else if (progress <= 0.40) {
             // Resting phase
             frontendContainerRef.current.style.transform = 'translate3d(0, 0, 0)';
             frontRef.current.style.transform = 'translate3d(0, 0, 0)';
@@ -106,7 +113,7 @@ export default function WavyBackgroundDemo() {
             feSubRef.current.style.transform = 'translate3d(0, 0, 0)';
           } else {
             // Exit phase (splitting apart horizontally, sub-skills slide down)
-            const p = (progress - 0.45) / 0.15;
+            const p = (progress - 0.40) / 0.15;
             frontendContainerRef.current.style.transform = 'translate3d(0, 0, 0)';
             frontRef.current.style.transform = `translate3d(${p * -120}vw, 0, 0)`;
             endRef.current.style.transform = `translate3d(${p * 120}vw, 0, 0)`;
@@ -117,19 +124,19 @@ export default function WavyBackgroundDemo() {
         }
       }
 
-      // 3. "BACKEND" -> active 0.45 to 0.90
+      // 3. "BACKEND" -> active 0.40 to 0.80
       if (backendContainerRef.current && backRef.current && backEndRef.current && beSubRef.current) {
-        if (progress > 0.45 && progress <= 0.90) {
+        if (progress > 0.40 && progress <= 0.80) {
           backendContainerRef.current.style.display = 'flex';
           
-          if (progress <= 0.60) {
+          if (progress <= 0.52) {
             // Entry phase (whole container slides up from bottom to center)
-            const p = (progress - 0.45) / 0.15;
+            const p = (progress - 0.40) / 0.12;
             backendContainerRef.current.style.transform = `translate3d(0, ${(1 - p) * 120}vh, 0)`;
             backRef.current.style.transform = 'translate3d(0, 0, 0)';
             backEndRef.current.style.transform = 'translate3d(0, 0, 0)';
             beSubRef.current.style.transform = 'translate3d(0, 0, 0)';
-          } else if (progress <= 0.80) {
+          } else if (progress <= 0.70) {
             // Resting phase
             backendContainerRef.current.style.transform = 'translate3d(0, 0, 0)';
             backRef.current.style.transform = 'translate3d(0, 0, 0)';
@@ -137,7 +144,7 @@ export default function WavyBackgroundDemo() {
             beSubRef.current.style.transform = 'translate3d(0, 0, 0)';
           } else {
             // Exit phase (splitting apart horizontally, sub-skills slide down)
-            const p = (progress - 0.80) / 0.10;
+            const p = (progress - 0.70) / 0.10;
             backendContainerRef.current.style.transform = 'translate3d(0, 0, 0)';
             backRef.current.style.transform = `translate3d(${p * -120}vw, 0, 0)`;
             backEndRef.current.style.transform = `translate3d(${p * 120}vw, 0, 0)`;
@@ -148,17 +155,24 @@ export default function WavyBackgroundDemo() {
         }
       }
 
-      // 4. "TOOLS" -> active 0.80 to 1.0
+      // 4. "TOOLS" -> active 0.70 to 1.0
       if (toolsContainerRef.current && toSubRef.current) {
-        if (progress > 0.80) {
+        if (progress > 0.70) {
           toolsContainerRef.current.style.display = 'flex';
-          if (progress <= 0.95) {
+          if (progress <= 0.82) {
             // Entry phase
-            const p = (progress - 0.80) / 0.15;
+            const p = (progress - 0.70) / 0.12;
             toolsContainerRef.current.style.transform = `translate3d(0, ${(1 - p) * 120}vh, 0)`;
-          } else {
+            toSubRef.current.style.transform = 'translate3d(0, 0, 0)';
+          } else if (progress <= 0.92) {
             // Resting phase
             toolsContainerRef.current.style.transform = 'translate3d(0, 0, 0)';
+            toSubRef.current.style.transform = 'translate3d(0, 0, 0)';
+          } else {
+            // Exit phase: slide up to the top end
+            const p = (progress - 0.92) / 0.08;
+            toolsContainerRef.current.style.transform = `translate3d(0, ${p * -120}vh, 0)`;
+            toSubRef.current.style.transform = `translate3d(0, ${p * -80}vh, 0)`;
           }
         } else {
           toolsContainerRef.current.style.display = 'none';

@@ -49,7 +49,7 @@ export default function Home() {
             <AboutSection isActive={activeSectionIdx === 1} />
           </div>
         </ScrollStackItem>
-        <ScrollStackItem>
+        <ScrollStackItem extraDelay={600}>
           <div className="min-h-screen lg:h-screen w-full bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.3)] relative z-25 overflow-visible lg:overflow-hidden py-12 lg:py-0">
             <SkillsSection />
           </div>
