@@ -122,6 +122,51 @@ export function ProjectsSection() {
     }
   };
 
+  const navigateToSlide = (idx) => {
+    if (isMobile) return;
+
+    const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+    const myCardIndex = cards.findIndex(card => card.querySelector('#projects'));
+    if (myCardIndex === -1) return;
+
+    const myCard = cards[myCardIndex];
+    const myCardTop = myCard ? myCard.offsetTop : 0;
+    const itemDistance = 1100;
+
+    const cardDelays = cards.map((card, idx) => {
+      let delay = 0;
+      for (let i = 0; i < idx; i++) {
+        const c = cards[i];
+        const extraDelay = c ? (parseFloat(c.getAttribute('data-extra-delay')) || 0) : 0;
+        delay += itemDistance + extraDelay;
+      }
+      return delay;
+    });
+
+    const pinStart = myCardTop + cardDelays[myCardIndex];
+    const endElement = document.querySelector('.scroll-stack-end');
+    const endTop = endElement ? endElement.offsetTop : (pinStart + 2000);
+    const rangeStart = pinStart + 200;
+
+    const nextCard = cards[myCardIndex + 1];
+    let rangeEnd;
+    if (nextCard) {
+      const nextPinStart = nextCard.offsetTop + cardDelays[myCardIndex + 1];
+      rangeEnd = nextPinStart - 400;
+    } else {
+      rangeEnd = endTop - window.innerHeight - 200;
+    }
+    rangeEnd = Math.max(rangeStart + 100, rangeEnd);
+
+    const fraction = idx / (slidesData.length - 1);
+    const targetScroll = rangeStart + fraction * (rangeEnd - rangeStart);
+
+    window.scrollTo({
+      top: targetScroll,
+      behavior: 'smooth'
+    });
+  };
+
   // Initial GSAP scroll-scrubbed timeline setup
   useEffect(() => {
     if (isMobile) return;
@@ -130,15 +175,7 @@ export function ProjectsSection() {
     const tl = gsap.timeline({ paused: true });
     timelineRef.current = tl;
 
-    const slideDirections = [
-      { xPercent: 0, yPercent: 0 },       // Slide 0: starts centered
-      { xPercent: -100, yPercent: 0 },    // Slide 1: comes from Left
-      { xPercent: 100, yPercent: 0 },     // Slide 2: comes from Right
-      { xPercent: 0, yPercent: -100 },    // Slide 3: comes from Top
-      { xPercent: 0, yPercent: 100 }      // Slide 4: comes from Bottom
-    ];
-
-    // Initialize all slides to their start states
+    // Initialize all slides to their start states for 3D Depth Transition
     slidesData.forEach((_, idx) => {
       const slide   = slideRefs.current[idx];
       const card    = cardRefs.current[idx];
@@ -150,8 +187,7 @@ export function ProjectsSection() {
         if (card)    gsap.set(card,    { borderRadius: '0px' });
         if (details) gsap.set(details, { opacity: 1, y: 0 });
       } else {
-        const dir = slideDirections[idx] || { xPercent: 100, yPercent: 0 };
-        gsap.set(slide, { scale: 1.0, opacity: 0, xPercent: dir.xPercent, yPercent: dir.yPercent, visibility: 'hidden', zIndex: 10, pointerEvents: 'none' });
+        gsap.set(slide, { scale: 1.8, opacity: 0, xPercent: 0, yPercent: 0, visibility: 'hidden', zIndex: 10, pointerEvents: 'none' });
         if (card)    gsap.set(card,    { borderRadius: '0px' });
         if (details) gsap.set(details, { opacity: 0, y: 20 });
       }
@@ -168,22 +204,22 @@ export function ProjectsSection() {
       const nextSlide   = slideRefs.current[toIdx];
       const nextDetails = detailRefs.current[toIdx];
 
-      const dir = slideDirections[toIdx] || { xPercent: 100, yPercent: 0 };
       const startTime = i * duration;
 
       // Make next slide visible and set zIndex
       tl.set(nextSlide, { visibility: 'visible' }, startTime);
 
-      // Slide incoming slide in
+      // Zoom incoming slide in (scale down from 1.8 to 1.0, fade in)
       tl.fromTo(nextSlide, 
-        { xPercent: dir.xPercent, yPercent: dir.yPercent, opacity: 0 },
-        { xPercent: 0, yPercent: 0, opacity: 1, duration: duration, ease: 'power2.inOut' },
+        { scale: 1.8, opacity: 0, xPercent: 0, yPercent: 0 },
+        { scale: 1.0, opacity: 1, duration: duration, ease: 'power2.inOut' },
         startTime
       );
 
-      // Slide previous slide out slightly in the opposite direction and fade it
-      tl.to(prevSlide, 
-        { xPercent: -dir.xPercent * 0.25, yPercent: -dir.yPercent * 0.25, opacity: 0, duration: duration, ease: 'power2.inOut' },
+      // Recede previous slide out (scale down from 1.0 to 0.75, fade out)
+      tl.fromTo(prevSlide,
+        { scale: 1.0, opacity: 1, xPercent: 0, yPercent: 0 },
+        { scale: 0.75, opacity: 0, duration: duration, ease: 'power2.inOut' },
         startTime
       );
 
@@ -741,6 +777,7 @@ export function ProjectsSection() {
                 key={project.title}
                 onMouseEnter={() => setHoverIndex(idx)}
                 onMouseLeave={() => setHoverIndex(null)}
+                onClick={() => navigateToSlide(idx)}
                 className={`slide-thumb ${activeIndex === idx ? 'active' : ''}`}
                 style={{
                   '--thumb-accent': thumbAccents[idx % thumbAccents.length].color,

@@ -155,8 +155,8 @@ const ScrollStack = ({
 
       let blur = 0;
 
-      let translateY = delayOffset;
       const isLastCard = i === cardsRef.current.length - 1;
+      let translateY = isLastCard ? (delayOffset + containerHeight) : delayOffset;
       const isPinned = !isLastCard && scrollTop >= pinStart && scrollTop <= pinEnd;
 
       if (isPinned) {
@@ -360,7 +360,9 @@ const ScrollStack = ({
           const extraDelay = parseFloat(card.getAttribute('data-extra-delay')) || 0;
           cumulativeDelay += delayPx + extraDelay;
         });
-        const totalDelay = cumulativeDelay - delayPx - (parseFloat(cards[cards.length - 1]?.getAttribute('data-extra-delay')) || 0);
+
+        const containerHeight = useWindowScroll ? window.innerHeight : scrollerRef.current.clientHeight;
+        const totalDelay = cumulativeDelay - delayPx - (parseFloat(cards[cards.length - 1]?.getAttribute('data-extra-delay')) || 0) + containerHeight;
 
         spacer.style.height = `${totalDelay}px`;
         spacer.style.width = '100%';
