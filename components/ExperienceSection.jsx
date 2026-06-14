@@ -19,6 +19,8 @@ export function ExperienceSection() {
   
   const contributionTextsRef = useRef([]);
   const metricValuesRef = useRef([]);
+  const videoRef = useRef(null);
+  const targetTimeRef = useRef(0);
 
   // Background interactive elements
   const canvasRef = useRef(null);
@@ -61,6 +63,33 @@ export function ExperienceSection() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
+  }, [isMobile]);
+
+  // RAF loop to smoothly interpolate video current time without choking decoder
+  useEffect(() => {
+    if (isMobile) return;
+
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+
+    let animFrameId;
+    const updateVideoFrame = () => {
+      const video = videoRef.current;
+      if (video && !isNaN(video.duration) && video.duration > 0) {
+        const targetTime = targetTimeRef.current;
+        const diff = targetTime - video.currentTime;
+        
+        // Seek-safeguard: Only update currentTime if change is meaningful and not currently seeking
+        if (Math.abs(diff) > 0.02 && !video.seeking) {
+          video.currentTime = video.currentTime + diff * 0.15;
+        }
+      }
+      animFrameId = requestAnimationFrame(updateVideoFrame);
+    };
+
+    animFrameId = requestAnimationFrame(updateVideoFrame);
+    return () => cancelAnimationFrame(animFrameId);
   }, [isMobile]);
 
 
@@ -341,6 +370,11 @@ export function ExperienceSection() {
         overwrite: "auto" 
       });
 
+      // Update target time for RAF video scrub loop
+      if (videoRef.current && !isNaN(videoRef.current.duration)) {
+        targetTimeRef.current = progress * videoRef.current.duration;
+      }
+
       // Scroll-aware metric count-up
       const metricStart = 0.80;
       const metricEnd = 0.88;
@@ -382,6 +416,16 @@ export function ExperienceSection() {
     >
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-10">
         
+        {/* Background video with scroll-scrubbed playback */}
+        <video
+          ref={videoRef}
+          src="/Cinematic_D_abstract_motion_g.mp4"
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover opacity-15 z-0 pointer-events-none transition-opacity duration-700"
+        />
+
         {/* -------------------- STAGE 1: HERO STATEMENT -------------------- */}
         <div 
           ref={stage1Ref}
