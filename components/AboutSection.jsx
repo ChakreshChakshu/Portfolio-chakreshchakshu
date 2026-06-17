@@ -259,9 +259,9 @@ export function AboutSection() {
           >
             {/* Line 1: Who I Am Title Slide */}
             <div className="kinetic-line opacity-0 flex flex-col justify-center items-center text-center px-6 md:px-16 w-full h-[60vh] shrink-0">
-              <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white font-sans">
+              <h2 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white font-sans">
                 Who I Am
-              </h1>
+              </h2>
               <div className="h-1.5 w-24 bg-gradient-to-r from-white via-accent to-accent mt-6 rounded-full shadow-[0_0_12px_rgba(255,49,46,0.5)]" />
             </div>
 
