@@ -225,3 +225,49 @@ Building custom scroll-driven features often breaks keyboard navigation and read
 1. **Semantic HTML5 Elements:** Using `<section>`, `<nav>`, `<header>`, and `<footer>` tags to define content outlines.
 2. **Aria Attributes:** Custom interactive elements (like the scroll dots or slide thumbnails) are configured with `aria-label` tags detailing their action (e.g., `aria-label="Scroll to next section"`).
 3. **Radix Headless Components:** Reusing accessible primitive layers (such as Radix UI's Form labels or Input controls) to handle keyboard focusing, focus rings, and screen reader feedback out of the box.
+
+---
+
+## 🔍 6. SEO, Crawler Indexation & Performance
+
+### Q13: How does Next.js handle dynamic sitemaps and robots.txt generation? What is the difference between static files in `/public` vs. dynamic files like `sitemap.js`?
+**Answer:**
+- **Static files (`/public/sitemap.xml`)**: Hardcoded XML. Hard to maintain, dynamic routes cannot be automatically updated when changes happen, and environment variables cannot be read.
+- **Dynamic configurations (`app/sitemap.js` and `app/robots.js`)**: Next.js App Router intercepts these file routes. It evaluates the exported function and returns standard XML / TXT formats. This allows:
+  1. Dynamically generating URLs based on active backend databases or routes.
+  2. Accessing environment variables (like base URL configuration).
+  3. Specifying caching and headers.
+  This project implements `sitemap.js` and `robots.js` under `/app` to dynamically construct URLs using the base URL context.
+
+---
+
+### Q14: Why is it bad to have multiple `<h1>` tags on a page from an SEO perspective? How did you fix it in the portfolio?
+**Answer:**
+- **The SEO Issue**: Search crawlers use heading tags to understand the semantic hierarchy of a document. The `<h1>` tag defines the primary subject of a page. Having multiple `<h1>` tags dilutes the primary topic keyword and confuses crawling spiders about what page represents.
+- **The Fix**: The homepage had `<h1>` tags in the Hero (the developer name) and in the About section ("Who I Am"). We changed the About section to `<h2>`, leaving a single, unique `<h1>` containing the primary search target: **"Chakresh Chakshu"** to focus PageRank authority on the developer's name entity.
+
+---
+
+### Q15: How do you handle metadata inheritance in Next.js App Router for sub-pages to prevent duplicate title tag penalties?
+**Answer:**
+- In Next.js, metadata declared in the root `layout.jsx` is inherited by default by all subpages.
+- If subpages (`/about`, `/skills`, `/experience`, etc.) do not override their metadata, search engines see duplicate titles and descriptions, harming SEO rankings.
+- **The Fix**:
+  1. We configured a title template in `app/layout.jsx`:
+     ```javascript
+     title: {
+       default: "Chakresh Chakshu | Developer",
+       template: "%s | Chakresh Chakshu"
+     }
+     ```
+  2. We exported a route-specific `metadata` object from each sub-page (e.g. `app/about/page.jsx`). Setting `title: "About Me"` automatically resolves to `"About Me | Chakresh Chakshu"`.
+
+---
+
+### Q16: How do you optimize client-side-heavy GSAP websites (like a ScrollStack single page) so search engines can index their text content even if JavaScript execution is delayed?
+**Answer:**
+- **The Issue**: Search engine crawlers (especially non-Google crawlers) do not always execute client-side JavaScript. If critical text content (like work experience details) is generated solely on client-side state after JS loads, bots will index an empty page.
+- **The Solution**: 
+  1. Leverage Next.js SSR to pre-render the initial HTML on the server. The raw HTML sent to the browser already contains the text content of all sections inside standard semantic wrappers (`<section>`, `<article>`, `<p>`).
+  2. GSAP animations are initialized only on client-side components using `"use client"`. Even if JS is disabled or slow, the crawler parses the raw server-rendered HTML containing headings and descriptions, ensuring indexability.
+
