@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = "https://chakreshchakshu.github.io";
+  const baseUrl = "https://chakreshchakshu.in";
 
   const routes = ["", "/about", "/skills", "/experience", "/projects", "/contact"];
 

@@ -8,9 +8,16 @@ export function ProjectsSection() {
   const [isMobile, setIsMobile] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const [isStandalone, setIsStandalone] = useState(false);
   
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
+  const progressRef = useRef(0);
+
+  useEffect(() => {
+    const card = sectionRef.current?.closest('.scroll-stack-card');
+    setIsStandalone(!card);
+  }, []);
   const slideRefs = useRef([]);
   const cardRefs = useRef([]);
   const detailRefs = useRef([]);
@@ -59,7 +66,42 @@ export function ProjectsSection() {
 
     const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
     const myCardIndex = cards.findIndex(card => card.querySelector('#projects'));
-    if (myCardIndex === -1) return;
+    if (myCardIndex === -1) {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const containerHeight = rect.height;
+      const windowHeight = window.innerHeight;
+      const totalScrollableDistance = containerHeight - windowHeight;
+
+      let progress = 0;
+      if (totalScrollableDistance > 0) {
+        const scrolled = -rect.top;
+        if (scrolled < 0) {
+          progress = 0;
+        } else if (scrolled > totalScrollableDistance) {
+          progress = 1;
+        } else {
+          progress = scrolled / totalScrollableDistance;
+        }
+      }
+
+      if (timelineRef.current) {
+        timelineRef.current.progress(progress);
+      }
+
+      const newIndex = Math.min(
+        Math.floor(progress * slidesData.length),
+        slidesData.length - 1
+      );
+
+      const prev = activeIndexRef.current;
+      if (newIndex !== prev) {
+        activeIndexRef.current = newIndex;
+        setActiveIndex(newIndex);
+      }
+      return;
+    }
 
     const myCard = cards[myCardIndex];
     const myCardTop = myCard ? myCard.offsetTop : 0;
@@ -127,7 +169,23 @@ export function ProjectsSection() {
 
     const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
     const myCardIndex = cards.findIndex(card => card.querySelector('#projects'));
-    if (myCardIndex === -1) return;
+    if (myCardIndex === -1) {
+      const fraction = idx / (slidesData.length - 1);
+      progressRef.current = fraction;
+
+      if (timelineRef.current) {
+        gsap.to(timelineRef.current, {
+          progress: fraction,
+          duration: 0.8,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      }
+
+      activeIndexRef.current = idx;
+      setActiveIndex(idx);
+      return;
+    }
 
     const myCard = cards[myCardIndex];
     const myCardTop = myCard ? myCard.offsetTop : 0;
@@ -262,16 +320,57 @@ export function ProjectsSection() {
     // Buffer at the end of the timeline
     tl.to({}, { duration: 0.1 });
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-    const timer = setTimeout(handleScroll, 100);
+    const useWheel = isStandalone && !isMobile;
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      clearTimeout(timer);
-    };
-  }, [isMobile, slidesData.length]);
+    if (!useWheel) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleScroll);
+      const timer = setTimeout(handleScroll, 100);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleScroll);
+        clearTimeout(timer);
+      };
+    } else {
+      const handleWheel = (e) => {
+        e.preventDefault();
+        const speed = 0.001;
+        progressRef.current = Math.min(1, Math.max(0, progressRef.current + e.deltaY * speed));
+
+        if (timelineRef.current) {
+          gsap.to(timelineRef.current, {
+            progress: progressRef.current,
+            duration: 0.25,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        }
+
+        const newIndex = Math.min(
+          Math.floor(progressRef.current * slidesData.length),
+          slidesData.length - 1
+        );
+
+        const prev = activeIndexRef.current;
+        if (newIndex !== prev) {
+          activeIndexRef.current = newIndex;
+          setActiveIndex(newIndex);
+        }
+      };
+
+      const container = sectionRef.current;
+      if (container) {
+        container.addEventListener('wheel', handleWheel, { passive: false });
+      }
+
+      return () => {
+        if (container) {
+          container.removeEventListener('wheel', handleWheel);
+        }
+      };
+    }
+  }, [isMobile, slidesData.length, isStandalone]);
 
   // Smooth mobile color transition based on scroll position
   useEffect(() => {
@@ -418,8 +517,9 @@ export function ProjectsSection() {
     <section 
       id="projects" 
       ref={sectionRef}
-      className="w-full relative bg-background h-[100vh] flex flex-col justify-start select-none overflow-hidden"
+      className={`w-full relative bg-background ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[100vh] overflow-hidden'} flex flex-col justify-start select-none`}
     >
+      <div className={isStandalone ? "sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-start" : "contents"}>
       <style>{`
         #projects .slides {
           width: 100%;
@@ -796,6 +896,7 @@ export function ProjectsSection() {
             ))}
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

@@ -7,8 +7,15 @@ import SplitText from "./SplitText";
 
 export function ExperienceSection() {
   const [isMobile, setIsMobile] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   const containerRef = useRef(null);
+  const progressRef = useRef(0);
+
+  useEffect(() => {
+    const card = containerRef.current?.closest('.scroll-stack-card');
+    setIsStandalone(!card);
+  }, []);
   
   // Section refs for Desktop timeline steps
   const stage1Ref = useRef(null);
@@ -304,32 +311,49 @@ export function ExperienceSection() {
 
       if (!isMobileViewport) {
         const card = containerRef.current?.closest('.scroll-stack-card');
-        if (!card) return;
+        if (!card) {
+          if (!containerRef.current) return;
+          const rect = containerRef.current.getBoundingClientRect();
+          const containerHeight = rect.height;
+          const windowHeight = window.innerHeight;
+          const totalScrollableDistance = containerHeight - windowHeight;
 
-        const cardIndex = cards.indexOf(card);
-        if (cardIndex === -1) return;
-
-        const cardTop = card.offsetTop;
-        const itemDistance = 1100;
-
-        let delayOffset = 0;
-        for (let j = 0; j < cardIndex; j++) {
-          const c = cards[j];
-          const attr = c ? c.getAttribute('data-extra-delay') : null;
-          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
-          delayOffset += itemDistance + extraDelay;
-        }
-
-        const rangeStart = cardTop + delayOffset;
-        const rangeEnd = rangeStart + itemDistance;
-        const scroll = window.scrollY;
-
-        if (scroll < rangeStart) {
-          progress = 0;
-        } else if (scroll > rangeEnd) {
-          progress = 1;
+          if (totalScrollableDistance > 0) {
+            const scrolled = -rect.top;
+            if (scrolled < 0) {
+              progress = 0;
+            } else if (scrolled > totalScrollableDistance) {
+              progress = 1;
+            } else {
+              progress = scrolled / totalScrollableDistance;
+            }
+          }
         } else {
-          progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
+          const cardIndex = cards.indexOf(card);
+          if (cardIndex === -1) return;
+
+          const cardTop = card.offsetTop;
+          const itemDistance = 1100;
+
+          let delayOffset = 0;
+          for (let j = 0; j < cardIndex; j++) {
+            const c = cards[j];
+            const attr = c ? c.getAttribute('data-extra-delay') : null;
+            const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+            delayOffset += itemDistance + extraDelay;
+          }
+
+          const rangeStart = cardTop + delayOffset;
+          const rangeEnd = rangeStart + itemDistance;
+          const scroll = window.scrollY;
+
+          if (scroll < rangeStart) {
+            progress = 0;
+          } else if (scroll > rangeEnd) {
+            progress = 1;
+          } else {
+            progress = (scroll - rangeStart) / (rangeEnd - rangeStart);
+          }
         }
       } else {
         if (!containerRef.current) return;
@@ -396,23 +420,79 @@ export function ExperienceSection() {
       });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    const timer = setTimeout(handleScroll, 100);
+    const isMobileViewport = window.innerWidth < 1024;
+    const useWheel = isStandalone && !isMobileViewport;
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      clearTimeout(timer);
-      tl.kill();
-    };
-  }, [isMobile]);
+    if (!useWheel) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", handleScroll);
+      const timer = setTimeout(handleScroll, 100);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleScroll);
+        clearTimeout(timer);
+        tl.kill();
+      };
+    } else {
+      const handleWheel = (e) => {
+        e.preventDefault();
+        const speed = 0.001;
+        progressRef.current = Math.min(1, Math.max(0, progressRef.current + e.deltaY * speed));
+
+        // Scrub timeline smoothly
+        gsap.to(tl, { 
+          progress: progressRef.current, 
+          duration: 0.25, 
+          ease: "power2.out", 
+          overwrite: "auto" 
+        });
+
+        // Update target time for RAF video scrub loop
+        if (videoRef.current && !isNaN(videoRef.current.duration)) {
+          targetTimeRef.current = progressRef.current * videoRef.current.duration;
+        }
+
+        // Metric count-up
+        const metricStart = 0.80;
+        const metricEnd = 0.88;
+        let metricP = 0;
+        if (progressRef.current < metricStart) {
+          metricP = 0;
+        } else if (progressRef.current > metricEnd) {
+          metricP = 1;
+        } else {
+          metricP = (progressRef.current - metricStart) / (metricEnd - metricStart);
+        }
+
+        experienceData.metrics.forEach((metric, mIdx) => {
+          const el = metricValuesRef.current[mIdx];
+          if (el) {
+            const currentVal = Math.floor(metricP * metric.value);
+            el.innerText = currentVal + metric.suffix;
+          }
+        });
+      };
+
+      const container = containerRef.current;
+      if (container) {
+        container.addEventListener('wheel', handleWheel, { passive: false });
+      }
+
+      return () => {
+        if (container) {
+          container.removeEventListener('wheel', handleWheel);
+        }
+        tl.kill();
+      };
+    }
+  }, [isMobile, isStandalone]);
 
   return (
     <section
       id="experience"
       ref={containerRef}
-      className="w-full h-[250vh] lg:h-screen relative bg-transparent flex flex-col overflow-visible lg:overflow-hidden select-none"
+      className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-screen'} relative bg-transparent flex flex-col overflow-visible select-none`}
     >
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-10">
         

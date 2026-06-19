@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = "https://chakreshchakshu.github.io";
+  const baseUrl = "https://chakreshchakshu.in";
   return {
     rules: {
       userAgent: "*",

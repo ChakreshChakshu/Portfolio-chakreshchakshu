@@ -3,7 +3,9 @@ import React, { useEffect, useRef } from "react";
 import { WavyBackground } from "@/components/ui/wavy-background";
 
 export default function WavyBackgroundDemo() {
+  const [isStandalone, setIsStandalone] = React.useState(false);
   const outerContainerRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
   const skillsContainerRef = useRef<HTMLDivElement>(null);
   const skillsTitleRef = useRef<HTMLHeadingElement>(null);
   
@@ -21,61 +23,12 @@ export default function WavyBackgroundDemo() {
   const toSubRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const isMobile = window.innerWidth < 1024;
-      let progress = 0;
+    const card = document.getElementById('skills')?.closest('.scroll-stack-card');
+    setIsStandalone(!card);
+  }, []);
 
-      if (!isMobile) {
-        const currentScroll = window.scrollY;
-        
-        const card = document.getElementById('skills')?.closest('.scroll-stack-card');
-        if (!card) return;
-        
-        const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
-        const cardIndex = cards.indexOf(card as HTMLElement);
-        if (cardIndex === -1) return;
-        
-        const cardTop = (card as HTMLElement).offsetTop;
-        
-        let delayOffset = 0;
-        for (let j = 0; j < cardIndex; j++) {
-          const c = cards[j] as HTMLElement;
-          const attr = c ? c.getAttribute('data-extra-delay') : null;
-          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
-          delayOffset += 1100 + extraDelay;
-        }
-
-        const rangeStart = cardTop + delayOffset;
-        const myExtraDelayAttr = card.getAttribute('data-extra-delay');
-        const myExtraDelay = myExtraDelayAttr ? (parseFloat(myExtraDelayAttr) || 0) : 0;
-        const rangeEnd = rangeStart + 1100 + myExtraDelay;
-        
-        if (currentScroll < rangeStart) {
-          progress = 0;
-        } else if (currentScroll > rangeEnd) {
-          progress = 1;
-        } else {
-          progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
-        }
-      } else {
-        if (!outerContainerRef.current) return;
-        const rect = outerContainerRef.current.getBoundingClientRect();
-        const containerHeight = rect.height;
-        const windowHeight = window.innerHeight;
-        const totalScrollableDistance = containerHeight - windowHeight;
-
-        if (totalScrollableDistance > 0) {
-          const scrolled = -rect.top;
-          if (scrolled < 0) {
-            progress = 0;
-          } else if (scrolled > totalScrollableDistance) {
-            progress = 1;
-          } else {
-            progress = scrolled / totalScrollableDistance;
-          }
-        }
-      }
-
+  useEffect(() => {
+    const updateVisuals = (progress: number) => {
       // 1. "SKILLS" scaling -> persistent across entire scroll
       if (skillsTitleRef.current) {
         if (progress <= 0.20) {
@@ -180,17 +133,119 @@ export default function WavyBackgroundDemo() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    handleScroll(); // Trigger initial state
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+    const handleScroll = () => {
+      const isMobile = window.innerWidth < 1024;
+      let progress = 0;
+
+      if (!isMobile) {
+        const currentScroll = window.scrollY;
+        
+        const card = document.getElementById('skills')?.closest('.scroll-stack-card');
+        if (!card) {
+          if (!outerContainerRef.current) return;
+          const rect = outerContainerRef.current.getBoundingClientRect();
+          const containerHeight = rect.height;
+          const windowHeight = window.innerHeight;
+          const totalScrollableDistance = containerHeight - windowHeight;
+
+          if (totalScrollableDistance > 0) {
+            const scrolled = -rect.top;
+            if (scrolled < 0) {
+              progress = 0;
+            } else if (scrolled > totalScrollableDistance) {
+              progress = 1;
+            } else {
+              progress = scrolled / totalScrollableDistance;
+            }
+          }
+        } else {
+        
+        const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+        const cardIndex = cards.indexOf(card as HTMLElement);
+        if (cardIndex === -1) return;
+        
+        const cardTop = (card as HTMLElement).offsetTop;
+        
+        let delayOffset = 0;
+        for (let j = 0; j < cardIndex; j++) {
+          const c = cards[j] as HTMLElement;
+          const attr = c ? c.getAttribute('data-extra-delay') : null;
+          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+          delayOffset += 1100 + extraDelay;
+        }
+
+        const rangeStart = cardTop + delayOffset;
+        const myExtraDelayAttr = card.getAttribute('data-extra-delay');
+        const myExtraDelay = myExtraDelayAttr ? (parseFloat(myExtraDelayAttr) || 0) : 0;
+        const rangeEnd = rangeStart + 1100 + myExtraDelay;
+        
+        if (currentScroll < rangeStart) {
+          progress = 0;
+        } else if (currentScroll > rangeEnd) {
+          progress = 1;
+        } else {
+          progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
+        }
+      }
+      } else {
+        if (!outerContainerRef.current) return;
+        const rect = outerContainerRef.current.getBoundingClientRect();
+        const containerHeight = rect.height;
+        const windowHeight = window.innerHeight;
+        const totalScrollableDistance = containerHeight - windowHeight;
+
+        if (totalScrollableDistance > 0) {
+          const scrolled = -rect.top;
+          if (scrolled < 0) {
+            progress = 0;
+          } else if (scrolled > totalScrollableDistance) {
+            progress = 1;
+          } else {
+            progress = scrolled / totalScrollableDistance;
+          }
+        }
+      }
+
+      updateVisuals(progress);
     };
-  }, []);
+
+    const isMobile = window.innerWidth < 1024;
+    const useWheel = isStandalone && !isMobile;
+
+    if (!useWheel) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", handleScroll);
+      handleScroll(); // Trigger initial state
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleScroll);
+      };
+    } else {
+      const handleWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        const speed = 0.001;
+        progressRef.current = Math.min(1, Math.max(0, progressRef.current + e.deltaY * speed));
+        updateVisuals(progressRef.current);
+      };
+
+      const container = outerContainerRef.current;
+      if (container) {
+        container.addEventListener('wheel', handleWheel, { passive: false });
+      }
+
+      // Initial visual trigger
+      updateVisuals(0);
+
+      return () => {
+        if (container) {
+          container.removeEventListener('wheel', handleWheel);
+        }
+      };
+    }
+  }, [isStandalone]);
 
   return (
-    <div ref={outerContainerRef} className="w-full h-[250vh] lg:h-full flex flex-col relative overflow-visible lg:overflow-hidden select-none">
+    <div ref={outerContainerRef} className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-full lg:overflow-hidden'} flex flex-col relative overflow-visible select-none`}>
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10">
         <WavyBackground className="max-w-6xl mx-auto flex flex-col items-center justify-center h-full relative">
           <div className="flex flex-col items-center justify-center text-center relative w-full h-[60vh] select-none overflow-visible">

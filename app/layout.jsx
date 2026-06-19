@@ -3,7 +3,7 @@ import "./globals.css";
 import NavbarWrapper from "../components/NavbarWrapper";
 
 export const metadata = {
-  metadataBase: new URL("https://chakreshchakshu.github.io"),
+  metadataBase: new URL("https://chakreshchakshu.in"),
   title: {
     default: "Chakresh Chakshu | Frontend Focused Full Stack Developer",
     template: "%s | Chakresh Chakshu",
@@ -25,7 +25,7 @@ export const metadata = {
   openGraph: {
     title: "Chakresh Chakshu | Frontend Focused Full Stack Developer",
     description: "Crafting modern web experiences with clean code and smooth animations.",
-    url: "https://chakreshchakshu.github.io",
+    url: "https://chakreshchakshu.in",
     siteName: "Chakresh Chakshu Portfolio",
     locale: "en_US",
     type: "website",
@@ -65,8 +65,8 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Chakresh Chakshu",
-    "url": "https://chakreshchakshu.github.io",
-    "image": "https://chakreshchakshu.github.io/images/chakresh.png",
+    "url": "https://chakreshchakshu.in",
+    "image": "https://chakreshchakshu.in/images/chakresh.png",
     "jobTitle": "Frontend Focused Full Stack Developer",
     "sameAs": [
       process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chakreshchakshu",

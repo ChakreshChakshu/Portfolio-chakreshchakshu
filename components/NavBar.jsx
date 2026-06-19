@@ -251,7 +251,7 @@ const PillNav = ({
         aria-label="Primary"
         style={cssVars}
       >
-        {isRouterLink(items?.[0]?.href) ? (
+        {logo && (isRouterLink(items?.[0]?.href) ? (
           <Link
             href={items[0].href}
             aria-label="Home"
@@ -288,11 +288,11 @@ const PillNav = ({
           >
             <img src={logo} alt={logoAlt} ref={logoImgRef} className="w-full h-full object-cover block" />
           </a>
-        )}
+        ))}
 
         <div
           ref={navItemsRef}
-          className="relative items-center rounded-full hidden md:flex ml-2"
+          className={`relative items-center rounded-full hidden md:flex ${logo ? 'ml-2' : ''}`}
           style={{
             height: 'var(--nav-h)',
             background: 'var(--base, #000)'

@@ -10,8 +10,6 @@ export default function NavbarWrapper() {
 
   return (
     <PillNav
-      logo="/next.svg"
-      logoAlt="Company Logo"
       items={[
         { label: 'Home', href: '/' },
         { label: 'About', href: '/about' },

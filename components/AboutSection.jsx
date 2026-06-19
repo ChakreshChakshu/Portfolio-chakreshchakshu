@@ -15,9 +15,16 @@ const ringColors = [
 
 export function AboutSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isStandalone, setIsStandalone] = useState(false);
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const timelineRef = useRef(null);
+  const progressRef = useRef(0);
+
+  useEffect(() => {
+    const card = containerRef.current?.closest('.scroll-stack-card');
+    setIsStandalone(!card);
+  }, []);
 
   const stats = [
     { target: 150000, suffix: "+", label: "Lines of Code" },
@@ -137,33 +144,50 @@ export function AboutSection() {
 
       if (!isMobile) {
         const card = containerRef.current?.closest('.scroll-stack-card');
-        if (!card) return;
+        if (!card) {
+          if (!containerRef.current) return;
+          const rect = containerRef.current.getBoundingClientRect();
+          const containerHeight = rect.height;
+          const windowHeight = window.innerHeight;
+          const totalScrollableDistance = containerHeight - windowHeight;
 
-        const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
-        const cardIndex = cards.indexOf(card);
-        if (cardIndex === -1) return;
-
-        const cardTop = card.offsetTop;
-        const itemDistance = 1100;
-
-        let delayOffset = 0;
-        for (let j = 0; j < cardIndex; j++) {
-          const c = cards[j];
-          const attr = c ? c.getAttribute('data-extra-delay') : null;
-          const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
-          delayOffset += itemDistance + extraDelay;
-        }
-
-        const rangeStart = cardTop + delayOffset;
-        const rangeEnd = rangeStart + itemDistance;
-        const currentScroll = window.scrollY;
-
-        if (currentScroll < rangeStart) {
-          progress = 0;
-        } else if (currentScroll > rangeEnd) {
-          progress = 1;
+          if (totalScrollableDistance > 0) {
+            const scrolled = -rect.top;
+            if (scrolled < 0) {
+              progress = 0;
+            } else if (scrolled > totalScrollableDistance) {
+              progress = 1;
+            } else {
+              progress = scrolled / totalScrollableDistance;
+            }
+          }
         } else {
-          progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
+          const cards = Array.from(document.querySelectorAll('.scroll-stack-card'));
+          const cardIndex = cards.indexOf(card);
+          if (cardIndex === -1) return;
+
+          const cardTop = card.offsetTop;
+          const itemDistance = 1100;
+
+          let delayOffset = 0;
+          for (let j = 0; j < cardIndex; j++) {
+            const c = cards[j];
+            const attr = c ? c.getAttribute('data-extra-delay') : null;
+            const extraDelay = attr ? (parseFloat(attr) || 0) : 0;
+            delayOffset += itemDistance + extraDelay;
+          }
+
+          const rangeStart = cardTop + delayOffset;
+          const rangeEnd = rangeStart + itemDistance;
+          const currentScroll = window.scrollY;
+
+          if (currentScroll < rangeStart) {
+            progress = 0;
+          } else if (currentScroll > rangeEnd) {
+            progress = 1;
+          } else {
+            progress = (currentScroll - rangeStart) / (rangeEnd - rangeStart);
+          }
         }
       } else {
         if (!containerRef.current) return;
@@ -205,21 +229,66 @@ export function AboutSection() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
+    const isMobile = window.innerWidth < 1024;
+    const useWheel = isStandalone && !isMobile;
 
-    // Initial trigger
-    const timer = setTimeout(handleScroll, 100);
+    if (!useWheel) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      clearTimeout(timer);
-    };
-  }, []);
+      // Initial trigger
+      const timer = setTimeout(handleScroll, 100);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleScroll);
+        clearTimeout(timer);
+      };
+    } else {
+      const handleWheel = (e) => {
+        e.preventDefault();
+        const speed = 0.001;
+        progressRef.current = Math.min(1, Math.max(0, progressRef.current + e.deltaY * speed));
+
+        let activeIdx = 0;
+        if (progressRef.current < 0.20) {
+          activeIdx = 0;
+        } else if (progressRef.current < 0.40) {
+          activeIdx = 1;
+        } else if (progressRef.current < 0.60) {
+          activeIdx = 2;
+        } else if (progressRef.current < 0.80) {
+          activeIdx = 3;
+        } else {
+          activeIdx = 4;
+        }
+        setActiveIndex(activeIdx);
+
+        if (timelineRef.current) {
+          gsap.to(timelineRef.current, {
+            progress: progressRef.current,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto"
+          });
+        }
+      };
+
+      const container = containerRef.current;
+      if (container) {
+        container.addEventListener('wheel', handleWheel, { passive: false });
+      }
+
+      return () => {
+        if (container) {
+          container.removeEventListener('wheel', handleWheel);
+        }
+      };
+    }
+  }, [isStandalone]);
 
   return (
-    <div ref={containerRef} className="w-full h-[250vh] lg:h-full flex flex-col bg-transparent text-white relative overflow-visible lg:overflow-hidden select-none">
+    <div ref={containerRef} className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-full lg:overflow-hidden'} flex flex-col bg-transparent text-white relative overflow-visible select-none`}>
       
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10">
         {/* Cinematic Ambient Background Glows */}
