@@ -455,9 +455,11 @@ export function ProjectsSection() {
                   className="mobile-project-card flex flex-col gap-6 bg-white/[0.02] border border-white/5 p-6 rounded-3xl relative overflow-hidden min-h-[340px] justify-end"
                 >
                   {/* Background Image on mobile card */}
-                  <div 
+                  <div
+                    role="img"
+                    aria-label={`${project.title} preview`}
                     className="absolute inset-0 bg-cover bg-center z-0 scale-105"
-                    style={{ 
+                    style={{
                       backgroundImage: `url(${project.imageSrc})`,
                       filter: 'brightness(0.35)'
                     }}
@@ -767,9 +769,11 @@ export function ProjectsSection() {
                 className="project-card-overlay relative overflow-hidden"
               >
                 {/* Parallax/Static background image */}
-                <div 
+                <div
+                  role="img"
+                  aria-label={`${project.title} preview`}
                   className="absolute inset-0 bg-cover bg-center z-0 scale-105 transition-transform duration-700 ease-out"
-                  style={{ 
+                  style={{
                     backgroundImage: `url(${project.imageSrc})`,
                     filter: 'brightness(0.65)'
                   }}

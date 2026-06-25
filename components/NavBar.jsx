@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 
 const PillNav = ({
   logo,
-  logoAlt = 'Logo',
+  logoAlt = 'Chakresh Chakshu logo',
   items,
   activeHref,
   className = '',

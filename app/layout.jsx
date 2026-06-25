@@ -4,6 +4,7 @@ import NavbarWrapper from "../components/NavbarWrapper";
 
 export const metadata = {
   metadataBase: new URL("https://chakreshchakshu.in"),
+  alternates: { canonical: "/" },
   title: {
     default: "Chakresh Chakshu | Frontend Focused Full Stack Developer",
     template: "%s | Chakresh Chakshu",
@@ -31,7 +32,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/images/chakresh.png",
+        url: "/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "Chakresh Chakshu Portfolio Preview",
@@ -42,7 +43,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Chakresh Chakshu | Frontend Focused Full Stack Developer",
     description: "Crafting modern web experiences with clean code and smooth animations.",
-    images: ["/images/chakresh.png"],
+    images: ["/images/og-image.png"],
   },
   robots: {
     index: true,
@@ -76,6 +77,13 @@ export default function RootLayout({ children }) {
     "description": "Portfolio of Chakresh Chakshu, a Frontend Focused Full Stack Developer specializing in crafting interactive, high-performance web experiences."
   };
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Chakresh Chakshu Portfolio",
+    "url": "https://chakreshchakshu.in",
+  };
+
   return (
     <html
       lang="en"
@@ -86,6 +94,10 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <NavbarWrapper />
         <main className="grow">{children}</main>
