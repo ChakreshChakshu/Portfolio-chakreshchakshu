@@ -17,7 +17,7 @@ export async function POST(req) {
     // Server-side Zod validation
     const parsedData = contactSchema.safeParse(body);
     if (!parsedData.success) {
-      const errorMsg = parsedData.error.errors.map(err => err.message).join(', ');
+      const errorMsg = parsedData.error.issues.map(err => err.message).join(', ');
       return new Response(
         JSON.stringify({ error: errorMsg }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
