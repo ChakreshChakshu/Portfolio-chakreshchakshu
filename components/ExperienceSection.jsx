@@ -492,7 +492,7 @@ export function ExperienceSection() {
     <section
       id="experience"
       ref={containerRef}
-      className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-screen'} relative bg-transparent flex flex-col overflow-visible select-none`}
+      className={`w-full ${isStandalone ? 'h-[170vh] lg:h-screen lg:overflow-hidden' : 'h-[170vh] lg:h-screen'} relative bg-transparent flex flex-col overflow-visible select-none`}
     >
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden z-10">
         

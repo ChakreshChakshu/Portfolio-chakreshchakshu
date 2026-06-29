@@ -16,6 +16,7 @@ const ringColors = [
 export function AboutSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const timelineRef = useRef(null);
@@ -24,6 +25,13 @@ export function AboutSection() {
   useEffect(() => {
     const card = containerRef.current?.closest('.scroll-stack-card');
     setIsStandalone(!card);
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const stats = [
@@ -75,7 +83,9 @@ export function AboutSection() {
       // Centered layout configuration for 5 lines (offset starts at 40%)
       gsap.set(heroRef.current, { yPercent: 40, opacity: 1 });
       lines.forEach((line, idx) => {
-        gsap.set(line, { opacity: idx === 0 ? 1 : 0 });
+        // Mobile: keep every line visible so the next slide previews underneath
+        // the current one instead of cross-fading in isolation.
+        gsap.set(line, { opacity: isMobile || idx === 0 ? 1 : 0 });
       });
 
       // Create a paused timeline that we will scrub manually on scroll
@@ -84,24 +94,28 @@ export function AboutSection() {
 
       const duration = 0.5; // Relative duration since it is scrubbed
       const gap = 0.5;      // Gap between entries
+      // Mobile: stretch each transition across its whole slot (no idle "resting" phase)
+      // so the next slide keeps overlapping/sliding in for the entire scroll segment
+      // instead of snapping into place and pausing.
+      const slideDuration = isMobile ? duration + gap : duration;
 
       lines.forEach((line, index) => {
         const startTime = index * (duration + gap);
 
         // Step 1: Set opacity of current line to 1 at its startTime (skip first line since it is already opacity 1)
-        if (index > 0) {
+        if (index > 0 && !isMobile) {
           tl.set(line, { opacity: 1 }, startTime);
         }
 
         // Step 2: Animate current line in (rising and scaling)
-        tl.fromTo(line, 
+        tl.fromTo(line,
           { yPercent: 120, scale: 0.6 },
-          { 
-            yPercent: 0, 
-            scale: 1, 
-            duration: duration, 
-            ease: "power2.out" 
-          }, 
+          {
+            yPercent: 0,
+            scale: 1,
+            duration: slideDuration,
+            ease: "power2.out"
+          },
           startTime
         );
 
@@ -109,13 +123,14 @@ export function AboutSection() {
         if (index > 0) {
           tl.to(heroRef.current, {
             yPercent: 40 - (index * 20),
-            duration: duration,
+            duration: slideDuration,
             ease: "power2.out"
           }, startTime);
         }
 
-        // Step 4: Fade out previous lines to keep focus perfectly on the active one
-        if (index > 0) {
+        // Step 4: Fade out previous lines to keep focus perfectly on the active one.
+        // Skipped on mobile so the current slide stays visible while the next previews in.
+        if (index > 0 && !isMobile) {
           const prevLines = Array.from(lines).slice(0, index);
           tl.to(prevLines, {
             opacity: 0,
@@ -135,7 +150,7 @@ export function AboutSection() {
         timelineRef.current.kill();
       }
     };
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -288,7 +303,7 @@ export function AboutSection() {
   }, [isStandalone]);
 
   return (
-    <div ref={containerRef} className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-full lg:overflow-hidden'} flex flex-col bg-transparent text-white relative overflow-visible select-none`}>
+    <div ref={containerRef} className={`w-full ${isStandalone ? 'h-[170vh] lg:h-screen lg:overflow-hidden' : 'h-[170vh] lg:h-full lg:overflow-hidden'} flex flex-col bg-transparent text-white relative overflow-visible select-none`}>
       
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10">
         {/* Cinematic Ambient Background Glows */}
@@ -309,6 +324,7 @@ export function AboutSection() {
             scaleRate={0.14}
             opacity={0.45}
             noiseAmount={0.02}
+            rotation={isMobile ? 90 : 0}
             followMouse={true}
             mouseInfluence={0.15}
             hoverScale={1.15}

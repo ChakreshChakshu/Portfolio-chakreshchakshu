@@ -245,7 +245,7 @@ export default function WavyBackgroundDemo() {
   }, [isStandalone]);
 
   return (
-    <div ref={outerContainerRef} className={`w-full ${isStandalone ? 'h-[250vh] lg:h-screen lg:overflow-hidden' : 'h-[250vh] lg:h-full lg:overflow-hidden'} flex flex-col relative overflow-visible select-none`}>
+    <div ref={outerContainerRef} className={`w-full ${isStandalone ? 'h-[170vh] lg:h-screen lg:overflow-hidden' : 'h-[170vh] lg:h-full lg:overflow-hidden'} flex flex-col relative overflow-visible select-none`}>
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden z-10">
         <WavyBackground className="max-w-6xl mx-auto flex flex-col items-center justify-center h-full relative">
           <div className="flex flex-col items-center justify-center text-center relative w-full h-[60vh] select-none overflow-visible">

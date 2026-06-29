@@ -19,6 +19,111 @@ const specsData = {
   currentUpgrade: "System Design + DSA",
 };
 
+function MobileHero({
+  name,
+  role,
+  coreStack,
+  specialization,
+  currentUpgrade,
+  imageSrc,
+  imageAlt,
+  socialLinks,
+  locationText,
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 80);
+    return () => clearTimeout(t);
+  }, []);
+
+  const specs = [
+    { label: 'Role', value: role },
+    { label: 'Core Stack', value: coreStack },
+    { label: 'Specialization', value: specialization },
+    { label: 'Upgrade', value: currentUpgrade },
+  ];
+
+  const reveal = (delay) =>
+    cn(
+      'transition-all duration-700 ease-out',
+      mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3',
+      delay
+    );
+
+  return (
+    <div className="relative flex min-h-screen w-full flex-col items-center bg-background px-6 pt-16 pb-10 font-sans overflow-hidden select-none">
+      {/* Ambient glow */}
+      <div className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full bg-accent/10 blur-[110px] pointer-events-none" />
+
+      {/* Tag */}
+      <span className={cn('text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase', reveal('delay-0'))}>
+        Welcome
+      </span>
+
+      {/* Avatar */}
+      <div className={cn('relative mt-6 w-[150px] h-[150px] shrink-0', reveal('delay-100'))}>
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(233,156,22,0.18)_0%,rgba(233,156,22,0)_70%)] blur-2xl" />
+        <div className="relative w-full h-full rounded-full border-2 border-accent/45 shadow-[0_0_30px_rgba(255,49,46,0.15)] overflow-hidden bg-gradient-to-tr from-background via-card to-muted">
+          {imageSrc && (
+            <img
+              src={imageSrc}
+              alt={imageAlt}
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 h-auto w-[88%] max-w-none object-cover origin-bottom"
+              onError={(e) => {
+                const target = e.target;
+                target.onerror = null;
+                target.src = `https://placehold.co/400x600/eab308/ffffff?text=Image+Not+Found`;
+              }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Name + role */}
+      <div className={cn('mt-5 flex flex-col items-center text-center', reveal('delay-150'))}>
+        <h1 className="text-2xl font-extrabold text-white tracking-tight leading-none font-sans">{name}</h1>
+        <span className="mt-1.5 text-xs font-mono uppercase tracking-[0.2em] text-accent font-bold">{role}</span>
+      </div>
+
+      {/* Headline */}
+      <h2 className={cn('mt-6 max-w-sm text-center text-xl font-extrabold leading-snug text-white font-sans', reveal('delay-200'))}>
+        I engineer <span className="text-accent underline decoration-accent/30 decoration-2 underline-offset-4">interfaces</span>, systems and interactive product experiences.
+      </h2>
+
+      {/* Specs grid */}
+      <div className={cn('mt-8 grid w-full max-w-sm grid-cols-2 gap-3', reveal('delay-300'))}>
+        {specs.map((s) => (
+          <div key={s.label} className="flex flex-col gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-accent/80 font-bold">{s.label}</span>
+            <span className="text-[13px] text-white/90 font-medium leading-snug">{s.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Socials */}
+      <div className={cn('mt-8 flex items-center gap-4', reveal('delay-[400ms]'))}>
+        {socialLinks.map((link, i) => (
+          <a
+            key={i}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-accent/25 bg-muted/80 text-[#e5e5e5] active:scale-95 transition-transform"
+          >
+            <link.icon className="h-5 w-5" weight="fill" />
+          </a>
+        ))}
+      </div>
+
+      {/* Location */}
+      <div className={cn('mt-auto pt-8 text-[10px] font-mono tracking-[0.2em] text-white/40', reveal('delay-[500ms]'))}>
+        {locationText}
+      </div>
+    </div>
+  );
+}
+
 export function MinimalistHero({ className }) {
   const {
     imageSrc,
@@ -77,13 +182,24 @@ export function MinimalistHero({ className }) {
   }, []);
 
   return (
-    <div
-      id="home"
-      className={cn(
-        'relative flex h-auto min-h-screen md:h-full w-full flex-col items-center justify-between bg-background p-8 font-sans md:p-12 overflow-visible md:overflow-hidden select-none',
-        className
-      )}
-    >
+    <div id="home" className={cn('relative w-full h-auto min-h-screen md:h-full bg-background select-none', className)}>
+      {/* Mobile: standalone, animation-light hero */}
+      <div className="md:hidden">
+        <MobileHero
+          name={name}
+          role={role}
+          coreStack={coreStack}
+          specialization={specialization}
+          currentUpgrade={currentUpgrade}
+          imageSrc={imageSrc}
+          imageAlt={imageAlt}
+          socialLinks={socialLinks}
+          locationText={locationText}
+        />
+      </div>
+
+      {/* Desktop: original scroll-driven orbit hero */}
+      <div className="hidden md:flex md:h-full w-full flex-col items-center justify-between p-12 font-sans overflow-hidden">
       {/* 1. Cyber-Beams Grid Background */}
       <div
         className={cn(
@@ -422,6 +538,7 @@ export function MinimalistHero({ className }) {
           {locationText}
         </div>
       </footer>
+      </div>
 
       {/* Standard CSS Keyframe Injector */}
       <style jsx global>{`
